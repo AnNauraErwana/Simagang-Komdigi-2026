@@ -58,7 +58,7 @@
                             <p class="text-gray-500">{{ $report->file_name }}</p>
                         </div>
                     </div>
-                    <a href="{{ url('storage/' . $report->file_path) }}" target="_blank"
+                    <a href="{{ route('download', ['path' => $report->file_path]) }}" target="_blank"
                         class="text-blue-600 hover:underline font-medium">
                         Download
                     </a>
@@ -71,10 +71,10 @@
                         <i class="fas fa-file-archive text-gray-600 text-lg"></i>
                         <div>
                             <p class="font-medium">File Proyek</p>
-                            <p class="text-gray-500">{{ basename($report->project_file) }}</p>
+                            <p class="text-gray-500">{{ $report->project_file_name ?? basename($report->project_file) }}</p>
                         </div>
                     </div>
-                    <a href="{{ url('storage/' . $report->project_file) }}" target="_blank"
+                    <a href="{{ route('download', ['path' => $report->project_file]) }}" target="_blank"
                         class="text-blue-600 hover:underline font-medium">
                         Download
                     </a>
@@ -100,6 +100,22 @@
                     </a>
                 </div>
                 @endif
+                
+                {{-- Activities (Kegiatan Magang) --}}
+                <div class="mt-4 p-4 bg-white rounded border">
+                    <h4 class="font-semibold">Kegiatan Selama Magang</h4>
+                    @if($report->activities && count($report->activities))
+                        <div class="mt-2 space-y-2">
+                            @foreach($report->activities as $activity)
+                                <div class="p-3 bg-gray-50 rounded border">
+                                    <p class="text-gray-900">{{ $activity['description'] ?? '' }}</p>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="mt-2 text-gray-500">Belum ada kegiatan yang dicatat.</p>
+                    @endif
+                </div>
             </div>
 
             {{-- Catatan Admin --}}
@@ -136,15 +152,36 @@
             @method('PUT')
 
             <div class="mb-4">
-                <label class="block text-sm font-medium">Upload Laporan Baru</label>
-                <input type="file" name="file" required
-                    class="w-full border rounded px-3 py-2">
+                <label class="block text-sm font-medium">Laporan Saat Ini</label>
+                <div class="relative">
+                    <input type="text" id="fileDisplay" value="{{ $report->file_name }}" readonly
+                        class="w-full border rounded px-3 py-2 bg-gray-100 text-gray-700 cursor-pointer"
+                        onclick="document.getElementById('fileInput').click()">
+                    <input type="file" name="file" id="fileInput" style="display: none;" onchange="updateFileDisplay(this)">
+                    <button type="button" class="absolute right-2 top-2 text-gray-500 hover:text-gray-700" onclick="clearFile()">×</button>
+                </div>
+                <p class="mt-1 text-sm text-gray-500">
+                    Klik untuk pilih file baru atau biarkan untuk tetap menggunakan file saat ini. 
+                    <a href="{{ route('download', ['path' => $report->file_path]) }}" target="_blank" class="text-blue-600 hover:underline">Lihat file saat ini</a>
+                </p>
             </div>
 
             <div class="mb-4">
-                <label class="block text-sm font-medium">Upload Proyek (Opsional)</label>
-                <input type="file" name="project_file"
-                    class="w-full border rounded px-3 py-2">
+                <label class="block text-sm font-medium">Proyek Saat Ini</label>
+                <div class="relative">
+                    <input type="text" id="projectDisplay" value="{{ $report->project_file ? ($report->project_file_name ?? basename($report->project_file)) : 'Belum ada file proyek' }}" readonly
+                        class="w-full border rounded px-3 py-2 bg-gray-100 text-gray-700 cursor-pointer"
+                        onclick="document.getElementById('projectInput').click()">
+                    <input type="file" name="project_file" id="projectInput" style="display: none;" onchange="updateProjectDisplay(this)">
+                    <button type="button" class="absolute right-2 top-2 text-gray-500 hover:text-gray-700" onclick="clearProject()">×</button>
+                </div>
+                <p class="mt-1 text-sm text-gray-500">
+                    Klik untuk pilih file baru atau biarkan untuk tetap menggunakan file saat ini.
+                    @if($report->project_file)
+                        <a href="{{ route('download', ['path' => $report->project_file]) }}" target="_blank" class="text-blue-600 hover:underline">Download file saat ini</a>
+                    @endif
+                    Format: .zip, .rar, .7z, .tar.gz (Maks: 100MB)
+                </p>
             </div>
 
             <div class="mb-4">
@@ -152,6 +189,13 @@
                 <input type="url" name="project_link"
                     value="{{ old('project_link', $report->project_link) }}"
                     class="w-full border rounded px-3 py-2">
+            </div>
+
+            {{-- Activities (Kegiatan Magang) --}}
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-2">Kegiatan Selama Magang (Opsional)</label>
+                <textarea name="activities[0][description]" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Deskripsikan kegiatan harian/mingguan yang relevan untuk laporan akhir...">{{ old('activities.0.description', data_get($report, 'activities.0.description', '')) }}</textarea>
+                <p class="mt-1 text-sm text-gray-500">Opsional: Masukkan ringkasan kegiatan selama magang.</p>
             </div>
 
             <button type="submit"
@@ -192,11 +236,8 @@
                         class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm
                         focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                     <p class="mt-1 text-sm text-gray-500">
-                        Format: .zip, .rar, .7z, .tar.gz (Opsional, Maks: 50MB)
+                        Format: .zip, .rar, .7z, .tar.gz (Opsional, Maks: 100MB)
                     </p>
-                    @error('project_file')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <div class="mb-6 max-w-md mx-auto">
@@ -216,15 +257,90 @@
                     @enderror
                 </div>
 
+                {{-- Activities (Kegiatan Magang) --}}
+                <div class="mb-6 max-w-md mx-auto">
+                    <label for="activities_description" class="block text-sm font-medium text-gray-700 mb-2">
+                        Kegiatan Selama Magang (opsional)
+                    </label>
+                    <textarea name="activities[0][description]" id="activities_description" rows="4"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm
+                        focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Deskripsikan kegiatan harian/mingguan yang relevan untuk laporan akhir...">{{ old('activities.0.description') }}</textarea>
+                    <p class="mt-1 text-sm text-gray-500">
+                        Opsional: Masukkan ringkasan kegiatan selama magang.
+                    </p>
+                </div>
+
                 <button type="submit"
                     class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded">
                     <i class="fas fa-upload mr-2"></i>Upload Laporan
                 </button>
             </form>
         </div>
+
+        @push('scripts')
+        <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            // Custom file input functions
+            function updateFileDisplay(input) {
+                const display = document.getElementById('fileDisplay');
+                if (input.files && input.files[0]) {
+                    display.value = input.files[0].name;
+                    display.classList.remove('text-gray-700');
+                    display.classList.add('text-blue-700');
+                }
+            }
+
+            function clearFile() {
+                const display = document.getElementById('fileDisplay');
+                const input = document.getElementById('fileInput');
+                display.value = '{{ $report?->file_name }}';
+                input.value = '';
+                display.classList.remove('text-blue-700');
+                display.classList.add('text-gray-700');
+            }
+
+            function updateProjectDisplay(input) {
+                const display = document.getElementById('projectDisplay');
+                if (input.files && input.files[0]) {
+                    display.value = input.files[0].name;
+                    display.classList.remove('text-gray-700', 'text-gray-500');
+                    display.classList.add('text-blue-700');
+                }
+            }
+
+            function clearProject() {
+                const display = document.getElementById('projectDisplay');
+                const input = document.getElementById('projectInput');
+                display.value = '{{ $report?->project_file ? ($report?->project_file_name ?? basename($report?->project_file)) : 'Belum ada file proyek' }}';
+                input.value = '';
+                display.classList.remove('text-blue-700');
+                display.classList.add('text-gray-700');
+            }
+
+            // Attach to global if elements exist
+            const fileInput = document.getElementById('fileInput');
+            const projectInput = document.getElementById('projectInput');
+            if (fileInput) {
+                fileInput.addEventListener('change', function() { updateFileDisplay(this); });
+            }
+            if (projectInput) {
+                projectInput.addEventListener('change', function() { updateProjectDisplay(this); });
+            }
+
+            // Clear buttons
+            const clearFileBtn = document.querySelector('button[onclick="clearFile()"]');
+            const clearProjectBtn = document.querySelector('button[onclick="clearProject()"]');
+            if (clearFileBtn) clearFileBtn.addEventListener('click', clearFile);
+            if (clearProjectBtn) clearProjectBtn.addEventListener('click', clearProject);
+        });
+        </script>
+        @endpush
+
         @endif
 
 
     </div>
 </div>
+
 @endsection

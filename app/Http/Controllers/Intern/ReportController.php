@@ -29,8 +29,10 @@ class ReportController extends Controller
 
         $validated = $request->validate([
             'file' => ['required', 'file', 'mimes:pdf,doc,docx', 'max:10240'],
-            'project_file' => ['nullable', 'file', 'mimes:zip,rar,7z,tar,gz', 'max:51200'],
+            'project_file' => ['nullable', 'file', 'mimes:zip,rar,7z,tar,gz', 'max:102400'],
             'project_link' => ['nullable', 'url', 'max:1024'],
+            'activities' => ['nullable', 'array'],
+            'activities.*.description' => ['nullable', 'string', 'max:2000'],
         ]);
 
         $file = $request->file('file');
@@ -60,6 +62,7 @@ class ReportController extends Controller
         }
 
         $projectFilePath = null;
+        $projectFileName = null;
         if ($request->hasFile('project_file')) {
             $pfile = $request->file('project_file');
             if ($pfile->isValid()) {
@@ -69,6 +72,7 @@ class ReportController extends Controller
                 if (!file_exists($pdest)) mkdir($pdest, 0755, true);
                 if ($pfile->move($pdest, $pname) && file_exists($pdest . DIRECTORY_SEPARATOR . $pname)) {
                     $projectFilePath = 'projects/' . $pname;
+                    $projectFileName = $pfile->getClientOriginalName();
                 }
             }
         }
@@ -77,7 +81,9 @@ class ReportController extends Controller
             'intern_id' => $intern->id,
             'file_path' => $filePath,
             'project_file' => $projectFilePath,
+            'project_file_name' => $projectFileName,
             'project_link' => $request->input('project_link'),
+            'activities' => $request->input('activities'),
             'file_name' => $fileName,
             'status' => 'pending',
             'submitted_at' => now(),
@@ -100,17 +106,50 @@ class ReportController extends Controller
         }
 
         $validated = $request->validate([
-            'file' => ['required', 'file', 'mimes:pdf,doc,docx', 'max:10240'],
-            'project_file' => ['nullable', 'file', 'mimes:zip,rar,7z,tar,gz', 'max:51200'],
+            'file' => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:10240'],
+            'project_file' => ['nullable', 'file', 'mimes:zip,rar,7z,tar,gz', 'max:102400'],
             'project_link' => ['nullable', 'url', 'max:1024'],
+            'activities' => ['nullable', 'array'],
+            'activities.*.description' => ['nullable', 'string', 'max:2000'],
         ]);
 
-        // Delete old report file
-        if ($report->file_path) {
-            $oldPath = storage_path('app/public/' . $report->file_path);
-            if (file_exists($oldPath)) {
-                @unlink($oldPath);
+        // Handle main report file replacement
+        if ($request->hasFile('file')) {
+            // delete old report file
+            if ($report->file_path) {
+                $oldPath = storage_path('app/public/' . $report->file_path);
+                if (file_exists($oldPath)) {
+                    @unlink($oldPath);
+                }
             }
+            $file = $request->file('file');
+            $fileName = $file->getClientOriginalName();
+            
+            if ($file->isValid() && $file->getError() === UPLOAD_ERR_OK) {
+                try {
+                    $extension = $file->getClientOriginalExtension() ?: ($file->guessExtension() ?: 'pdf');
+                    $filename = 'report_' . time() . '_' . uniqid() . '.' . $extension;
+                    $destinationPath = storage_path('app/public/final-reports');
+                    
+                    if (!file_exists($destinationPath)) {
+                        mkdir($destinationPath, 0755, true);
+                    }
+                    
+                    $fullPath = $destinationPath . DIRECTORY_SEPARATOR . $filename;
+                    if ($file->move($destinationPath, $filename) && file_exists($fullPath)) {
+                        $filePath = 'final-reports/' . $filename;
+                    } else {
+                        return back()->withErrors(['file' => 'Gagal menyimpan file.'])->withInput();
+                    }
+                } catch (\Exception $e) {
+                    return back()->withErrors(['file' => 'Terjadi kesalahan: ' . $e->getMessage()])->withInput();
+                }
+            } else {
+                return back()->withErrors(['file' => 'File tidak valid.'])->withInput();
+            }
+        } else {
+            $filePath = $report->file_path;
+            $fileName = $report->file_name;
         }
 
         // Handle project file replacement
@@ -130,44 +169,23 @@ class ReportController extends Controller
                 if (!file_exists($pdest)) mkdir($pdest, 0755, true);
                 if ($pfile->move($pdest, $pname) && file_exists($pdest . DIRECTORY_SEPARATOR . $pname)) {
                     $projectFilePath = 'projects/' . $pname;
+                    $projectFileName = $pfile->getClientOriginalName();
                 } else {
                     $projectFilePath = null;
+                    $projectFileName = null;
                 }
             }
         } else {
             $projectFilePath = $report->project_file;
-        }
-
-        $file = $request->file('file');
-        $fileName = $file->getClientOriginalName();
-        
-        if ($file->isValid() && $file->getError() === UPLOAD_ERR_OK) {
-            try {
-                $extension = $file->getClientOriginalExtension() ?: ($file->guessExtension() ?: 'pdf');
-                $filename = 'report_' . time() . '_' . uniqid() . '.' . $extension;
-                $destinationPath = storage_path('app/public/final-reports');
-                
-                if (!file_exists($destinationPath)) {
-                    mkdir($destinationPath, 0755, true);
-                }
-                
-                $fullPath = $destinationPath . DIRECTORY_SEPARATOR . $filename;
-                if ($file->move($destinationPath, $filename) && file_exists($fullPath)) {
-                    $filePath = 'final-reports/' . $filename;
-                } else {
-                    return back()->withErrors(['file' => 'Gagal menyimpan file.'])->withInput();
-                }
-            } catch (\Exception $e) {
-                return back()->withErrors(['file' => 'Terjadi kesalahan: ' . $e->getMessage()])->withInput();
-            }
-        } else {
-            return back()->withErrors(['file' => 'File tidak valid.'])->withInput();
+            $projectFileName = $report->project_file_name;
         }
 
         $report->update([
             'file_path' => $filePath,
             'project_file' => $projectFilePath,
+            'project_file_name' => $projectFileName,
             'project_link' => $request->input('project_link'),
+            'activities' => $request->input('activities'),
             'file_name' => $fileName,
             'status' => 'pending',
             'needs_revision' => false, // Reset revision flag when resubmitted

@@ -18,7 +18,7 @@
 
             <div>
                 <label class="block text-sm font-medium text-gray-500 mb-1">Nama File</label>
-                <p class="text-lg text-gray-900">{{ $report->file_name }}</p>
+                <p class="text-lg text-gray-900">{{ $report?->file_name }}</p>
             </div>
 
             <div>
@@ -70,11 +70,49 @@
             @endif
 
             <div>
-                <a href="{{ url('storage/' . $report->file_path) }}" target="_blank" 
+                <a href="{{ route('download', ['path' => $report->file_path]) }}" target="_blank" 
                     class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     <i class="fas fa-download mr-2"></i>Download Laporan
                 </a>
             </div>
+
+            @if($report->project_file || $report->project_link)
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Proyek</label>
+                    <div class="space-y-3">
+                        @if($report->project_file)
+                            <div>
+                                <p class="text-sm text-gray-700 font-medium">File Proyek: {{ $report?->project_file_name ?? basename($report?->project_file ?? '') }}</p>
+                                <a href="{{ route('download', ['path' => $report->project_file]) }}" target="_blank" class="inline-block mt-2 bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded">
+                                    <i class="fas fa-file-archive mr-2"></i>Download File Proyek
+                                </a>
+                            </div>
+                        @endif
+
+                        @if($report->project_link)
+                            <div>
+                                <p class="text-sm text-gray-700 font-medium">Link Proyek</p>
+                                <a href="{{ $report->project_link }}" target="_blank" rel="noopener" class="inline-block mt-2 bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded">
+                                    <i class="fas fa-external-link-alt mr-2"></i>Buka Link Proyek
+                                </a>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
+            @if($report->activities && count($report->activities))
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Kegiatan Selama Magang</label>
+                    <div class="space-y-2">
+                        @foreach($report->activities as $activity)
+                            <div class="p-3 bg-gray-50 rounded border">
+                                <p class="text-gray-900">{{ $activity['description'] }}</p>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
 
             @if(!$report->grade)
                 <form method="POST" action="{{ route('mentor.report.grade', $report) }}" class="mt-6 border-t pt-6">

@@ -56,6 +56,15 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
+// File Download Route
+Route::get('/download/{path}', function ($path) {
+    $fullPath = storage_path('app/public/' . $path);
+    if (file_exists($fullPath)) {
+        return response()->download($fullPath);
+    }
+    abort(404);
+})->middleware('auth')->where('path', '.*')->name('download');
+
 // Intern Routes
 Route::middleware(['auth', 'intern'])->prefix('intern')->name('intern.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -134,7 +143,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     
     // Monitoring Routes
     Route::get('/monitoring', [AdminMonitoringController::class, 'index'])->name('monitoring.index');
-    Route::get('/monitoring/export', [AdminMonitoringController::class, 'export'])->name('monitoring.export');
 });
 
 // Mentor Routes

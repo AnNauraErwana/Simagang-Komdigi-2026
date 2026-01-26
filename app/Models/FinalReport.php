@@ -13,9 +13,11 @@ class FinalReport extends Model
         'intern_id',
         'file_path',
         'project_file',
+        'project_file_name',
         'project_link',
         'file_name',
         'status',
+        'activities',
         'grade',
         'score',
         'needs_revision',
@@ -26,6 +28,7 @@ class FinalReport extends Model
     protected $casts = [
         'submitted_at' => 'datetime',
         'needs_revision' => 'boolean',
+        'activities' => 'array',
     ];
 
     public function intern()
