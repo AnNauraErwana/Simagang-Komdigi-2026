@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\Intern;
 use App\Models\MicroSkillSubmission;
+use App\Models\Certificate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -47,6 +48,9 @@ class DashboardController extends Controller
         $microSkillTotal = $intern->microSkills()->count();
         $microSkillApproved = $intern->microSkills()->where('status', 'approved')->count();
 
+        // Latest certificate for this intern (if any)
+        $certificate = Certificate::where('intern_id', $intern->id)->latest()->first();
+
         // Leaderboard (Top 10 global, termasuk yang 0)
         $topMicroSkills = Intern::leftJoin('micro_skill_submissions', 'interns.id', '=', 'micro_skill_submissions.intern_id')
             ->select('interns.id as intern_id', 'interns.name', 'interns.institution', 'interns.photo_path', DB::raw('COUNT(micro_skill_submissions.id) as total'))
@@ -72,6 +76,7 @@ class DashboardController extends Controller
             'totalIzin',
             'totalSakit',
             'hasFinalReport',
+            'certificate',
             'microSkillTotal',
             'microSkillApproved',
             'topMicroSkills'

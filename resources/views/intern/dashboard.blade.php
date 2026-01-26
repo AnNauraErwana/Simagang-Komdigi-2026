@@ -24,6 +24,17 @@
                     </a>
                 </div>
             </div>
+            @if (
+                $certificate &&
+                ($certificate->issue_date->isToday() || $certificate->issue_date->isPast())
+            )
+                <div class="mt-4 md:mt-0">
+                    <a href="{{ route('intern.certificates.print', $certificate->id) }}" target="_blank"
+                        class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                        Lihat Sertifikat
+                    </a>
+                </div>
+            @endif
         </div>
     </div>
 

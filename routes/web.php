@@ -25,6 +25,7 @@ use App\Http\Controllers\Intern\LogbookController;
 use App\Http\Controllers\Intern\ReportController;
 use App\Http\Controllers\Intern\MicroSkillLeaderboardController as InternMicroSkillLeaderboardController;
 use App\Http\Controllers\Intern\ProfileController;
+use App\Http\Controllers\Mentor\CertificateController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,6 +41,19 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return redirect()->route('login');
+});
+
+Route::get('/convert-font', function () {
+    $fontPath = storage_path('app/fonts/Poppins-Extralight.ttf');
+
+    TCPDF_FONTS::addTTFfont(
+        $fontPath,
+        'TrueTypeUnicode',
+        '',
+        32
+    );
+
+    return 'Poppins Extralight berhasil di-convert';
 });
 
 // API Routes for Institution Search
@@ -68,6 +82,11 @@ Route::get('/download/{path}', function ($path) {
 // Intern Routes
 Route::middleware(['auth', 'intern'])->prefix('intern')->name('intern.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get(
+            'certificates/{certificate}/print',
+            [CertificateController::class, 'print']
+        )->name('certificates.print');
     
     // Attendance Routes
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
@@ -160,4 +179,10 @@ Route::middleware(['auth', 'mentor'])->prefix('mentor')->name('mentor.')->group(
     Route::put('/report/{report}/grade', [MentorReportController::class, 'grade'])->name('report.grade');
     Route::get('/microskill', [MentorMicroSkillController::class, 'index'])->name('microskill.index');
     Route::get('/microskill/leaderboard', [MentorMicroSkillLeaderboardController::class, 'index'])->name('microskill.leaderboard');
+    Route::resource('certificates', CertificateController::class)
+            ->only(['index', 'create', 'store', 'show', "update"]);
+    Route::get(
+            'certificates/{certificate}/print',
+            [CertificateController::class, 'print']
+        )->name('certificates.print');
 });

@@ -61,4 +61,9 @@ class Intern extends Model
     {
         return $this->hasMany(MicroSkillSubmission::class);
     }
+
+    public function certificate()
+    {
+        return $this->hasOne(Certificate::class);
+    }
 }

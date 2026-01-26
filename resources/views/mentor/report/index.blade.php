@@ -42,14 +42,14 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nama</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">File</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Proyek</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nilai</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Revisi?</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Dikirim</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Nama</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">File</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Proyek</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Status</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Nilai</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Revisi?</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Dikirim</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -93,12 +93,27 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $r->needs_revision ? 'Ya' : 'Tidak' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $r->submitted_at ? \Carbon\Carbon::parse($r->submitted_at)->format('d M Y H:i') : '-' }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-6 py-4 whitespace-nowrap space-x-3">
+                                {{-- Aksi Laporan --}}
                                 @if(!$r->grade)
-                                    <a href="{{ route('mentor.report.show', $r) }}" class="text-indigo-600 hover:underline">Beri Nilai</a>
+                                    <a href="{{ route('mentor.report.show', $r) }}"
+                                    class="text-indigo-600 hover:underline">
+                                        Beri Nilai Laporan
+                                    </a>
                                 @else
-                                    <a href="{{ route('mentor.report.show', $r) }}" class="text-blue-600 hover:underline">Lihat</a>
+                                    <a href="{{ route('mentor.report.show', $r) }}"
+                                    class="text-blue-600 hover:underline">
+                                        Lihat Nilai Laporan
+                                    </a>
                                 @endif
+
+                                <span class="text-blue-600">|</span>
+
+                                {{-- Aksi Sertifikat --}}
+                                <a href="{{ route('mentor.certificates.create', ['intern_id' => $r->intern->id]) }}"
+                                    class="text-indigo-600 hover:underline">
+                                        Penilaian Sertifikat
+                                </a>
                             </td>
                         </tr>
                         @empty
