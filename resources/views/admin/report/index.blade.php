@@ -119,6 +119,14 @@
                             <a href="{{ route('admin.report.show', $report) }}" class="text-blue-600 hover:text-blue-900">
                                 <i class="fas fa-eye"></i> Detail
                             </a>
+
+                            <span class="text-blue-600">|</span>
+
+                            {{-- Aksi Sertifikat --}}
+                            <a href="{{ route('admin.certificates.create', ['intern_id' => $report->intern->id]) }}"
+                                class="text-indigo-600 hover:underline">
+                                    Penilaian Sertifikat
+                            </a>
                         </td>
                     </tr>
                 @empty

@@ -26,6 +26,7 @@ use App\Http\Controllers\Intern\ReportController;
 use App\Http\Controllers\Intern\MicroSkillLeaderboardController as InternMicroSkillLeaderboardController;
 use App\Http\Controllers\Intern\ProfileController;
 use App\Http\Controllers\Mentor\CertificateController;
+use App\Http\Controllers\Admin\AdminCertificateController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -164,7 +165,18 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Monitoring Routes
     Route::get('/monitoring', [AdminMonitoringController::class, 'index'])->name('monitoring.index');
     Route::get('/monitoring/export', [AdminMonitoringController::class, 'export'])->name('monitoring.export');
+
+    // Certificate Management Routes
+    Route::resource('certificates', AdminCertificateController::class)
+            ->only(['index', 'create', 'store', 'show', "update"]);
+
+    Route::get(
+            'certificates/{certificate}/print',
+            [AdminCertificateController::class, 'print']
+        )->name('certificates.print');
     });
+
+
 
 // Mentor Routes
 Route::middleware(['auth', 'mentor'])->prefix('mentor')->name('mentor.')->group(function () {
