@@ -1,141 +1,317 @@
 @extends('layouts.app')
 
+@section('title', 'Dashboard Mentor - Sistem Magang')
+
 @section('content')
-<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-        <div class="p-6 bg-white border-b border-gray-200">
-            <h1 class="text-2xl font-bold mb-4">Dashboard Mentor</h1>
-            <p class="mb-6">Halo, {{ $mentor?->name ?? auth()->user()->name }}. Berikut ringkasan anak magang Anda.</p>
-
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-                <div class="p-4 bg-blue-50 rounded">
-                    <div class="text-sm text-gray-600">Jumlah Anak Magang</div>
-                    <div class="text-2xl font-bold">{{ $interns->count() }}</div>
-                </div>
-                <div class="p-4 bg-green-50 rounded">
-                    <div class="text-sm text-gray-600">Hadir Hari Ini</div>
-                    <div class="text-2xl font-bold">{{ $todayAttendances->where('status','hadir')->count() }}</div>
-                </div>
-                <div class="p-4 bg-yellow-50 rounded">
-                    <div class="text-sm text-gray-600">Izin/Sakit Hari Ini</div>
-                    <div class="text-2xl font-bold">{{ $todayAttendances->whereIn('status',[ 'izin','sakit'])->count() }}</div>
-                </div>
-                <div class="p-4 bg-gray-100 rounded">
-                    <div class="text-sm text-gray-600">Alfa Hari Ini</div>
-                    <div class="text-2xl font-bold">{{ $todayAttendances->where('status','alfa')->count() }}</div>
-                </div>
-                <div class="p-4 bg-indigo-50 rounded">
-                    <div class="text-sm text-gray-600">Mikro Skill (Pending)</div>
-                    <div class="text-2xl font-bold">{{ $microPending }} / {{ $microTotal }}</div>
-                </div>
-            </div>
-
-            <h2 class="text-xl font-semibold mb-3">Daftar Anak Magang</h2>
-            <div class="overflow-x-auto mb-8">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nama</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Institusi</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total Absensi</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total Mikro Skill</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        @forelse($interns as $intern)
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $intern->name }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $intern->institution }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $intern->attendances_count }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $intern->micro_skills_count }}</td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="4" class="px-6 py-4 text-center text-gray-500">Belum ada anak magang.</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-
-            <h2 class="text-xl font-semibold mb-3">Absensi Hari Ini</h2>
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nama</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Check In</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Check Out</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Foto In</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Foto Out</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        @forelse($todayAttendances as $attendance)
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $attendance->intern->name }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap capitalize">{{ $attendance->status }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $attendance->check_in ? \Carbon\Carbon::parse($attendance->check_in)->format('H:i') : '-' }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $attendance->check_out ? \Carbon\Carbon::parse($attendance->check_out)->format('H:i') : '-' }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                @if($attendance->photo_path)
-                                    <img src="{{ url('storage/' . $attendance->photo_path) }}" alt="Check In" class="w-12 h-12 object-cover rounded border cursor-pointer" onclick="window.open('{{ url('storage/' . $attendance->photo_path) }}', '_blank')">
-                                @else
-                                    -
-                                @endif
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                @if($attendance->photo_checkout)
-                                    <img src="{{ url('storage/' . $attendance->photo_checkout) }}" alt="Check Out" class="w-12 h-12 object-cover rounded border cursor-pointer" onclick="window.open('{{ url('storage/' . $attendance->photo_checkout) }}', '_blank')">
-                                @else
-                                    -
-                                @endif
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">Belum ada data absensi hari ini.</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
+                Dashboard Mentor
+            </h1>
+            <p class="text-gray-600">Halo, <span class="font-semibold text-gray-800">{{ $mentor?->name ?? auth()->user()->name }}</span>. Berikut ringkasan anak magang Anda.</p>
         </div>
-    </div>
 
-    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-6">
-        <div class="p-6 bg-white border-b border-gray-200">
-            <h2 class="text-xl font-semibold mb-3">Leaderboard Mikro Skill (Top 10 Bimbingan)</h2>
-            @if(isset($topMicroSkills) && count($topMicroSkills))
-                <div class="space-y-3">
-                    @foreach($topMicroSkills as $index => $row)
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                            <div class="flex items-center">
-                                <span class="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold mr-3">{{ $index + 1 }}</span>
-                                @if(!empty($row['photo_path']))
-                                    <img src="{{ url('storage/'.$row['photo_path']) }}" class="w-10 h-10 rounded-full object-cover border mr-3" />
-                                @else
-                                    <div class="w-10 h-10 rounded-full bg-gray-200 mr-3"></div>
-                                @endif
-                                <div>
-                                    <div class="font-semibold text-gray-900">{{ $row['name'] }}</div>
-                                    <div class="text-xs text-gray-500">{{ $row['institution'] }}</div>
-                                </div>
-                            </div>
-                            <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm font-semibold">{{ $row['total'] }} course</span>
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+            <!-- Card 1: Jumlah Anak Magang -->
+            <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                <div class="p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-600 mb-1">Jumlah Anak Magang</p>
+                            <h3 class="text-3xl font-bold text-gray-900">{{ $interns->count() }}</h3>
                         </div>
-                    @endforeach
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-users text-white text-2xl"></i>
+                        </div>
+                    </div>
                 </div>
-            @else
-                <p class="text-gray-500">Belum ada data.</p>
-            @endif
-            <div class="mt-4">
-                <a href="{{ route('mentor.microskill.leaderboard') }}" class="text-indigo-600 hover:underline">Lihat selengkapnya</a>
+                <div class="h-1 bg-gradient-to-r from-blue-500 to-blue-600"></div>
+            </div>
+
+            <!-- Card 2: Hadir Hari Ini -->
+            <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                <div class="p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-600 mb-1">Hadir Hari Ini</p>
+                            <h3 class="text-3xl font-bold text-gray-900">{{ $todayAttendances->where('status','hadir')->count() }}</h3>
+                        </div>
+                        <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-calendar-check text-white text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="h-1 bg-gradient-to-r from-green-500 to-emerald-600"></div>
+            </div>
+
+            <!-- Card 3: Izin/Sakit Hari Ini -->
+            <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                <div class="p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-600 mb-1">Izin/Sakit</p>
+                            <h3 class="text-3xl font-bold text-gray-900">{{ $todayAttendances->whereIn('status',['izin','sakit'])->count() }}</h3>
+                        </div>
+                        <div class="w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-calendar-times text-white text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="h-1 bg-gradient-to-r from-yellow-500 to-orange-500"></div>
+            </div>
+
+            <!-- Card 4: Alfa Hari Ini -->
+            <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                <div class="p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-600 mb-1">Alfa Hari Ini</p>
+                            <h3 class="text-3xl font-bold text-gray-900">{{ $todayAttendances->where('status','alfa')->count() }}</h3>
+                        </div>
+                        <div class="w-16 h-16 bg-gradient-to-br from-gray-500 to-gray-600 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-user-times text-white text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="h-1 bg-gradient-to-r from-gray-500 to-gray-600"></div>
+            </div>
+
+            <!-- Card 5: Mikro Skill (Pending) -->
+            <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                <div class="p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-600 mb-1">Mikro Skill</p>
+                            <h3 class="text-3xl font-bold text-gray-900">{{ $microPending }} <span class="text-lg text-gray-500">/ {{ $microTotal }}</span></h3>
+                            <p class="text-xs text-gray-500 mt-1">Pending</p>
+                        </div>
+                        <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-graduation-cap text-white text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="h-1 bg-gradient-to-r from-indigo-500 to-purple-600"></div>
             </div>
         </div>
+
+        <!-- Daftar Anak Magang -->
+        <div class="bg-white rounded-2xl shadow-md border border-blue-100 overflow-hidden mb-8">
+            <div class="bg-blue-600 px-6 py-4">
+                <h2 class="text-xl font-bold text-white flex items-center">
+                    <i class="fas fa-users-cog mr-3"></i>
+                    Daftar Anak Magang
+                </h2>
+            </div>
+            <div class="p-6">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr class="bg-blue-50">
+                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider rounded-tl-lg">Nama</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Institusi</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Total Absensi</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider rounded-tr-lg">Total Mikro Skill</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-100">
+                            @forelse($interns as $intern)
+                                <tr class="hover:bg-blue-50 transition-colors duration-150">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">{{ $intern->name }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-600">{{ $intern->institution }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                            <i class="fas fa-calendar-alt mr-1"></i>
+                                            {{ $intern->attendances_count }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">
+                                            <i class="fas fa-book mr-1"></i>
+                                            {{ $intern->micro_skills_count }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="px-6 py-8 text-center">
+                                        <div class="flex flex-col items-center justify-center text-gray-500">
+                                            <i class="fas fa-user-slash text-4xl mb-3 text-gray-300"></i>
+                                            <p class="text-sm">Belum ada anak magang.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Absensi Hari Ini -->
+        <div class="bg-white rounded-2xl shadow-md border border-blue-100 overflow-hidden mb-8">
+            <div class="bg-blue-600 px-6 py-4">
+                <h2 class="text-xl font-bold text-white flex items-center">
+                    <i class="fas fa-clipboard-check mr-3"></i>
+                    Absensi Hari Ini
+                </h2>
+            </div>
+            <div class="p-6">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr class="bg-blue-50">
+                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider rounded-tl-lg">Nama</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Check In</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Foto</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Check Out</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider rounded-tr-lg">Foto Out</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-100">
+                            @forelse($todayAttendances as $attendance)
+                                <tr class="hover:bg-blue-50 transition-colors duration-150">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">{{ $attendance->intern->name }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full capitalize
+                                            @if($attendance->status == 'hadir') bg-green-100 text-green-800
+                                            @elseif($attendance->status == 'izin') bg-yellow-100 text-yellow-800
+                                            @elseif($attendance->status == 'sakit') bg-red-100 text-red-800
+                                            @else bg-gray-200 text-gray-800
+                                            @endif">
+                                            {{ $attendance->status }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                        {{ $attendance->check_in ? \Carbon\Carbon::parse($attendance->check_in)->format('H:i') : '-' }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if($attendance->photo_path)
+                                            <img src="{{ url('storage/' . $attendance->photo_path) }}" 
+                                                 alt="Check In" 
+                                                 class="w-12 h-12 object-cover rounded-lg border-2 border-blue-200 cursor-pointer hover:border-blue-400 transition-all" 
+                                                 onclick="window.open('{{ url('storage/' . $attendance->photo_path) }}', '_blank')" 
+                                                 title="Klik untuk melihat full size">
+                                        @else
+                                            <span class="text-gray-400">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                        {{ $attendance->check_out ? \Carbon\Carbon::parse($attendance->check_out)->format('H:i') : '-' }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if($attendance->photo_checkout)
+                                            <img src="{{ url('storage/' . $attendance->photo_checkout) }}" 
+                                                 alt="Check Out" 
+                                                 class="w-12 h-12 object-cover rounded-lg border-2 border-blue-200 cursor-pointer hover:border-blue-400 transition-all" 
+                                                 onclick="window.open('{{ url('storage/' . $attendance->photo_checkout) }}', '_blank')" 
+                                                 title="Klik untuk melihat full size">
+                                        @else
+                                            <span class="text-gray-400">-</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="px-6 py-8 text-center">
+                                        <div class="flex flex-col items-center justify-center text-gray-500">
+                                            <i class="fas fa-inbox text-4xl mb-3 text-gray-300"></i>
+                                            <p class="text-sm">Belum ada data absensi hari ini.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaderboard Mikro Skill -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div class="bg-blue-600 px-6 py-4">
+                <h2 class="text-xl font-bold text-white flex items-center">
+                    <i class="fas fa-trophy mr-3"></i>
+                    Leaderboard Mikro Skill (Top 10 Bimbingan)
+                </h2>
+            </div>
+            <div class="p-6">
+                @if(isset($topMicroSkills) && count($topMicroSkills))
+                    <div class="space-y-3">
+                        @foreach($topMicroSkills as $index => $row)
+                            <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg hover:shadow-md transition-all duration-300 border border-blue-100">
+                                <div class="flex items-center">
+                                    <!-- Rank Badge -->
+                                    <div class="relative">
+                                        <span class="w-10 h-10 rounded-full bg-gradient-to-br 
+                                            @if($index == 0) from-yellow-400 to-yellow-600
+                                            @elseif($index == 1) from-gray-300 to-gray-500
+                                            @elseif($index == 2) from-orange-400 to-orange-600
+                                            @else from-blue-500 to-indigo-600
+                                            @endif
+                                            text-white flex items-center justify-center font-bold text-lg shadow-lg mr-4">
+                                            {{ $index + 1 }}
+                                        </span>
+                                        @if($index < 3)
+                                            <i class="fas fa-crown absolute -top-2 -right-1 text-yellow-500 text-xs"></i>
+                                        @endif
+                                    </div>
+                                    
+                                    <!-- Photo -->
+                                    @if(!empty($row['photo_path']))
+                                        <img src="{{ url('storage/'.$row['photo_path']) }}" 
+                                             class="w-12 h-12 rounded-full object-cover border-2 border-white shadow-md mr-4" />
+                                    @else
+                                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center mr-4 shadow-md">
+                                            <i class="fas fa-user text-white"></i>
+                                        </div>
+                                    @endif
+                                    
+                                    <!-- Info -->
+                                    <div>
+                                        <div class="font-bold text-gray-900 text-lg">{{ $row['name'] }}</div>
+                                        <div class="text-xs text-gray-600 flex items-center">
+                                            <i class="fas fa-university mr-1"></i>
+                                            {{ $row['institution'] }}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Score Badge -->
+                                <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-xs font-semibold">
+                                    <i class="fas fa-star mr-1"></i>
+                                    {{ $row['total'] }} course
+                                </span>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="flex flex-col items-center justify-center py-8 text-gray-500">
+                        <i class="fas fa-chart-line text-5xl mb-3 text-gray-300"></i>
+                        <p class="text-sm">Belum ada data.</p>
+                    </div>
+                @endif
+                
+                <div class="mt-6 text-center">
+                    <a href="{{ route('mentor.microskill.leaderboard') }}" 
+                       class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all duration-300">
+                        <span>Lihat Selengkapnya</span>
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 @endsection
-
-

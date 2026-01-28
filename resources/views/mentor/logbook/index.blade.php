@@ -1,76 +1,176 @@
 @extends('layouts.app')
 
+@section('title', 'Logbook Anak Bimbingan - Sistem Magang')
+
 @section('content')
-<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-        <div class="p-6 bg-white border-b border-gray-200">
-            <h1 class="text-2xl font-bold mb-4">Logbook Anak Bimbingan</h1>
-
-    <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                <div>
-                    <label class="block text-sm text-gray-600 mb-1">Anak Magang</label>
-                    <select name="intern_id" class="w-full px-3 py-2 border rounded">
-                        <option value="">Semua</option>
-                        @foreach($interns as $intern)
-                            <option value="{{ $intern->id }}" @selected(request('intern_id')==$intern->id)>{{ $intern->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm text-gray-600 mb-1">Dari Tanggal</label>
-                    <input type="date" name="date_from" value="{{ request('date_from') }}" class="w-full px-3 py-2 border rounded" />
-                </div>
-                <div>
-                    <label class="block text-sm text-gray-600 mb-1">Hingga Tanggal</label>
-                    <input type="date" name="date_to" value="{{ request('date_to') }}" class="w-full px-3 py-2 border rounded" />
-                </div>
-        <div class="flex items-end space-x-2">
-            <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Filter</button>
-            <a href="{{ route('mentor.logbook.index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded">Reset</a>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
+                Logbook Anak Bimbingan
+            </h1>
+            <p class="text-gray-600">Pantau dan kelola catatan harian aktivitas anak magang</p>
         </div>
-            </form>
 
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tanggal</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nama</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aktivitas</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Foto</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        @forelse($logbooks as $l)
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ \Carbon\Carbon::parse($l->date)->format('d M Y') }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $l->intern->name }}</td>
-                            <td class="px-6 py-4">{{ $l->activity }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                @if($l->photo_path)
-                                    <img src="{{ url('storage/'.$l->photo_path) }}" class="w-10 h-10 object-cover rounded border cursor-pointer" onclick="window.open('{{ url('storage/'.$l->photo_path) }}','_blank')" />
-                                @else - @endif
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <a href="{{ route('mentor.logbook.show', $l) }}" class="text-indigo-600 hover:underline">Lihat</a>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="5" class="px-6 py-4 text-center text-gray-500">Tidak ada data.</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+        <!-- Filter Card -->
+        <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden mb-6">
+            <div class="bg-green-600 px-6 py-4">
+                <h2 class="text-xl font-bold text-white flex items-center">
+                    <i class="fas fa-filter mr-3"></i>
+                    Filter Data
+                </h2>
             </div>
+            <div class="p-6">
+                <form method="GET" action="{{ route('mentor.logbook.index') }}">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                        <!-- Anak Magang -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-user mr-1 text-blue-500"></i>
+                                Anak Magang
+                            </label>
+                            <select name="intern_id" 
+                                    class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all">
+                                <option value="">Semua</option>
+                                @foreach($interns as $intern)
+                                    <option value="{{ $intern->id }}" @selected(request('intern_id')==$intern->id)>{{ $intern->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-            <div class="mt-4">
-                {{ $logbooks->links() }}
+                        <!-- Dari Tanggal -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-calendar-alt mr-1 text-green-500"></i>
+                                Dari Tanggal
+                            </label>
+                            <input type="date" 
+                                   name="date_from" 
+                                   value="{{ request('date_from') }}" 
+                                   class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all" />
+                        </div>
+
+                        <!-- Hingga Tanggal -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-calendar-check mr-1 text-purple-500"></i>
+                                Hingga Tanggal
+                            </label>
+                            <input type="date" 
+                                   name="date_to" 
+                                   value="{{ request('date_to') }}" 
+                                   class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all" />
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="flex items-end space-x-2">
+                            <button type="submit" 
+                                    class="flex-1 inline-flex items-center justify-center px-4 py-2.5 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 shadow-md hover:shadow-lg transition-all duration-300">
+                                <i class="fas fa-search mr-2"></i>
+                                Filter
+                            </button>
+                            <a href="{{ route('mentor.logbook.index') }}" 
+                               class="inline-flex items-center justify-center px-4 py-2.5 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 shadow-md hover:shadow-lg transition-all duration-300">
+                                <i class="fas fa-redo"></i>
+                            </a>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
+
+        <!-- Table Card -->
+        <div class="bg-white rounded-2xl shadow-lg border border-green-100 overflow-hidden">
+            <div class="bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-4">
+                <h2 class="text-xl font-bold text-white flex items-center">
+                    <i class="fas fa-book mr-3"></i>
+                    Data Logbook
+                </h2>
+            </div>
+            <div class="p-6">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr class="bg-green-50">
+                                <th class="px-6 py-4 text-left text-xs font-bold text-green-900 uppercase tracking-wider rounded-tl-lg">Tanggal</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-green-900 uppercase tracking-wider">Nama</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-green-900 uppercase tracking-wider">Aktivitas</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-green-900 uppercase tracking-wider">Foto</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-green-900 uppercase tracking-wider rounded-tr-lg">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-100">
+                            @forelse($logbooks as $l)
+                                <tr class="hover:bg-green-50 transition-colors duration-150">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center text-sm text-gray-900">
+                                            <i class="fas fa-calendar mr-2 text-gray-400"></i>
+                                            {{ \Carbon\Carbon::parse($l->date)->format('d M Y') }}
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            @if($l->intern->photo_path)
+                                                <img src="{{ url('storage/'.$l->intern->photo_path) }}" 
+                                                     class="w-8 h-8 rounded-full object-cover border-2 border-green-200 mr-3" 
+                                                     alt="{{ $l->intern->name }}" />
+                                            @else
+                                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center mr-3">
+                                                    <i class="fas fa-user text-white text-xs"></i>
+                                                </div>
+                                            @endif
+                                            <span class="text-sm font-medium text-gray-900">{{ $l->intern->name }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="text-sm text-gray-600 max-w-md">
+                                            <i class="fas fa-tasks mr-2 text-green-500"></i>
+                                            {{ $l->activity }}
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if($l->photo_path)
+                                            <img src="{{ url('storage/'.$l->photo_path) }}" 
+                                                 alt="Logbook Photo" 
+                                                 class="w-12 h-12 object-cover rounded-lg border-2 border-green-200 cursor-pointer hover:border-green-400 transition-all shadow-sm" 
+                                                 onclick="window.open('{{ url('storage/'.$l->photo_path) }}', '_blank')" 
+                                                 title="Klik untuk melihat full size" />
+                                        @else
+                                            <span class="text-gray-400">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <a href="{{ route('mentor.logbook.show', $l) }}" 
+                                           class="inline-flex items-center px-3 py-1.5 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 shadow-sm hover:shadow-md transition-all duration-300">
+                                            <i class="fas fa-eye mr-2"></i>
+                                            Lihat
+                                        </a>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="px-6 py-8 text-center">
+                                        <div class="flex flex-col items-center justify-center text-gray-500">
+                                            <i class="fas fa-book-open text-5xl mb-3 text-gray-300"></i>
+                                            <p class="text-sm font-medium">Tidak ada data logbook.</p>
+                                            <p class="text-xs text-gray-400 mt-1">Coba ubah filter untuk melihat data lainnya</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="mt-6">
+                    {{ $logbooks->links() }}
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 @endsection
-
-
