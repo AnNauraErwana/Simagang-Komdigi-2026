@@ -9,34 +9,38 @@
         <!-- Profile Header -->
         <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
             <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-8">
-                <div class="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
-                    @if($intern->photo_path)
-                        <img src="{{ url('storage/' . $intern->photo_path) }}" alt="{{ $intern->name }}" 
-                            class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg">
-                    @else
-                        <div class="w-32 h-32 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center border-4 border-white shadow-lg">
-                            <i class="fas fa-user text-4xl text-white"></i>
-                        </div>
-                    @endif
-                    <div class="text-center md:text-left flex-1">
-                        <h1 class="text-3xl font-bold text-white mb-2">{{ $intern->name }}</h1>
-                        <p class="text-blue-100 mb-1">{{ $intern->institution }}</p>
-                        <p class="text-blue-100 text-sm mb-4">{{ $intern->education_level }} - {{ $intern->major }}</p>
-                        <div class="flex flex-col md:flex-row gap-3">
-                            <a href="{{ route('intern.profile.edit') }}" class="inline-flex items-center justify-center px-4 py-2 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-all duration-300 shadow-md">
-                                <i class="fas fa-edit mr-2"></i>Edit Profile
-                            </a>
-                            @if (
-                                $certificate &&
-                                ($certificate->issue_date->isToday() || $certificate->issue_date->isPast())
-                            )
-                                <a href="{{ route('intern.certificates.print', $certificate->id) }}" target="_blank"
-                                    class="inline-flex items-center justify-center px-4 py-2 bg-yellow-400 text-gray-900 font-semibold rounded-lg hover:bg-yellow-300 transition-all duration-300 shadow-md">
-                                    <i class="fas fa-certificate mr-2"></i>Lihat Sertifikat
+                <div class="flex flex-col md:flex-row items-start justify-between space-y-4 md:space-y-0">
+                    <div class="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
+                        @if($intern->photo_path)
+                            <img src="{{ url('storage/' . $intern->photo_path) }}" alt="{{ $intern->name }}" 
+                                class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg">
+                        @else
+                            <div class="w-32 h-32 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center border-4 border-white shadow-lg">
+                                <i class="fas fa-user text-4xl text-white"></i>
+                            </div>
+                        @endif
+                        <div class="text-center md:text-left flex-1">
+                            <h1 class="text-3xl font-bold text-white mb-2">{{ $intern->name }}</h1>
+                            <p class="text-blue-100 mb-1">{{ $intern->institution }}</p>
+                            <p class="text-blue-100 text-sm mb-4">{{ $intern->education_level }} - {{ $intern->major }}</p>
+                            <div class="flex flex-col md:flex-row gap-3">
+                                <a href="{{ route('intern.profile.edit') }}" class="inline-flex items-center justify-center px-4 py-2 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-all duration-300 shadow-md">
+                                    <i class="fas fa-edit mr-2"></i>Edit Profile
                                 </a>
-                            @endif
+                            </div>
                         </div>
                     </div>
+                    @if (
+                        $certificate &&
+                        ($certificate->issue_date->isToday() || $certificate->issue_date->isPast())
+                    )
+                        <div class="self-start">
+                            <a href="{{ route('intern.certificates.print', $certificate->id) }}" target="_blank"
+                                class="inline-flex items-center justify-center px-4 py-2 bg-yellow-400 text-white font-semibold rounded-lg hover:bg-yellow-300 transition-all duration-300 shadow-md">
+                                <i class="fas fa-award mr-2"></i>Lihat Sertifikat
+                            </a>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
