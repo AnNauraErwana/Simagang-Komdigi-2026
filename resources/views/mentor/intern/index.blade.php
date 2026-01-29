@@ -177,7 +177,7 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <div class="flex items-center mb-2">
-                                <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mr-3">
+                                <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center mr-3">
                                     <i class="fas fa-file-alt text-white text-xl"></i>
                                 </div>
                                 <h3 class="text-lg font-bold text-gray-900">Laporan</h3>
@@ -185,11 +185,11 @@
                             <p class="text-sm text-gray-600">Lihat laporan keseluruhan</p>
                         </div>
                         <div class="transform group-hover:translate-x-1 transition-transform duration-300">
-                            <i class="fas fa-arrow-right text-purple-600 text-xl"></i>
+                            <i class="fas fa-arrow-right text-red-600 text-xl"></i>
                         </div>
                     </div>
                 </div>
-                <div class="h-1 bg-gradient-to-r from-purple-500 to-purple-600"></div>
+                <div class="h-1 bg-gradient-to-r from-red-500 to-red-600"></div>
             </a>
         </div>
 
