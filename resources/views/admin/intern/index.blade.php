@@ -3,19 +3,34 @@
 @section('title', 'Kelola Anak Magang - Sistem Magang')
 
 @section('content')
-<div class="bg-gradient-to-br from-blue-50 min-h-screen via-indigo-50 to-blue-100 p-5 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- Header Section -->
-    <div class="bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg rounded-lg p-6 mb-6">
-        <div class="flex justify-between items-center">
+<div class="bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 min-h-screen p-5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Header Section -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <div>
-                <h1 class="text-3xl font-bold text-white mb-1">Kelola Anak Magang</h1>
-                <p class="text-blue-100 text-sm">Manajemen data anak magang dan monitoring aktif</p>
+                <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-1">
+                    Kelola Anak Magang
+                </h1>
+                <p class="text-sm text-blue-700">
+                    Manajemen data anak magang dan monitoring aktif
+                </p>
             </div>
-            <a href="{{ route('admin.intern.create') }}" class="bg-white hover:bg-blue-50 text-blue-700 font-bold py-3 px-6 rounded-lg shadow-md transition duration-200 transform hover:scale-105">
-                <i class="fas fa-plus mr-2"></i>Tambah Anak Magang
+
+    
+            <a href="{{ route('admin.intern.create') }}"
+                class="inline-flex items-center justify-center gap-2
+                        bg-blue-600 hover:bg-blue-700
+                        text-white font-semibold
+                        px-6 py-3 rounded-xl
+                        shadow-lg hover:shadow-xl
+                        transition-all duration-300 transform hover:scale-105">
+                    <i class="fas fa-plus"></i>
+                    <span>Tambah Anak Magang</span>
             </a>
+
         </div>
-    </div>
+
 
     <!-- Filter Section -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-6 border-t-4 border-blue-500">
@@ -77,9 +92,7 @@
         </form>
     </div>
 
-            <!-- Table Section -->
         <div class="bg-white rounded-2xl shadow-md border border-blue-100 overflow-hidden mb-8">
-            <!-- Header -->
             <div class="bg-blue-600 px-6 py-4">
                 <h2 class="text-xl font-bold text-white flex items-center">
                     <i class="fas fa-users mr-3"></i>
@@ -87,19 +100,18 @@
                 </h2>
             </div>
 
-            <!-- Table -->
             <div class="p-6">
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
                             <tr class="bg-blue-50">
-                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider rounded-tl-lg">Nama</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Email</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Institusi</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">TIM</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Mentor</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider rounded-tr-lg">Aksi</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider rounded-tl-lg">Nama</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider">Email</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider">Institusi</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider">TIM</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider">Mentor</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider rounded-tr-lg">Aksi</th>
                             </tr>
                         </thead>
 
@@ -191,8 +203,6 @@
             </div>
         </div>
 
-
-    <!-- Pagination -->
     <div class="mt-6">
         {{ $interns->links() }}
     </div>

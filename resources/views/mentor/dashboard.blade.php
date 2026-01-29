@@ -6,7 +6,6 @@
     <div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            <!-- Header -->
             <div class="mb-8">
                 <h1
                     class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
@@ -17,9 +16,8 @@
                     ringkasan anak magang Anda.</p>
             </div>
 
-            <!-- Stats Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
-                <!-- Card 1: Jumlah Anak Magang -->
+                
                 <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
                     <div class="p-4">
                         <div class="flex items-center justify-between gap-3">
@@ -36,7 +34,6 @@
                     <div class="h-1 bg-gradient-to-r from-blue-500 to-blue-600"></div>
                 </div>
 
-                <!-- Card 2: Hadir Hari Ini -->
                 <div
                     class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
                     <div class="p-4">
@@ -55,7 +52,6 @@
                     <div class="h-1 bg-gradient-to-r from-green-500 to-emerald-600"></div>
                 </div>
 
-                <!-- Card 3: Izin/Sakit Hari Ini -->
                 <div
                     class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
                     <div class="p-4">
@@ -74,7 +70,6 @@
                     <div class="h-1 bg-gradient-to-r from-yellow-500 to-orange-500"></div>
                 </div>
 
-                <!-- Card 4: Alfa Hari Ini -->
                 <div
                     class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
                     <div class="p-4">
@@ -93,7 +88,6 @@
                     <div class="h-1 bg-gradient-to-r from-gray-500 to-gray-600"></div>
                 </div>
 
-                <!-- Card 5: Mikro Skill -->
                 <div
                     class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
                     <div class="p-4">
@@ -112,7 +106,6 @@
                 </div>
             </div>
 
-            <!-- Daftar Anak Magang -->
             <div class="bg-white rounded-2xl shadow-md border border-blue-100 overflow-hidden mb-8">
                 <div class="bg-blue-600 px-6 py-4">
                     <h2 class="text-xl font-bold text-white flex items-center">
@@ -179,7 +172,6 @@
                 </div>
             </div>
 
-            <!-- Absensi Hari Ini -->
             <div class="bg-white rounded-2xl shadow-md border border-blue-100 overflow-hidden mb-8">
                 <div class="bg-blue-600 px-6 py-4">
                     <h2 class="text-xl font-bold text-white flex items-center">
@@ -273,7 +265,6 @@
                 </div>
             </div>
 
-            <!-- Leaderboard Mikro Skill -->
             <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
                 <div class="bg-blue-600 px-6 py-4">
                     <h2 class="text-xl font-bold text-white flex items-center">
@@ -288,7 +279,7 @@
                                 <div
                                     class="flex items-center justify-between p-3 bg-blue-50 rounded-lg hover:shadow-md transition-all duration-300 border border-blue-100">
                                     <div class="flex items-center">
-                                        <!-- Rank Badge -->
+                                        
                                         <div class="relative">
                                             <span
                                                 class="w-10 h-10 rounded-full bg-gradient-to-br 
@@ -305,7 +296,6 @@
                                             @endif
                                         </div>
 
-                                        <!-- Photo -->
                                         @if (!empty($row['photo_path']))
                                             <img src="{{ url('storage/' . $row['photo_path']) }}"
                                                 class="w-12 h-12 rounded-full object-cover border-2 border-white shadow-md mr-4" />
@@ -316,7 +306,6 @@
                                             </div>
                                         @endif
 
-                                        <!-- Info -->
                                         <div>
                                             <div class="font-bold text-gray-900 text-lg">{{ $row['name'] }}</div>
                                             <div class="text-xs text-gray-600 flex items-center">
@@ -326,7 +315,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Score Badge -->
                                     <span
                                         class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-xs font-semibold">
                                         <i class="fas fa-star mr-1"></i>

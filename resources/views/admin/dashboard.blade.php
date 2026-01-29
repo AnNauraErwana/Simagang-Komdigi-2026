@@ -11,7 +11,7 @@
             <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
                 Dashboard Admin
             </h1>
-            <p class="text-gray-600">Sistem Manajemen Magang Terpadu</p>
+            <p class="text-gray-600">Sistem Manajemen Magang BBPSDMP Komdigi Makassar</p>
         </div>
 
         <!-- Stats Cards -->
@@ -126,12 +126,12 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
                             <tr class="bg-blue-50">
-                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider rounded-tl-lg">Nama</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Check In</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Foto</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Check Out</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider rounded-tr-lg">Foto Out</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider rounded-tl-lg">Nama</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider">Check In</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider">Foto</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider">Check Out</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider rounded-tr-lg">Foto Out</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-100">
@@ -200,13 +200,13 @@
             <div class="bg-blue-600 px-6 py-4">
                 <h2 class="text-xl font-bold text-white flex items-center">
                     <i class="fas fa-trophy mr-3"></i>
-                    Leaderboard Mikro Skill (Top 5)
+                    Leaderboard Mikro Skill (Top 3)
                 </h2>
             </div>
             <div class="p-6">
                 @if($topMicroSkills->count())
                     <div class="space-y-3">
-                        @foreach($topMicroSkills as $index => $row)
+                        @foreach($topMicroSkills->take(3) as $index => $row)
                             <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg hover:shadow-md transition-all duration-300 border border-blue-100">
                                 <div class="flex items-center">
                                     <!-- Rank Badge -->

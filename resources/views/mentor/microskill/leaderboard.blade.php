@@ -6,7 +6,6 @@
 <div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <!-- Header -->
         <div class="mb-8">
             <h1 class="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
                 Leaderboard Mikro Skill
@@ -14,7 +13,6 @@
             <p class="text-gray-600">Peringkat pencapaian keterampilan anak magang bimbingan Anda</p>
         </div>
 
-        <!-- Leaderboard Card -->
         <div class="bg-white rounded-2xl shadow-lg border border-indigo-100 overflow-hidden">
             <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-6">
                 <div class="flex items-center justify-between">
@@ -44,7 +42,6 @@
                         @endphp
                         <div class="flex items-center justify-between p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl hover:shadow-lg transition-all duration-300 border border-indigo-100 group">
                             <div class="flex items-center flex-1">
-                                <!-- Rank Badge -->
                                 <div class="relative mr-4">
                                     <span class="w-12 h-12 rounded-full bg-gradient-to-br 
                                         @if($actualRank == 1) from-yellow-400 to-yellow-600 shadow-lg
@@ -60,7 +57,6 @@
                                     @endif
                                 </div>
                                 
-                                <!-- Photo -->
                                 <div class="mr-4">
                                     @if($row->photo_path)
                                         <img src="{{ url('storage/'.$row->photo_path) }}" 
@@ -78,7 +74,6 @@
                                     @endif
                                 </div>
                                 
-                                <!-- Info -->
                                 <div class="flex-1">
                                     <div class="flex items-center mb-1">
                                         <h3 class="font-bold text-gray-900 text-lg mr-2">{{ $row->name }}</h3>
@@ -127,7 +122,6 @@
                     @endforelse
                 </div>
 
-                <!-- Pagination -->
                 @if($rows->hasPages())
                     <div class="mt-6 pt-6 border-t border-indigo-100">
                         {{ $rows->links() }}
@@ -136,7 +130,6 @@
             </div>
         </div>
 
-        <!-- Info Cards -->
         <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
             <!-- Top Performer -->
             @if($rows->count() > 0 && $rows->currentPage() == 1)
@@ -154,7 +147,6 @@
                 </div>
             @endif
 
-            <!-- Average -->
             <div class="bg-white rounded-xl shadow-md border border-indigo-100 p-6">
                 <div class="flex items-center justify-between">
                     <div>
@@ -173,7 +165,6 @@
                 </div>
             </div>
 
-            <!-- Total Courses -->
             <div class="bg-white rounded-xl shadow-md border border-purple-100 p-6">
                 <div class="flex items-center justify-between">
                     <div>
@@ -187,7 +178,6 @@
             </div>
         </div>
 
-        <!-- Back Button -->
         <div class="mt-6">
             <a href="{{ route('mentor.dashboard') }}" 
                class="inline-flex items-center px-6 py-3 bg-gray-500 text-white font-semibold rounded-xl hover:bg-gray-600 shadow-md hover:shadow-lg transition-all duration-300">

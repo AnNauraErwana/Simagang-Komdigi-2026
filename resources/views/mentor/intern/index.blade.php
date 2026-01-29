@@ -6,18 +6,15 @@
 <div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <!-- Header -->
         <div class="mb-8">
-            <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
-                Anak Magang Bimbingan
+            <h1 class="text-4xl font-bold text-blue-600 mb-3">    Anak Magang Bimbingan
             </h1>
             <p class="text-gray-600">Kelola dan pantau perkembangan anak magang Anda</p>
         </div>
 
-        <!-- Main Content Card -->
         <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden mb-6">
             <div class="p-6">
-                <!-- Search Section -->
+                
                 <form method="GET" action="{{ route('mentor.intern.index') }}" class="mb-6">
                     <div class="flex gap-3">
                         <div class="flex-1 relative">
@@ -45,7 +42,6 @@
                     </div>
                 </form>
 
-                <!-- Table -->
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
@@ -118,7 +114,6 @@
                     </table>
                 </div>
 
-                <!-- Pagination -->
                 @if(method_exists($interns, 'links'))
                     <div class="mt-6">
                         {{ $interns->links() }}
@@ -127,7 +122,6 @@
             </div>
         </div>
 
-        <!-- Action Buttons -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <a href="{{ route('mentor.attendance.index') }}" 
                class="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-blue-100">

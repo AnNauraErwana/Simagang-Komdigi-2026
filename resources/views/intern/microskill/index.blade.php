@@ -1,67 +1,149 @@
 @extends('layouts.app')
 
-@section('content')
-<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-    <div class="flex justify-between items-center mb-4">
-        <h1 class="text-2xl font-bold">Mikro Skill Saya</h1>
-        <a href="{{ route('intern.microskill.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Upload Bukti</a>
-    </div>
+@section('title', 'Mikro Skill - Sistem Magang')
 
-    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-        <div class="p-6 bg-white border-b border-gray-200">
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50 border-b border-gray-200">
-                        <tr>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Judul</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Dikirim</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Bukti</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        @forelse($submissions as $s)
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $s->title }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap capitalize">{{ $s->status }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $s->submitted_at ? \Carbon\Carbon::parse($s->submitted_at)->setTimezone('Asia/Makassar')->format('d M Y H:i') : '-' }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <img src="{{ asset('storage/'.$s->photo_path) }}" class="w-12 h-12 object-cover rounded border cursor-pointer" onclick="window.open('{{ asset('storage/'.$s->photo_path) }}','_blank')">
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <div class="flex space-x-2">
-                                    <a href="{{ route('intern.microskill.edit', $s->id) }}" 
-                                       class="inline-flex items-center justify-center w-10 h-10 bg-blue-100 hover:bg-blue-200 rounded-lg transition-all duration-200 group"
-                                       title="Edit">
-                                        <svg class="w-5 h-5 text-blue-600 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-                                        </svg>
-                                    </a>
-                                    <form action="{{ route('intern.microskill.destroy', $s->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus mikro skill ini?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" 
-                                                class="inline-flex items-center justify-center w-10 h-10 bg-red-100 hover:bg-red-200 rounded-lg transition-all duration-200 group"
-                                                title="Hapus">
-                                            <svg class="w-5 h-5 text-red-600 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
-                                                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-                                            </svg>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="5" class="px-6 py-4 text-center text-gray-500">Belum ada pengumpulan.</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+@section('content')
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        @if($errors->any())
+            <div class="bg-red-100 border-t-4 border-red-500 text-red-700 px-6 py-4 mb-8 rounded-lg" role="alert">
+                <div class="flex items-start">
+                    <i class="fas fa-exclamation-circle mr-3 mt-1"></i>
+                    <ul class="list-disc list-inside">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             </div>
-            <div class="mt-4">{{ $submissions->links() }}</div>
+        @endif
+        
+        
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
+                <div>
+                    <h1 class="text-4xl font-bold bg-blue-600 bg-clip-text text-transparent mb-2">
+                        Mikro Skill Saya
+                    </h1>
+                    <p class="text-gray-600">Kelola pengumpulan mikro skill Anda</p>
+                </div>
+                <a href="{{ route('intern.microskill.create') }}" 
+                   class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                    <i class="fas fa-upload mr-2"></i>Upload Bukti
+                </a>
+            </div>
         </div>
+
+        <!-- Microskill Table -->
+        <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
+            <div class="bg-blue-600 px-6 py-4">
+                <h2 class="text-xl font-bold text-white flex items-center">
+                    <i class="fas fa-star mr-3"></i>
+                    Data Mikro Skill
+                </h2>
+            </div>
+            <div class="p-6">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr class="bg-blue-50">
+                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider rounded-tl-lg">Judul</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider">Dikirim</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider">Bukti</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider rounded-tr-lg">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-100">
+                            @forelse($submissions as $s)
+                                <tr class="hover:bg-blue-50 transition-colors duration-150">
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <div class="flex items-center justify-center">
+                                            <span class="text-sm font-medium text-gray-900">{{ $s->title }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
+                                            @if($s->status == 'approved') bg-green-100 text-green-800
+                                            @elseif($s->status == 'pending') bg-yellow-100 text-yellow-800
+                                            @elseif($s->status == 'rejected') bg-red-100 text-red-800
+                                            @else bg-gray-100 text-gray-800
+                                            @endif">
+                                            @if($s->status == 'approved')
+                                            @elseif($s->status == 'pending')
+                                            @elseif($s->status == 'rejected')
+                                            @endif
+                                            {{ ucfirst($s->status) }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 text-center">
+                                        @if($s->submitted_at)
+                                            <div class="flex items-center justify-center">
+                                                {{ \Carbon\Carbon::parse($s->submitted_at)->setTimezone('Asia/Makassar')->format('d/m/Y') }}
+                                            </div>
+                                        @else
+                                            <span class="text-gray-400">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        @if($s->photo_path)
+                                            <img src="{{ asset('storage/'.$s->photo_path) }}" 
+                                                 alt="Bukti" 
+                                                 class="w-12 h-12 object-cover rounded-lg border-2 border-blue-200 cursor-pointer hover:border-blue-400 transition-all shadow-sm mx-auto" 
+                                                 onclick="window.open('{{ asset('storage/'.$s->photo_path) }}', '_blank')"
+                                                 title="Klik untuk melihat full size">
+                                        @else
+                                            <span class="text-gray-400">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
+                                        <div class="flex space-x-2 justify-center">
+                                            <a href="{{ route('intern.microskill.edit', $s->id) }}" 
+                                               class="inline-flex items-center justify-center px-3 py-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg transition-all duration-200"
+                                               title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <form action="{{ route('intern.microskill.destroy', $s->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus mikro skill ini?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" 
+                                                        class="inline-flex items-center justify-center px-3 py-2 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg transition-all duration-200"
+                                                        title="Hapus">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="px-6 py-12 text-center">
+                                        <div class="flex flex-col items-center justify-center text-gray-500">
+                                            <i class="fas fa-inbox text-5xl mb-3 text-gray-300"></i>
+                                            <p class="text-lg font-medium">Belum ada pengumpulan.</p>
+                                            <a href="{{ route('intern.microskill.create') }}" 
+                                               class="mt-4 inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all duration-300">
+                                                <i class="fas fa-upload mr-2"></i>Upload Bukti
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                @if($submissions->count() > 0)
+                    <div class="mt-6">
+                        {{ $submissions->links() }}
+                    </div>
+                @endif
+            </div>
+        </div>
+
     </div>
 </div>
 @endsection

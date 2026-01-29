@@ -6,16 +6,12 @@
     <div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            <!-- Header -->
             <div class="mb-8">
-                <h1
-                    class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
-                    Laporan Akhir Anak Bimbingan
+            <h1 class="text-4xl font-bold text-blue-600 mb-3">Laporan Akhir Anak Bimbingan
                 </h1>
                 <p class="text-gray-600">Kelola dan nilai laporan akhir serta sertifikat anak magang</p>
             </div>
 
-            <!-- Filter Card -->
             <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden mb-6">
                 <div class="bg-blue-600 px-6 py-4">
                     <h2 class="text-xl font-bold text-white flex items-center">
@@ -26,7 +22,6 @@
                 <div class="p-6">
                     <form method="GET" action="{{ route('mentor.report.index') }}">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                            <!-- Anak Magang -->
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">
                                     <i class="fas fa-user mr-1 text-blue-500"></i>
@@ -42,7 +37,6 @@
                                 </select>
                             </div>
 
-                            <!-- Status -->
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">
                                     <i class="fas fa-info-circle mr-1 text-blue-500"></i>
@@ -57,7 +51,6 @@
                                 </select>
                             </div>
 
-                            <!-- Perlu Revisi -->
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">
                                     <i class="fas fa-exclamation-triangle mr-1 text-orange-500"></i>
@@ -71,7 +64,6 @@
                                 </select>
                             </div>
 
-                            <!-- Buttons -->
                             <div class="flex items-end space-x-2">
                                 <button type="submit"
                                     class="flex-1 inline-flex items-center justify-center px-4 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 shadow-md hover:shadow-lg transition-all duration-300">
@@ -88,7 +80,6 @@
                 </div>
             </div>
 
-            <!-- Table Card -->
             <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
                 <div class="bg-blue-600 px-6 py-4">
                     <h2 class="text-xl font-bold text-white flex items-center">
@@ -210,7 +201,6 @@
                                                     </a>
                                                 @endif
 
-                                                {{-- Aksi Sertifikat --}}
                                                 <a href="{{ route('mentor.certificates.create', ['intern_id' => $r->intern->id]) }}"
                                                     class="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 shadow-sm hover:shadow-md transition-all duration-300 w-full justify-center">
                                                     <i class="fas fa-certificate mr-1"></i>
@@ -235,14 +225,12 @@
                         </table>
                     </div>
 
-                    <!-- Pagination -->
                     <div class="mt-6">
                         {{ $reports->links() }}
                     </div>
                 </div>
             </div>
 
-            <!-- Summary Stats -->
             <div class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div class="bg-white rounded-xl shadow-md border border-green-100 p-6">
                     <div class="flex items-center justify-between">

@@ -3,168 +3,242 @@
 @section('title', 'Tambah Anak Magang - Sistem Magang')
 
 @section('content')
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="bg-white shadow rounded-lg p-6">
-        <h1 class="text-2xl font-bold text-gray-900 mb-6">Tambah Anak Magang</h1>
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <form method="POST" action="{{ route('admin.intern.store') }}" enctype="multipart/form-data" class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
+        <div>
+            <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                Tambah Anak Magang
+            </h1>
+            <p class="text-sm text-gray-500 mt-1">
+                Tambahkan data anak magang baru
+            </p>
+        </div>
+
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <form method="POST" action="{{ route('admin.intern.store') }}" enctype="multipart/form-data">
             @csrf
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
-                    <input type="text" name="name" id="name" value="{{ old('name') }}" required 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    @error('name')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+            <div class="p-8 border-b">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                        <i class="fas fa-user text-blue-600"></i>
+                    </div>
+                    <h2 class="text-lg font-bold text-gray-800">Informasi Pribadi</h2>
                 </div>
 
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                    <input type="email" name="email" id="email" value="{{ old('email') }}" required 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    @error('email')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="text-sm font-medium text-gray-600">Nama Lengkap *</label>
+                        <input type="text" name="name" value="{{ old('name') }}" required
+                                class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300
+                                    focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        @error('name')<p class="text-sm text-red-500 mt-1">{{ $message }}</p>@enderror
+                    </div>
 
-                <div>
-                    <label for="gender" class="block text-sm font-medium text-gray-700 mb-2">Jenis Kelamin</label>
-                    <select name="gender" id="gender" required 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Pilih Jenis Kelamin</option>
-                        <option value="Laki-laki" {{ old('gender') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                        <option value="Perempuan" {{ old('gender') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
-                    </select>
-                    @error('gender')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-                </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-600">Email *</label>
+                        <input type="email" name="email" value="{{ old('email') }}" required
+                                class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300
+                                    focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        @error('email')<p class="text-sm text-red-500 mt-1">{{ $message }}</p>@enderror
+                    </div>
 
-                <div>
-                    <label for="education_level" class="block text-sm font-medium text-gray-700 mb-2">Jenjang Pendidikan</label>
-                    <select name="education_level" id="education_level" required 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Pilih Jenjang</option>
-                        <option value="SMA/SMK" {{ old('education_level') == 'SMA/SMK' ? 'selected' : '' }}>SMA/SMK</option>
-                        <option value="S1/D4" {{ old('education_level') == 'S1/D4' ? 'selected' : '' }}>S1/D4</option>
-                    </select>
-                    @error('education_level')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-                </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-600">Jenis Kelamin *</label>
+                        <select name="gender" required
+                                class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300">
+                            <option value="">Pilih</option>
+                            <option value="Laki-laki" {{ old('gender')=='Laki-laki'?'selected':'' }}>Laki-laki</option>
+                            <option value="Perempuan" {{ old('gender')=='Perempuan'?'selected':'' }}>Perempuan</option>
+                        </select>
+                        @error('gender')<p class="text-sm text-red-500 mt-1">{{ $message }}</p>@enderror
+                    </div>
 
-                <div>
-                    <label for="major" class="block text-sm font-medium text-gray-700 mb-2">Jurusan</label>
-                    <input type="text" name="major" id="major" value="{{ old('major') }}" 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    @error('major')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-                </div>
-
-                <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Nomor Telepon</label>
-                    <input type="text" name="phone" id="phone" value="{{ old('phone') }}" 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    @error('phone')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-                </div>
-
-                <div>
-                    <label for="institution" class="block text-sm font-medium text-gray-700 mb-2">Institusi</label>
-                    <input type="text" name="institution" id="institution" value="{{ old('institution') }}" required 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Masukkan nama institusi/kampus">
-                    @error('institution')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-                </div>
-
-                <div>
-                    <label for="purpose" class="block text-sm font-medium text-gray-700 mb-2">Keperluan</label>
-                    <select name="purpose" id="purpose" 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Pilih Keperluan (Opsional)</option>
-                        <option value="Magang" {{ old('purpose') == 'Magang' ? 'selected' : '' }}>Magang</option>
-                        <option value="KKN Profesi" {{ old('purpose') == 'KKN Profesi' ? 'selected' : '' }}>KKN Profesi</option>
-                        <option value="PKL" {{ old('purpose') == 'PKL' ? 'selected' : '' }}>PKL</option>
-                        <option value="Praktek Industri" {{ old('purpose') == 'Praktek Industri' ? 'selected' : '' }}>Praktek Industri</option>
-                        <option value="Magang Industri" {{ old('purpose') == 'Magang Industri' ? 'selected' : '' }}>Magang Industri</option>
-                        <option value="Guru Magang Industri" {{ old('purpose') == 'Guru Magang Industri' ? 'selected' : '' }}>Guru Magang Industri</option>
-                        <option value="Job on Training" {{ old('purpose') == 'Job on Training' ? 'selected' : '' }}>Job on Training</option>
-                    </select>
-                    @error('purpose')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-                </div>
-
-                <div>
-                    <label for="mentor_id" class="block text-sm font-medium text-gray-700 mb-2">Mentor</label>
-                    <select name="mentor_id" id="mentor_id" 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Pilih Mentor (Opsional)</option>
-                        @foreach(\App\Models\Mentor::where('is_active', true)->orderBy('name')->get() as $mentor)
-                            <option value="{{ $mentor->id }}" {{ old('mentor_id') == $mentor->id ? 'selected' : '' }}>
-                                {{ $mentor->name }} @if($mentor->position) - {{ $mentor->position }} @endif
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('mentor_id')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-                </div>
-
-                <div>
-                    <label for="team" class="block text-sm font-medium text-gray-700 mb-2">TIM</label>
-                    <select name="team" id="team" 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Pilih TIM (Opsional)</option>
-                        <option value="TIM DEA" {{ old('team') == 'TIM DEA' ? 'selected' : '' }}>TIM DEA</option>
-                        <option value="TIM GTA" {{ old('team') == 'TIM GTA' ? 'selected' : '' }}>TIM GTA</option>
-                        <option value="TIM VSGA" {{ old('team') == 'TIM VSGA' ? 'selected' : '' }}>TIM VSGA</option>
-                        <option value="TIM TA" {{ old('team') == 'TIM TA' ? 'selected' : '' }}>TIM TA</option>
-                        <option value="TIM Microskill" {{ old('team') == 'TIM Microskill' ? 'selected' : '' }}>TIM Microskill</option>
-                        <option value="TIM Media (DiaPus)" {{ old('team') == 'TIM Media (DiaPus)' ? 'selected' : '' }}>TIM Media (DiaPus)</option>
-                        <option value="TIM Tata Usaha (Umum)" {{ old('team') == 'TIM Tata Usaha (Umum)' ? 'selected' : '' }}>TIM Tata Usaha (Umum)</option>
-                        <option value="FGA" {{ old('team') == 'FGA' ? 'selected' : '' }}>FGA</option>
-                        <option value="Keuangan" {{ old('team') == 'Keuangan' ? 'selected' : '' }}>Keuangan</option>
-                        <option value="Tim PUSDATIN" {{ old('team') == 'Tim PUSDATIN' ? 'selected' : '' }}>Tim PUSDATIN</option>
-                        <option value="Tim Perencanaan, Anggaran, Dan Kerja Sama" {{ old('team') == 'Tim Perencanaan, Anggaran, Dan Kerja Sama' ? 'selected' : '' }}>Tim Perencanaan, Anggaran, Dan Kerja Sama</option>
-                        <option value="Tim Kepegawaian, Persuratan dan Kearsipan" {{ old('team') == 'Tim Kepegawaian, Persuratan dan Kearsipan' ? 'selected' : '' }}>Tim Kepegawaian, Persuratan dan Kearsipan</option>
-                    </select>
-                    @error('team')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-                </div>
-
-                <div>
-                    <label for="photo" class="block text-sm font-medium text-gray-700 mb-2">Pass Foto</label>
-                    <input type="file" name="photo" id="photo" accept="image/*" required 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    @error('photo')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-                </div>
-
-                <div>
-                    <label for="start_date" class="block text-sm font-medium text-gray-700 mb-2">Tanggal Masuk</label>
-                    <input type="date" name="start_date" id="start_date" value="{{ old('start_date') }}" required 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    @error('start_date')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-                </div>
-
-                <div>
-                    <label for="end_date" class="block text-sm font-medium text-gray-700 mb-2">Tanggal Keluar</label>
-                    <input type="date" name="end_date" id="end_date" value="{{ old('end_date') }}" required 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    @error('end_date')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-                </div>
-
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-                    <input type="password" name="password" id="password" required 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    @error('password')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-                </div>
-
-                <div>
-                    <label for="is_active" class="flex items-center mt-6">
-                        <input type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }} 
-                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                        <span class="ml-2 text-sm text-gray-700">Aktif</span>
-                    </label>
+                    <div>
+                        <label class="text-sm font-medium text-gray-600">Nomor Telepon</label>
+                        <input type="text" name="phone" value="{{ old('phone') }}"
+                               class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300">
+                        @error('phone')<p class="text-sm text-red-500 mt-1">{{ $message }}</p>@enderror
+                    </div>
                 </div>
             </div>
 
-            <div class="flex items-center justify-between">
-                <a href="{{ route('admin.intern.index') }}" class="text-blue-600 hover:text-blue-500">
-                    <i class="fas fa-arrow-left mr-2"></i>Kembali
+            <div class="p-8 bg-gray-50 border-b">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center">
+                        <i class="fas fa-graduation-cap text-indigo-600"></i>
+                    </div>
+                    <h2 class="text-lg font-bold text-gray-800">Informasi Akademik</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="text-sm font-medium text-gray-600">Jenjang Pendidikan *</label>
+                        <select name="education_level" required
+                                class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300">
+                            <option value="">Pilih</option>
+                            <option value="SMA/SMK" {{ old('education_level')=='SMA/SMK'?'selected':'' }}>SMA/SMK</option>
+                            <option value="S1/D4" {{ old('education_level')=='S1/D4'?'selected':'' }}>S1/D4</option>
+                        </select>
+                        @error('education_level')<p class="text-sm text-red-500 mt-1">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-medium text-gray-600">Jurusan</label>
+                        <input type="text" name="major" value="{{ old('major') }}"
+                               class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300">
+                        @error('major')<p class="text-sm text-red-500 mt-1">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="text-sm font-medium text-gray-600">Institusi *</label>
+                        <input type="text" name="institution" value="{{ old('institution') }}" required
+                               class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300">
+                        @error('institution')<p class="text-sm text-red-500 mt-1">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="text-sm font-medium text-gray-600">Keperluan</label>
+                        <select name="purpose"
+                                class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300">
+                            <option value="">Pilih</option>
+                            @foreach(['Magang','KKN Profesi','PKL','Praktek Industri','Magang Industri','Guru Magang Industri','Job on Training'] as $p)
+                                <option value="{{ $p }}" {{ old('purpose')==$p?'selected':'' }}>{{ $p }}</option>
+                            @endforeach
+                        </select>
+                        @error('purpose')<p class="text-sm text-red-500 mt-1">{{ $message }}</p>@enderror
+                    </div>
+                </div>
+            </div>
+
+            <!-- Penempatan -->
+            <div class="p-8 border-b">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                        <i class="fas fa-users text-blue-600"></i>
+                    </div>
+                    <h2 class="text-lg font-bold text-gray-800">Penempatan</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="text-sm font-medium text-gray-600">Mentor</label>
+                        <select name="mentor_id"
+                                class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300">
+                            <option value="">Pilih Mentor</option>
+                            @foreach(\App\Models\Mentor::where('is_active', true)->orderBy('name')->get() as $mentor)
+                                <option value="{{ $mentor->id }}" {{ old('mentor_id')==$mentor->id?'selected':'' }}>
+                                    {{ $mentor->name }} @if($mentor->position) - {{ $mentor->position }} @endif
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('mentor_id')<p class="text-sm text-red-500 mt-1">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-medium text-gray-600">Tim</label>
+                        <select name="team"
+                                class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300">
+                            <option value="">Pilih Tim</option>
+                            @foreach([
+                                'TIM DEA','TIM GTA','TIM VSGA','TIM TA','TIM Microskill',
+                                'TIM Media (DiaPus)','TIM Tata Usaha (Umum)','FGA','Keuangan',
+                                'Tim PUSDATIN','Tim Perencanaan, Anggaran, Dan Kerja Sama',
+                                'Tim Kepegawaian, Persuratan dan Kearsipan'
+                            ] as $team)
+                                <option value="{{ $team }}" {{ old('team')==$team?'selected':'' }}>
+                                    {{ $team }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('team')<p class="text-sm text-red-500 mt-1">{{ $message }}</p>@enderror
+                    </div>
+                </div>
+            </div>
+
+        
+            <div class="p-8 bg-gray-50 border-b">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                        <i class="fas fa-calendar-alt text-blue-600"></i>
+                    </div>
+                    <h2 class="text-lg font-bold text-gray-800">Foto & Periode Magang</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="text-sm font-medium text-gray-600">Pass Foto *</label>
+                        <input type="file" name="photo" accept="image/*" required
+                               class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300">
+                        @error('photo')<p class="text-sm text-red-500 mt-1">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-medium text-gray-600">Tanggal Masuk *</label>
+                        <input type="date" name="start_date" value="{{ old('start_date') }}" required
+                               class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300">
+                        @error('start_date')<p class="text-sm text-red-500 mt-1">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-medium text-gray-600">Tanggal Keluar *</label>
+                        <input type="date" name="end_date" value="{{ old('end_date') }}" required
+                               class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300">
+                        @error('end_date')<p class="text-sm text-red-500 mt-1">{{ $message }}</p>@enderror
+                    </div>
+                </div>
+            </div>
+
+    
+            <div class="p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                        <i class="fas fa-shield-alt text-blue-600"></i>
+                    </div>
+                    <h2 class="text-lg font-bold text-gray-800">Keamanan & Status</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="text-sm font-medium text-gray-600">Password *</label>
+                        <input type="password" name="password" required
+                               class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300">
+                        @error('password')<p class="text-sm text-red-500 mt-1">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div class="flex items-center mt-6">
+                        <input type="checkbox" name="is_active" value="1"
+                               {{ old('is_active', true) ? 'checked' : '' }}
+                               class="h-5 w-5 text-blue-600 rounded">
+                        <span class="ml-3 text-sm font-medium text-gray-700">
+                            Tandai sebagai aktif
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+    
+            <div class="px-8 py-6 bg-gray-50 flex justify-between items-center">
+                <a href="{{ route('admin.intern.index') }}"
+                   class="text-blue-600 hover:text-blue-800 font-semibold transition inline-flex items-center gap-2">
+                    <i class="fas fa-arrow-left"></i>
+                    Kembali
                 </a>
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded">
-                    Simpan
+
+                <button type="submit"
+                        class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600
+                               hover:from-blue-700 hover:to-indigo-700
+                               text-white font-semibold px-8 py-3 rounded-xl shadow-lg
+                               transition transform hover:scale-105">
+                    <i class="fas fa-save"></i>
+                    Simpan Data
                 </button>
             </div>
+
         </form>
     </div>
 </div>

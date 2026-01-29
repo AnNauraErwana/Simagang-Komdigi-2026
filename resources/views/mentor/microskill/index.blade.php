@@ -6,16 +6,13 @@
     <div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            <!-- Header -->
             <div class="mb-8">
-                <h1
-                    class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
+                <h1 class="text-4xl font-bold text-blue-600 mb-3">
                     Mikro Skill Anak Bimbingan
                 </h1>
                 <p class="text-gray-600">Pantau pencapaian dan pengembangan keterampilan anak magang</p>
             </div>
 
-            <!-- Filter Card -->
             <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden mb-6">
                 <div class="bg-blue-600 px-6 py-4">
                     <h2 class="text-xl font-bold text-white flex items-center">
@@ -59,7 +56,6 @@
                 </div>
             </div>
 
-            <!-- Table Card -->
             <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
                 <div class="bg-blue-600 px-6 py-4">
                     <h2 class="text-xl font-bold text-white flex items-center">
@@ -151,14 +147,12 @@
                         </table>
                     </div>
 
-                    <!-- Pagination -->
                     <div class="mt-6">
                         {{ $submissions->links() }}
                     </div>
                 </div>
             </div>
 
-            <!-- Quick Stats -->
             <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-white rounded-xl shadow-md border border-blue-100 p-6">
                     <div class="flex items-center justify-between">
