@@ -5,15 +5,13 @@
 @section('content')
 <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Header Section -->
-    <div class="bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg rounded-lg p-6 mb-6">
+    <div class="bg-blue-600 shadow-lg rounded-lg p-6 mt-6 mb-6">
         <div class="flex justify-between items-center">
             <div>
                 <h1 class="text-3xl font-bold text-white mb-1">Edit Anak Magang</h1>
                 <p class="text-blue-100 text-sm">Perbarui informasi data anak magang</p>
             </div>
-            <a href="{{ route('admin.intern.index') }}" class="bg-white hover:bg-blue-50 text-blue-700 font-bold py-2 px-5 rounded-lg shadow-md transition duration-200">
-                <i class="fas fa-arrow-left mr-2"></i>Kembali
-            </a>
+
         </div>
     </div>
 
@@ -23,7 +21,6 @@
             @csrf
             @method('PUT')
 
-            <!-- Personal Information Section -->
             <div class="p-8 border-b border-gray-200">
                 <div class="flex items-center mb-6">
                     <div class="bg-blue-100 rounded-full p-3 mr-4">
@@ -81,7 +78,6 @@
                 </div>
             </div>
 
-            <!-- Academic Information Section -->
             <div class="p-8 border-b border-gray-200 bg-blue-50 bg-opacity-30">
                 <div class="flex items-center mb-6">
                     <div class="bg-blue-100 rounded-full p-3 mr-4">
@@ -147,7 +143,7 @@
                 </div>
             </div>
 
-            <!-- Assignment Section -->
+        
             <div class="p-8 border-b border-gray-200">
                 <div class="flex items-center mb-6">
                     <div class="bg-blue-100 rounded-full p-3 mr-4">
@@ -201,7 +197,7 @@
                 </div>
             </div>
 
-            <!-- Photo & Period Section -->
+    
             <div class="p-8 border-b border-gray-200 bg-blue-50 bg-opacity-30">
                 <div class="flex items-center mb-6">
                     <div class="bg-blue-100 rounded-full p-3 mr-4">
@@ -261,7 +257,7 @@
                 </div>
             </div>
 
-            <!-- Security & Status Section -->
+            
             <div class="p-8">
                 <div class="flex items-center mb-6">
                     <div class="bg-blue-100 rounded-full p-3 mr-4">

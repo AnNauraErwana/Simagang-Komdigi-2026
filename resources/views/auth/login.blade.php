@@ -182,7 +182,7 @@
 
         <!-- FOOTER -->
         <div class="text-center mt-6 text-xs text-gray-500">
-            © 2026 Simagang. Sistem manajemen magang terpadu.
+            © 2026 Simagang. Sistem manajemen magang BBPSDMP Komdigi Makassar.
         </div>
 
     </div>
