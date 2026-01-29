@@ -3,323 +3,420 @@
 @section('title', 'Laporan Akhir - Sistem Magang')
 
 @section('content')
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="bg-white shadow rounded-lg p-6">
-        <h1 class="text-2xl font-bold text-gray-900 mb-6">Laporan Akhir</h1>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold leading-tight bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2 pb-2">
+                Laporan Akhir
+            </h1>
+            <p class="text-gray-600">Kelola dan submit laporan akhir magang Anda</p>
+        </div>
 
         @if($report)
-        <div class="mb-6 p-4 bg-gray-50 rounded-lg">
-
-            {{-- Header --}}
-            <div class="flex justify-between items-start mb-4">
-                <div>
-                    <p class="text-sm text-gray-600">
-                        Diupload pada: {{ $report->submitted_at->format('d F Y H:i') }}
-                    </p>
-                </div>
-                <div class="flex flex-col items-end space-y-2">
-                    <span class="px-3 py-1 rounded-full text-sm font-medium
-                        @if($report->status == 'approved') bg-green-100 text-green-800
-                        @elseif($report->status == 'rejected') bg-red-100 text-red-800
-                        @else bg-yellow-100 text-yellow-800
-                        @endif">
-                        {{ ucfirst($report->status) }}
-                    </span>
-
-                    @if($report->needs_revision)
-                    <span class="px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-800">
-                        <i class="fas fa-exclamation-triangle mr-1"></i>Perlu Revisi
-                    </span>
-                    @endif
-
-                    @if($report->grade)
-                    <span class="px-3 py-1 rounded-full text-lg font-bold
-                        @if($report->grade == 'A') bg-green-100 text-green-800
-                        @elseif($report->grade == 'B') bg-blue-100 text-blue-800
-                        @else bg-yellow-100 text-yellow-800
-                        @endif">
-                        Nilai: {{ $report->grade }}
-                    </span>
-                    @endif
-                </div>
+        <!-- Report Card -->
+        <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden mb-6">
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
+                <h2 class="text-xl font-bold text-white flex items-center">
+                    <i class="fas fa-file-alt mr-3"></i>
+                    Detail Laporan Akhir
+                </h2>
             </div>
 
-            {{-- DETAIL BERKAS --}}
-            <h3 class="text-lg font-semibold text-gray-900 mb-3">Detail Berkas</h3>
-
-            <div class="space-y-3 text-sm">
-
-                {{-- Laporan --}}
-                <div class="flex items-center justify-between bg-white p-3 rounded border">
-                    <div class="flex items-center space-x-3">
-                        <i class="fas fa-file-pdf text-red-500 text-lg"></i>
-                        <div>
-                            <p class="font-medium">Laporan Akhir</p>
-                            <p class="text-gray-500">{{ $report->file_name }}</p>
-                        </div>
+            <div class="p-8">
+                {{-- Header Info --}}
+                <div class="flex flex-col md:flex-row justify-between items-start mb-6 pb-6 border-b border-gray-200">
+                    <div>
+                        <p class="text-sm text-gray-600 flex items-center">
+                            <i class="fas fa-clock text-blue-500 mr-2"></i>
+                            Diupload pada: <span class="font-medium ml-1">{{ $report->submitted_at->format('d F Y H:i') }}</span>
+                        </p>
                     </div>
-                    <a href="{{ route('download', ['path' => $report->file_path]) }}" target="_blank"
-                        class="text-blue-600 hover:underline font-medium">
-                        Download
-                    </a>
+                    <div class="flex flex-col items-end space-y-2 mt-4 md:mt-0">
+                        <span class="px-4 py-2 rounded-xl text-sm font-semibold shadow-sm
+                            @if($report->status == 'approved') bg-green-100 text-green-800 border border-green-200
+                            @elseif($report->status == 'rejected') bg-red-100 text-red-800 border border-red-200
+                            @else bg-yellow-100 text-yellow-800 border border-yellow-200
+                            @endif">
+                            <i class="fas fa-circle text-xs mr-1"></i>{{ ucfirst($report->status) }}
+                        </span>
+
+                        @if($report->needs_revision)
+                        <span class="px-4 py-2 rounded-xl text-sm font-semibold bg-orange-100 text-orange-800 border border-orange-200 shadow-sm">
+                            <i class="fas fa-exclamation-triangle mr-1"></i>Perlu Revisi
+                        </span>
+                        @endif
+
+                        @if($report->grade)
+                        <span class="px-4 py-2 rounded-xl text-lg font-bold shadow-sm
+                            @if($report->grade == 'A') bg-green-100 text-green-800 border border-green-200
+                            @elseif($report->grade == 'B') bg-blue-100 text-blue-800 border border-blue-200
+                            @else bg-yellow-100 text-yellow-800 border border-yellow-200
+                            @endif">
+                            <i class="fas fa-award mr-1"></i>Nilai: {{ $report->grade }}
+                        </span>
+                        @endif
+                    </div>
                 </div>
 
-                {{-- File Project (support multiple) --}}
-                @php
-                    $projectFilesDisplay = $report->project_files ?? null;
-                @endphp
-                @if(!empty($projectFilesDisplay) && is_array($projectFilesDisplay))
-                    <div class="space-y-2">
-                        <h4 class="text-sm font-medium text-gray-700">File Proyek</h4>
-                        @foreach($projectFilesDisplay as $pf)
-                            <div class="flex items-center justify-between bg-white p-3 rounded border">
-                                <div class="flex items-center space-x-3">
-                                    <i class="fas fa-file-archive text-gray-600 text-lg"></i>
-                                    <div>
-                                        <p class="font-medium">File Proyek {{ $loop->iteration }}</p>
-                                        <p class="text-gray-500">{{ data_get($pf, 'name') ?? basename(data_get($pf, 'path', '')) }}</p>
-                                    </div>
-                                </div>
-                                <a href="{{ route('download', ['path' => data_get($pf, 'path')]) }}" target="_blank"
-                                    class="text-blue-600 hover:underline font-medium">Download</a>
-                            </div>
-                        @endforeach
-                    </div>
-                @elseif($report->project_file)
-                    <div class="flex items-center justify-between bg-white p-3 rounded border">
-                        <div class="flex items-center space-x-3">
-                            <i class="fas fa-file-archive text-gray-600 text-lg"></i>
-                            <div>
-                                <p class="font-medium">File Proyek</p>
-                                <p class="text-gray-500">{{ $report->project_file_name ?? basename($report->project_file) }}</p>
-                            </div>
-                        </div>
-                        <a href="{{ route('download', ['path' => $report->project_file]) }}" target="_blank"
-                            class="text-blue-600 hover:underline font-medium">Download</a>
-                    </div>
-                @endif
+                {{-- DETAIL BERKAS --}}
+                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                    <i class="fas fa-folder-open text-blue-500 mr-2"></i>
+                    Detail Berkas
+                </h3>
 
-                {{-- Link Project (support multiple) --}}
-                @php
-                    $projectLinksDisplay = $report->project_links ?? null;
-                @endphp
-                @if(!empty($projectLinksDisplay) && is_array($projectLinksDisplay))
-                    <div class="space-y-2">
-                        <h4 class="text-sm font-medium text-gray-700">Link Proyek</h4>
-                        @foreach($projectLinksDisplay as $pl)
-                            @if(!empty($pl))
-                            <div class="flex items-center justify-between bg-white p-3 rounded border">
-                                <div class="flex items-center space-x-3">
-                                    <i class="fas fa-link text-indigo-600 text-lg"></i>
-                                    <div>
-                                        <p class="font-medium">Link Proyek {{ $loop->iteration }}</p>
-                                        <a href="{{ $pl }}" target="_blank" class="text-indigo-600 hover:underline break-all">{{ $pl }}</a>
-                                    </div>
-                                </div>
-                                <a href="{{ $pl }}" target="_blank" class="text-indigo-600 hover:underline font-medium">Buka</a>
-                            </div>
-                            @endif
-                        @endforeach
-                    </div>
-                @elseif($report->project_link)
-                    <div class="flex items-center justify-between bg-white p-3 rounded border">
+                <div class="space-y-3">
+
+                    {{-- Laporan --}}
+                    <div class="flex items-center justify-between bg-gradient-to-r from-red-50 to-pink-50 p-4 rounded-xl border-2 border-red-200 hover:border-red-300 transition-all">
                         <div class="flex items-center space-x-3">
-                            <i class="fas fa-link text-indigo-600 text-lg"></i>
+                            <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-file-pdf text-red-600 text-xl"></i>
+                            </div>
                             <div>
-                                <p class="font-medium">Link Proyek</p>
-                                <a href="{{ $report->project_link }}" target="_blank" class="text-indigo-600 hover:underline break-all">{{ $report->project_link }}</a>
+                                <p class="font-semibold text-gray-900">Laporan Akhir</p>
+                                <p class="text-sm text-gray-600">{{ $report->file_name }}</p>
                             </div>
                         </div>
-                        <a href="{{ $report->project_link }}" target="_blank" class="text-indigo-600 hover:underline font-medium">Buka</a>
+                        <a href="{{ route('download', ['path' => $report->file_path]) }}" target="_blank"
+                            class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-all shadow-sm">
+                            <i class="fas fa-download mr-2"></i>Download
+                        </a>
                     </div>
-                @endif
-                
-                {{-- Activities (Kegiatan Magang) --}}
-                <div class="mt-4 p-4 bg-white rounded border">
-                    <h4 class="font-semibold">Kegiatan Selama Magang</h4>
-                    @if($report->activities && count($report->activities))
-                        <div class="mt-2 space-y-2">
-                            @foreach($report->activities as $activity)
-                                <div class="p-3 bg-gray-50 rounded border">
-                                    <p class="text-gray-900">{{ $activity['description'] ?? '' }}</p>
+
+                    {{-- File Project (support multiple) --}}
+                    @php
+                        $projectFilesDisplay = $report->project_files ?? null;
+                    @endphp
+                    @if(!empty($projectFilesDisplay) && is_array($projectFilesDisplay))
+                        <div class="space-y-3">
+                            <h4 class="text-sm font-semibold text-gray-700 flex items-center mt-4">
+                                <i class="fas fa-folder text-blue-500 mr-2"></i>File Proyek
+                            </h4>
+                            @foreach($projectFilesDisplay as $pf)
+                                <div class="flex items-center justify-between bg-gradient-to-r from-gray-50 to-blue-50 p-4 rounded-xl border-2 border-gray-200 hover:border-blue-300 transition-all">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-file-archive text-gray-600 text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-semibold text-gray-900">File Proyek {{ $loop->iteration }}</p>
+                                            <p class="text-sm text-gray-600">{{ data_get($pf, 'name') ?? basename(data_get($pf, 'path', '')) }}</p>
+                                        </div>
+                                    </div>
+                                    <a href="{{ route('download', ['path' => data_get($pf, 'path')]) }}" target="_blank"
+                                        class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all shadow-sm">
+                                        <i class="fas fa-download mr-2"></i>Download
+                                    </a>
                                 </div>
                             @endforeach
                         </div>
-                    @else
-                        <p class="mt-2 text-gray-500">Belum ada kegiatan yang dicatat.</p>
+                    @elseif($report->project_file)
+                        <div class="flex items-center justify-between bg-gradient-to-r from-gray-50 to-blue-50 p-4 rounded-xl border-2 border-gray-200 hover:border-blue-300 transition-all">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-file-archive text-gray-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-900">File Proyek</p>
+                                    <p class="text-sm text-gray-600">{{ $report->project_file_name ?? basename($report->project_file) }}</p>
+                                </div>
+                            </div>
+                            <a href="{{ route('download', ['path' => $report->project_file]) }}" target="_blank"
+                                class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all shadow-sm">
+                                <i class="fas fa-download mr-2"></i>Download
+                            </a>
+                        </div>
+                    @endif
+
+                    {{-- Link Project (support multiple) --}}
+                    @php
+                        $projectLinksDisplay = $report->project_links ?? null;
+                    @endphp
+                    @if(!empty($projectLinksDisplay) && is_array($projectLinksDisplay))
+                        <div class="space-y-3">
+                            <h4 class="text-sm font-semibold text-gray-700 flex items-center mt-4">
+                                <i class="fas fa-link text-indigo-500 mr-2"></i>Link Proyek
+                            </h4>
+                            @foreach($projectLinksDisplay as $pl)
+                                @if(!empty($pl))
+                                <div class="flex items-center justify-between bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-xl border-2 border-indigo-200 hover:border-indigo-300 transition-all">
+                                    <div class="flex items-center space-x-3 flex-1 min-w-0">
+                                        <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                            <i class="fas fa-link text-indigo-600 text-xl"></i>
+                                        </div>
+                                        <div class="min-w-0 flex-1">
+                                            <p class="font-semibold text-gray-900">Link Proyek {{ $loop->iteration }}</p>
+                                            <a href="{{ $pl }}" target="_blank" class="text-sm text-indigo-600 hover:underline break-all">{{ $pl }}</a>
+                                        </div>
+                                    </div>
+                                    <a href="{{ $pl }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition-all shadow-sm ml-4 flex-shrink-0">
+                                        <i class="fas fa-external-link-alt mr-2"></i>Buka
+                                    </a>
+                                </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    @elseif($report->project_link)
+                        <div class="flex items-center justify-between bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-xl border-2 border-indigo-200 hover:border-indigo-300 transition-all">
+                            <div class="flex items-center space-x-3 flex-1 min-w-0">
+                                <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-link text-indigo-600 text-xl"></i>
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <p class="font-semibold text-gray-900">Link Proyek</p>
+                                    <a href="{{ $report->project_link }}" target="_blank" class="text-sm text-indigo-600 hover:underline break-all">{{ $report->project_link }}</a>
+                                </div>
+                            </div>
+                            <a href="{{ $report->project_link }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition-all shadow-sm ml-4 flex-shrink-0">
+                                <i class="fas fa-external-link-alt mr-2"></i>Buka
+                            </a>
+                        </div>
+                    @endif
+                    
+                    {{-- Activities (Kegiatan Magang) --}}
+                    <div class="mt-4 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border-2 border-green-200">
+                        <h4 class="font-bold text-gray-900 flex items-center mb-3">
+                            <i class="fas fa-tasks text-green-600 mr-2"></i>
+                            Kegiatan Selama Magang
+                        </h4>
+                        @if($report->activities && count($report->activities))
+                            <div class="space-y-2">
+                                @foreach($report->activities as $activity)
+                                    <div class="p-4 bg-white rounded-lg border border-green-200 shadow-sm">
+                                        <p class="text-gray-900">{{ $activity['description'] ?? '' }}</p>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <p class="text-gray-600 italic">Belum ada kegiatan yang dicatat.</p>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Catatan Admin --}}
+                @if($report->admin_note)
+                <div class="mt-6 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200">
+                    <p class="text-sm font-bold text-blue-900 mb-3 flex items-center">
+                        <i class="fas fa-comment-dots mr-2"></i>Catatan Admin
+                    </p>
+                    <div class="bg-white p-4 rounded-lg border border-blue-200 shadow-sm">
+                        <p class="text-sm text-gray-900 whitespace-pre-wrap">
+                            {{ $report->admin_note }}
+                        </p>
+                    </div>
+                </div>
+                @endif
+
+                {{-- Button --}}
+                <div class="mt-6 flex flex-col sm:flex-row gap-4">
+                    @if($report->status !== 'approved' || $report->needs_revision)
+                    <button onclick="document.getElementById('uploadForm').classList.toggle('hidden')"
+                        class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                        <i class="fas fa-upload mr-2"></i>
+                        {{ $report->needs_revision ? 'Upload Revisi' : 'Update Laporan' }}
+                    </button>
                     @endif
                 </div>
-            </div>
-
-            {{-- Catatan Admin --}}
-            @if($report->admin_note)
-            <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <p class="text-sm font-medium text-blue-900 mb-2">
-                    <i class="fas fa-comment-dots mr-2"></i>Catatan Admin
-                </p>
-                <div class="bg-white p-3 rounded border">
-                    <p class="text-sm text-gray-900 whitespace-pre-wrap">
-                        {{ $report->admin_note }}
-                    </p>
-                </div>
-            </div>
-            @endif
-
-            {{-- Button --}}
-            <div class="mt-6 flex space-x-4">
-                @if($report->status !== 'approved' || $report->needs_revision)
-                <button onclick="document.getElementById('uploadForm').classList.toggle('hidden')"
-                    class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                    <i class="fas fa-upload mr-2"></i>
-                    {{ $report->needs_revision ? 'Upload Revisi' : 'Update Laporan' }}
-                </button>
-                @endif
             </div>
         </div>
 
         {{-- FORM UPDATE --}}
-        <form id="uploadForm" method="POST"
-            action="{{ route('intern.report.update', $report) }}"
-            enctype="multipart/form-data" class="hidden">
-            @csrf
-            @method('PUT')
-
-            <div class="mb-4">
-                <label class="block text-sm font-medium">Laporan Saat Ini</label>
-                <div class="relative">
-                    <input type="text" id="fileDisplay" value="{{ $report->file_name }}" readonly
-                        class="w-full border rounded px-3 py-2 bg-gray-100 text-gray-700 cursor-pointer"
-                        onclick="document.getElementById('fileInput').click()">
-                    <input type="file" name="file" id="fileInput" style="display: none;" onchange="updateFileDisplay(this)">
-                    <button type="button" class="absolute right-2 top-2 text-gray-500 hover:text-gray-700" onclick="clearFile()">×</button>
-                </div>
-                <p class="mt-1 text-sm text-gray-500">
-                    Klik untuk pilih file baru atau biarkan untuk tetap menggunakan file saat ini. 
-                    <a href="{{ route('download', ['path' => $report->file_path]) }}" target="_blank" class="text-blue-600 hover:underline">Lihat file saat ini</a>
-                </p>
+        <div id="uploadForm" class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden hidden">
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
+                <h2 class="text-xl font-bold text-white flex items-center">
+                    <i class="fas fa-edit mr-3"></i>
+                    Update Laporan
+                </h2>
             </div>
 
-            <div class="mb-4">
-                <label class="block text-sm font-medium">Proyek Saat Ini (maks 3 file)</label>
-                <div class="relative">
-                    <input type="text" id="projectDisplay" value="{{ $report->project_file ? ($report->project_file_name ?? basename($report->project_file)) : 'Belum ada file proyek' }}" readonly
-                        class="w-full border rounded px-3 py-2 bg-gray-100 text-gray-700 cursor-pointer"
-                        onclick="document.getElementById('projectInput').click()">
-                    <input type="file" name="project_files[]" id="projectInput" style="display: none;" onchange="updateProjectDisplay(this)" multiple accept=".zip,.rar,.7z,.tar,.gz">
-                    <button type="button" class="absolute right-2 top-2 text-gray-500 hover:text-gray-700" onclick="clearProject()">×</button>
-                </div>
-                <p class="mt-1 text-sm text-gray-500">
-                    Klik untuk pilih hingga 3 file baru atau biarkan untuk tetap menggunakan file saat ini.
-                    @if($report->project_file)
-                        <a href="{{ route('download', ['path' => $report->project_file]) }}" target="_blank" class="text-blue-600 hover:underline">Download file saat ini</a>
-                    @endif
-                    Format: .zip, .rar, .7z, .tar.gz (Maks: 100MB per file)
-                </p>
-            </div>
+            <div class="p-8">
+                <form method="POST" action="{{ route('intern.report.update', $report) }}" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
 
-            <div class="mb-4">
-                <label class="block text-sm font-medium">Link Proyek (Opsional, maks 3)</label>
-                @php
-                    // Prefer new `project_links` array; fall back to legacy `project_link` string
-                    $existingLinks = [];
-                    if (!empty($report->project_links) && is_array($report->project_links)) {
-                        $existingLinks = $report->project_links;
-                    } elseif (!empty($report->project_link)) {
-                        $existingLinks = [$report->project_link];
-                    }
-                @endphp
-                @for($i = 0; $i < 3; $i++)
-                    <input type="url" name="project_links[]"
-                        value="{{ old('project_links.'.$i, data_get($existingLinks, $i, '')) }}"
-                        class="w-full border rounded px-3 py-2 mb-2">
-                @endfor
-                <p class="mt-1 text-sm text-gray-500">Opsional: masukkan hingga 3 tautan (GitHub, Drive, Pages, dll.).</p>
-            </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-file-pdf text-red-500 mr-2"></i>Laporan Saat Ini
+                        </label>
+                        <div class="relative">
+                            <input type="text" id="fileDisplay" value="{{ $report->file_name }}" readonly
+                                class="w-full border-2 border-gray-300 rounded-xl px-4 py-3 bg-gray-50 text-gray-700 cursor-pointer hover:border-blue-400 transition-all"
+                                onclick="document.getElementById('fileInput').click()">
+                            <input type="file" name="file" id="fileInput" style="display: none;" onchange="updateFileDisplay(this)">
+                            <button type="button" class="absolute right-3 top-3 text-gray-400 hover:text-red-600 text-xl font-bold" onclick="clearFile()">×</button>
+                        </div>
+                        <p class="mt-2 text-sm text-gray-500 flex items-center">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Klik untuk pilih file baru atau biarkan untuk tetap menggunakan file saat ini. 
+                            <a href="{{ route('download', ['path' => $report->file_path]) }}" target="_blank" class="text-blue-600 hover:underline ml-1">Lihat file saat ini</a>
+                        </p>
+                    </div>
 
-            {{-- Activities (Kegiatan Magang) --}}
-            <div class="mb-4">
-                <label class="block text-sm font-medium mb-2">Kegiatan Selama Magang (Opsional)</label>
-                <textarea name="activities[0][description]" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Deskripsikan kegiatan harian/mingguan yang relevan untuk laporan akhir...">{{ old('activities.0.description', data_get($report, 'activities.0.description', '')) }}</textarea>
-                <p class="mt-1 text-sm text-gray-500">Opsional: Masukkan ringkasan kegiatan selama magang.</p>
-            </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-file-archive text-gray-600 mr-2"></i>Proyek Saat Ini (maks 3 file)
+                        </label>
+                        <div class="relative">
+                            <input type="text" id="projectDisplay" value="{{ $report->project_file ? ($report->project_file_name ?? basename($report->project_file)) : 'Belum ada file proyek' }}" readonly
+                                class="w-full border-2 border-gray-300 rounded-xl px-4 py-3 bg-gray-50 text-gray-700 cursor-pointer hover:border-blue-400 transition-all"
+                                onclick="document.getElementById('projectInput').click()">
+                            <input type="file" name="project_files[]" id="projectInput" style="display: none;" onchange="updateProjectDisplay(this)" multiple accept=".zip,.rar,.7z,.tar,.gz">
+                            <button type="button" class="absolute right-3 top-3 text-gray-400 hover:text-red-600 text-xl font-bold" onclick="clearProject()">×</button>
+                        </div>
+                        <p class="mt-2 text-sm text-gray-500 flex items-start">
+                            <i class="fas fa-info-circle mr-1 mt-0.5"></i>
+                            <span>Klik untuk pilih hingga 3 file baru atau biarkan untuk tetap menggunakan file saat ini.
+                            @if($report->project_file)
+                                <a href="{{ route('download', ['path' => $report->project_file]) }}" target="_blank" class="text-blue-600 hover:underline">Download file saat ini</a>
+                            @endif
+                            Format: .zip, .rar, .7z, .tar.gz (Maks: 100MB per file)</span>
+                        </p>
+                    </div>
 
-            <button type="submit"
-                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded">
-                Update Laporan
-            </button>
-        </form>
+                    <div class="mb-6">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-link text-indigo-600 mr-2"></i>Link Proyek (Opsional, maks 3)
+                        </label>
+                        @php
+                            $existingLinks = [];
+                            if (!empty($report->project_links) && is_array($report->project_links)) {
+                                $existingLinks = $report->project_links;
+                            } elseif (!empty($report->project_link)) {
+                                $existingLinks = [$report->project_link];
+                            }
+                        @endphp
+                        @for($i = 0; $i < 3; $i++)
+                            <input type="url" name="project_links[]"
+                                value="{{ old('project_links.'.$i, data_get($existingLinks, $i, '')) }}"
+                                placeholder="https://example.com/project-{{ $i + 1 }}"
+                                class="w-full border-2 border-gray-300 rounded-xl px-4 py-3 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                        @endfor
+                        <p class="mt-2 text-sm text-gray-500 flex items-center">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Opsional: masukkan hingga 3 tautan (GitHub, Drive, Pages, dll.).
+                        </p>
+                    </div>
+
+                    {{-- Activities (Kegiatan Magang) --}}
+                    <div class="mb-6">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-tasks text-green-600 mr-2"></i>Kegiatan Selama Magang (Opsional)
+                        </label>
+                        <textarea name="activities[0][description]" rows="5" 
+                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" 
+                            placeholder="Deskripsikan kegiatan harian/mingguan yang relevan untuk laporan akhir...">{{ old('activities.0.description', data_get($report, 'activities.0.description', '')) }}</textarea>
+                        <p class="mt-2 text-sm text-gray-500 flex items-center">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Opsional: Masukkan ringkasan kegiatan selama magang.
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-gray-200">
+                        <button type="button" onclick="document.getElementById('uploadForm').classList.add('hidden')"
+                            class="inline-flex items-center px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-all duration-300 w-full sm:w-auto justify-center">
+                            <i class="fas fa-times mr-2"></i>Batal
+                        </button>
+                        <button type="submit"
+                            class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 w-full sm:w-auto justify-center">
+                            <i class="fas fa-save mr-2"></i>Update Laporan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
         @else
-        <div class="text-center py-12">
-            <i class="fas fa-file-alt text-gray-400 text-6xl mb-4"></i>
-            <p class="text-gray-500 text-lg mb-6">Anda belum mengupload laporan akhir.</p>
+        <!-- Upload Initial Report Card -->
+        <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
+                <h2 class="text-xl font-bold text-white flex items-center">
+                    <i class="fas fa-upload mr-3"></i>
+                    Upload Laporan Akhir
+                </h2>
+            </div>
 
-            <form method="POST" action="{{ route('intern.report.store') }}" enctype="multipart/form-data">
-                @csrf
-
-                <div class="mb-6 max-w-md mx-auto">
-                    <label for="file" class="block text-sm font-medium text-gray-700 mb-2">
-                        Upload Laporan Akhir
-                    </label>
-                    <input type="file" name="file" id="file" accept=".pdf,.doc,.docx" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm
-                        focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    <p class="mt-1 text-sm text-gray-500">
-                        Format: PDF, DOC, DOCX (Maks: 10MB)
-                    </p>
-                    @error('file')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+            <div class="p-8">
+                <div class="text-center py-8 mb-8">
+                    <div class="w-24 h-24 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-file-alt text-blue-600 text-5xl"></i>
+                    </div>
+                    <p class="text-gray-600 text-lg font-medium mb-2">Anda belum mengupload laporan akhir.</p>
+                    <p class="text-gray-500 text-sm">Lengkapi form di bawah untuk submit laporan akhir Anda.</p>
                 </div>
 
-                <div class="mb-6 max-w-md mx-auto">
-                    <label for="project_file" class="block text-sm font-medium text-gray-700 mb-2">
-                        Upload Proyek Akhir (opsional, maks 3 file)
-                    </label>
-                    <input type="file" name="project_files[]" id="project_file"
-                        accept=".zip,.rar,.7z,.tar,.gz" multiple
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm
-                        focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    <p class="mt-1 text-sm text-gray-500">
-                        Format: .zip, .rar, .7z, .tar.gz (Opsional, Maks: 100MB per file, maksimal 3 file)
-                    </p>
-                </div>
+                <form method="POST" action="{{ route('intern.report.store') }}" enctype="multipart/form-data">
+                    @csrf
 
-                <div class="mb-6 max-w-md mx-auto">
-                    <label for="project_link" class="block text-sm font-medium text-gray-700 mb-2">
-                        Link Proyek (opsional, maks 3)
-                    </label>
-                    @for($i = 0; $i < 3; $i++)
-                        <input type="url" name="project_links[]" id="project_link_{{ $i }}"
-                            placeholder="https://example.com/project"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm mb-2
-                            focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            value="{{ old('project_links.'.$i) }}">
-                    @endfor
-                    <p class="mt-1 text-sm text-gray-500">
-                        Contoh: GitHub, GitHub Pages, Google Drive (Public)
-                    </p>
-                </div>
+                    <div class="mb-6">
+                        <label for="file" class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-file-pdf text-red-500 mr-2"></i>Upload Laporan Akhir
+                        </label>
+                        <input type="file" name="file" id="file" accept=".pdf,.doc,.docx" required
+                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
+                        <p class="mt-2 text-sm text-gray-500 flex items-center">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Format: PDF, DOC, DOCX (Maks: 10MB)
+                        </p>
+                        @error('file')
+                            <p class="mt-2 text-sm text-red-600 flex items-center">
+                                <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
+                            </p>
+                        @enderror
+                    </div>
 
-                {{-- Activities (Kegiatan Magang) --}}
-                <div class="mb-6 max-w-md mx-auto">
-                    <label for="activities_description" class="block text-sm font-medium text-gray-700 mb-2">
-                        Kegiatan Selama Magang (opsional)
-                    </label>
-                    <textarea name="activities[0][description]" id="activities_description" rows="4"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm
-                        focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Deskripsikan kegiatan harian/mingguan yang relevan untuk laporan akhir...">{{ old('activities.0.description') }}</textarea>
-                    <p class="mt-1 text-sm text-gray-500">
-                        Opsional: Masukkan ringkasan kegiatan selama magang.
-                    </p>
-                </div>
+                    <div class="mb-6">
+                        <label for="project_file" class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-file-archive text-gray-600 mr-2"></i>Upload Proyek Akhir (opsional, maks 3 file)
+                        </label>
+                        <input type="file" name="project_files[]" id="project_file"
+                            accept=".zip,.rar,.7z,.tar,.gz" multiple
+                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <p class="mt-2 text-sm text-gray-500 flex items-center">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Format: .zip, .rar, .7z, .tar.gz (Opsional, Maks: 100MB per file, maksimal 3 file)
+                        </p>
+                    </div>
 
-                <button type="submit"
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded">
-                    <i class="fas fa-upload mr-2"></i>Upload Laporan
-                </button>
-            </form>
+                    <div class="mb-6">
+                        <label for="project_link" class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-link text-indigo-600 mr-2"></i>Link Proyek (opsional, maks 3)
+                        </label>
+                        @for($i = 0; $i < 3; $i++)
+                            <input type="url" name="project_links[]" id="project_link_{{ $i }}"
+                                placeholder="https://example.com/project-{{ $i + 1 }}"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl shadow-sm mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                                value="{{ old('project_links.'.$i) }}">
+                        @endfor
+                        <p class="mt-2 text-sm text-gray-500 flex items-center">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Contoh: GitHub, GitHub Pages, Google Drive (Public)
+                        </p>
+                    </div>
+
+                    {{-- Activities (Kegiatan Magang) --}}
+                    <div class="mb-8">
+                        <label for="activities_description" class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-tasks text-green-600 mr-2"></i>Kegiatan Selama Magang (opsional)
+                        </label>
+                        <textarea name="activities[0][description]" id="activities_description" rows="5"
+                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                            placeholder="Deskripsikan kegiatan harian/mingguan yang relevan untuk laporan akhir...">{{ old('activities.0.description') }}</textarea>
+                        <p class="mt-2 text-sm text-gray-500 flex items-center">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Opsional: Masukkan ringkasan kegiatan selama magang.
+                        </p>
+                    </div>
+
+                    <div class="flex justify-center pt-6 border-t border-gray-200">
+                        <button type="submit"
+                            class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                            <i class="fas fa-upload mr-2"></i>Upload Laporan
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
 
         @push('scripts')
@@ -398,7 +495,6 @@
         @endpush
 
         @endif
-
 
     </div>
 </div>

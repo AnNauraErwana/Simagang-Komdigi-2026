@@ -3,95 +3,235 @@
 @section('title', 'Absensi - Sistem Magang')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="bg-white shadow rounded-lg p-6 mb-6">
-        <div class="flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-gray-900">Riwayat Absensi</h1>
-            <a href="{{ route('intern.attendance.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                <i class="fas fa-plus mr-2"></i>Absensi Baru
-            </a>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
+                <div>
+                    <h1 class="text-4xl font-bold leading-tight bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2 pb-2">
+                        Riwayat Absensi
+                    </h1>
+                    <p class="text-gray-600">Pantau dan kelola absensi harian Anda</p>
+                </div>
+                <a href="{{ route('intern.attendance.create') }}" 
+                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                    <i class="fas fa-plus mr-2"></i>Absensi Baru
+                </a>
+            </div>
         </div>
-    </div>
+<!-- Statistics Cards (Optional - untuk informasi tambahan) -->
+        @if($attendances->count() > 0)
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
+                <!-- Total Hadir -->
+                <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-600 mb-1">Total Hadir</p>
+                                <h3 class="text-3xl font-bold text-gray-900">{{ $attendances->where('status', 'hadir')->count() }}</h3>
+                            </div>
+                            <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-calendar-check text-white text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h-1 bg-gradient-to-r from-green-500 to-emerald-600"></div>
+                </div>
 
-    <div class="bg-white shadow rounded-lg overflow-hidden">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50 border-b border-gray-200">
-                <tr>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Tanggal</th>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Check In</th>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Foto Check In</th>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Check Out</th>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Foto Check Out</th>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Keterangan</th>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status Dokumen</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                @forelse($attendances as $attendance)
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ $attendance->date->format('d/m/Y') }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                @if($attendance->status == 'hadir') bg-green-100 text-green-800
-                                @elseif($attendance->status == 'izin') bg-yellow-100 text-yellow-800
-                                @else bg-red-100 text-red-800
-                                @endif">
-                                {{ ucfirst($attendance->status) }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $attendance->check_in ? \Carbon\Carbon::parse($attendance->check_in)->format('H:i') : '-' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            @if($attendance->photo_path)
-                                <img src="{{ url('storage/' . $attendance->photo_path) }}" alt="Check In" class="w-16 h-16 object-cover rounded border cursor-pointer" onclick="window.open('{{ url('storage/' . $attendance->photo_path) }}', '_blank')">
-                            @else
-                                <span class="text-gray-400">-</span>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $attendance->check_out ? \Carbon\Carbon::parse($attendance->check_out)->format('H:i') : '-' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            @if($attendance->photo_checkout)
-                                <img src="{{ url('storage/' . $attendance->photo_checkout) }}" alt="Check Out" class="w-16 h-16 object-cover rounded border cursor-pointer" onclick="window.open('{{ url('storage/' . $attendance->photo_checkout) }}', '_blank')">
-                            @else
-                                <span class="text-gray-400">-</span>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4 text-sm text-gray-500">
-                            {{ $attendance->note ?? '-' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            @if($attendance->document_status)
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                    @if($attendance->document_status == 'approved') bg-green-100 text-green-800
-                                    @elseif($attendance->document_status == 'rejected') bg-red-100 text-red-800
-                                    @else bg-yellow-100 text-yellow-800
-                                    @endif">
-                                    {{ ucfirst($attendance->document_status) }}
-                                </span>
-                            @else
-                                <span class="text-gray-400">-</span>
-                            @endif
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="8" class="px-6 py-4 text-center text-gray-500">
-                            Belum ada data absensi.
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+                <!-- Total Izin -->
+                <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-600 mb-1">Total Izin</p>
+                                <h3 class="text-3xl font-bold text-gray-900">{{ $attendances->where('status', 'izin')->count() }}</h3>
+                            </div>
+                            <div class="w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-calendar-times text-white text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h-1 bg-gradient-to-r from-yellow-500 to-orange-500"></div>
+                </div>
 
-    <div class="mt-4">
-        {{ $attendances->links() }}
+                <!-- Total Sakit -->
+                <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-600 mb-1">Total Sakit</p>
+                                <h3 class="text-3xl font-bold text-gray-900">{{ $attendances->where('status', 'sakit')->count() }}</h3>
+                            </div>
+                            <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-rose-600 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-calendar-minus text-white text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h-1 bg-gradient-to-r from-red-500 to-rose-600"></div>
+                </div>
+
+                <!-- Total Records -->
+                <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-600 mb-1">Total Absensi</p>
+                                <h3 class="text-3xl font-bold text-gray-900">{{ $attendances->total() }}</h3>
+                            </div>
+                            <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-clipboard-list text-white text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h-1 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+                </div>
+            </div>
+        @endif
+
+        <!-- Attendance Table -->
+        <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden mt-8">
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
+                <h2 class="text-xl font-bold text-white flex items-center">
+                    <i class="fas fa-clipboard-list mr-3"></i>
+                    Data Absensi
+                </h2>
+            </div>
+            <div class="p-6">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr class="bg-blue-50">
+                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider rounded-tl-lg">Tanggal</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Check In</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Foto Check In</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Check Out</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Foto Check Out</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Keterangan</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider rounded-tr-lg">Status Dokumen</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-100">
+                            @forelse($attendances as $attendance)
+                                <tr class="hover:bg-blue-50 transition-colors duration-150">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-calendar text-blue-500 mr-2"></i>
+                                            <span class="text-sm font-medium text-gray-900">
+                                                {{ $attendance->date->format('d/m/Y') }}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
+                                            @if($attendance->status == 'hadir') bg-green-100 text-green-800
+                                            @elseif($attendance->status == 'izin') bg-yellow-100 text-yellow-800
+                                            @else bg-red-100 text-red-800
+                                            @endif">
+                                            {{ ucfirst($attendance->status) }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                        @if($attendance->check_in)
+                                            <div class="flex items-center">
+                                                <i class="fas fa-clock text-green-500 mr-2"></i>
+                                                {{ \Carbon\Carbon::parse($attendance->check_in)->format('H:i') }}
+                                            </div>
+                                        @else
+                                            <span class="text-gray-400">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if($attendance->photo_path)
+                                            <img src="{{ url('storage/' . $attendance->photo_path) }}" 
+                                                alt="Check In" 
+                                                class="w-12 h-12 object-cover rounded-lg border-2 border-blue-200 cursor-pointer hover:border-blue-400 transition-all shadow-sm" 
+                                                onclick="window.open('{{ url('storage/' . $attendance->photo_path) }}', '_blank')"
+                                                title="Klik untuk melihat full size">
+                                        @else
+                                            <span class="text-gray-400">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                        @if($attendance->check_out)
+                                            <div class="flex items-center">
+                                                <i class="fas fa-clock text-red-500 mr-2"></i>
+                                                {{ \Carbon\Carbon::parse($attendance->check_out)->format('H:i') }}
+                                            </div>
+                                        @else
+                                            <span class="text-gray-400">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if($attendance->photo_checkout)
+                                            <img src="{{ url('storage/' . $attendance->photo_checkout) }}" 
+                                                alt="Check Out" 
+                                                class="w-12 h-12 object-cover rounded-lg border-2 border-blue-200 cursor-pointer hover:border-blue-400 transition-all shadow-sm" 
+                                                onclick="window.open('{{ url('storage/' . $attendance->photo_checkout) }}', '_blank')"
+                                                title="Klik untuk melihat full size">
+                                        @else
+                                            <span class="text-gray-400">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-600">
+                                        @if($attendance->note)
+                                            <div class="max-w-xs truncate" title="{{ $attendance->note }}">
+                                                {{ $attendance->note }}
+                                            </div>
+                                        @else
+                                            <span class="text-gray-400">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if($attendance->document_status)
+                                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
+                                                @if($attendance->document_status == 'approved') bg-green-100 text-green-800
+                                                @elseif($attendance->document_status == 'rejected') bg-red-100 text-red-800
+                                                @else bg-yellow-100 text-yellow-800
+                                                @endif">
+                                                @if($attendance->document_status == 'approved')
+                                                    <i class="fas fa-check-circle mr-1"></i>
+                                                @elseif($attendance->document_status == 'rejected')
+                                                    <i class="fas fa-times-circle mr-1"></i>
+                                                @else
+                                                    <i class="fas fa-clock mr-1"></i>
+                                                @endif
+                                                {{ ucfirst($attendance->document_status) }}
+                                            </span>
+                                        @else
+                                            <span class="text-gray-400">-</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="8" class="px-6 py-12 text-center">
+                                        <div class="flex flex-col items-center justify-center text-gray-500">
+                                            <i class="fas fa-inbox text-5xl mb-3 text-gray-300"></i>
+                                            <p class="text-lg font-medium">Belum ada data absensi.</p>
+                                            <p class="text-sm mt-2">Mulai dengan membuat absensi baru.</p>
+                                            <a href="{{ route('intern.attendance.create') }}" 
+                                                class="mt-4 inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all duration-300">
+                                                <i class="fas fa-plus mr-2"></i>Buat Absensi
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                @if($attendances->count() > 0)
+                    <div class="mt-6">
+                        {{ $attendances->links() }}
+                    </div>
+                @endif
+            </div>
+        </div>
     </div>
 </div>
 @endsection
