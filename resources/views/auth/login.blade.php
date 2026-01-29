@@ -46,6 +46,15 @@
             animation: float 6s ease-in-out infinite reverse;
         }
 
+        @font-face {
+            font-family: 'Etna';
+            src: url('/fonts/Etna-Free-Font.otf') format('opentype');
+        }
+
+        .font-etna {
+            font-family: 'Etna', sans-serif;
+        }
+
         @keyframes float {
             0%, 100% { transform: translate(0,0); }
             50% { transform: translate(20px,-30px); }
