@@ -3,28 +3,23 @@
 @section('title', 'Penilaian Sertifikat Magang - Sistem Magang')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 py-8">
+<div class="min-h-screen bg-blue-50 via-indigo-50 py-8">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <!-- Header -->
         <div class="mb-8 flex justify-between items-center">
             <div>
-                <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-2">
+                <h1 class="text-4xl font-bold leading-tight bg-blue-600 bg-clip-text text-transparent mb-2 pb-2">
                     {{ $mode === 'edit' ? 'Edit Penilaian Sertifikat' : 'Penilaian Sertifikat Magang' }}
                 </h1>
                 <p class="text-gray-600">Berikan penilaian untuk penerbitan sertifikat magang</p>
             </div>
-            <a href="{{ route('admin.report.index') }}" 
-               class="bg-blue-800 hover:bg-blue-900 text-white font-bold py-2 px-5 rounded-lg shadow-md transition duration-200">
-                <i class="fas fa-arrow-left mr-2"></i>
-                Kembali
-            </a>
         </div>
 
         <!-- Main Form Card -->
         <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
             <!-- Profile Header -->
-            <div class="flex justify-between bg-gradient-to-r from-blue-600 to-cyan-600 px-6 py-6">
+            <div class="flex justify-between bg-blue-600 px-6 py-6">
                 <div class="flex items-center">
                     @if($selectedIntern && $selectedIntern->photo_path)
                         <img src="{{ url('storage/'.$selectedIntern->photo_path) }}" 
@@ -79,7 +74,7 @@
                     </div>
 
                     <!-- Grading Criteria Info -->
-                    <div class="mb-8 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border-2 border-blue-200">
+                    <div class="mb-8 p-4 bg-blue-600 rounded-xl border-2 border-blue-200">
                         <div class="flex items-start">
                             <i class="fas fa-info-circle text-blue-600 text-xl mr-3 mt-1"></i>
                             <div>
@@ -209,7 +204,7 @@
                             Batal & Kembali
                         </a>
                         <button type="submit"
-                                class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-cyan-700 shadow-md hover:shadow-lg transition-all duration-300">
+                                class="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-cyan-700 shadow-md hover:shadow-lg transition-all duration-300">
                             <i class="fas fa-save mr-2"></i>
                             {{ $mode === 'edit' ? 'Perbarui Nilai Sertifikat' : 'Simpan Nilai Sertifikat' }}
                         </button>
