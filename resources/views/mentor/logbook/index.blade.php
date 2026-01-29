@@ -6,7 +6,6 @@
     <div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            <!-- Header -->
             <div class="mb-8">
                 
                 <h1 class="text-4xl font-bold text-blue-600 mb-3">
@@ -15,7 +14,6 @@
                 <p class="text-gray-600">Pantau dan kelola catatan harian aktivitas anak magang</p>
             </div>
 
-            <!-- Filter Card -->
             <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden mb-6">
                 <div class="bg-blue-600 px-6 py-4">
                     <h2 class="text-xl font-bold text-white flex items-center">
@@ -42,7 +40,6 @@
                                 </select>
                             </div>
 
-                            <!-- Dari Tanggal -->
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">
                                     <i class="fas fa-calendar-alt mr-1 text-green-500"></i>
@@ -52,7 +49,6 @@
                                     class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" />
                             </div>
 
-                            <!-- Hingga Tanggal -->
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">
                                     <i class="fas fa-calendar-check mr-1 text-purple-500"></i>
@@ -62,7 +58,6 @@
                                     class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" />
                             </div>
 
-                            <!-- Buttons -->
                             <div class="flex items-end space-x-2">
                                 <button type="submit"
                                     class="flex-1 inline-flex items-center justify-center px-4 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 shadow-md hover:shadow-lg transition-all duration-300">
@@ -79,7 +74,6 @@
                 </div>
             </div>
 
-            <!-- Table Card -->
             <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
                 <div class="bg-blue-600 px-6 py-4">
                     <h2 class="text-xl font-bold text-white flex items-center">
@@ -174,7 +168,6 @@
                         </table>
                     </div>
 
-                    <!-- Pagination -->
                     <div class="mt-6">
                         {{ $logbooks->links() }}
                     </div>

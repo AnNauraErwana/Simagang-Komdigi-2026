@@ -6,7 +6,6 @@
     <div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 py-8">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            <!-- Header -->
             <div class="mb-8 flex justify-between items-center">
                 <div>
                     <h1
@@ -22,9 +21,8 @@
                 </a>
             </div>
 
-            <!-- Main Content Card -->
             <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden mb-6">
-                <!-- Profile Header -->
+                
                 <div class="bg-blue-600 px-6 py-6">
                     <div class="flex items-center">
                         @if ($report->intern->photo_path)
@@ -46,7 +44,6 @@
                     </div>
                 </div>
 
-                <!-- Content -->
                 <div class="p-8 space-y-6">
                     <!-- File Info -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -74,7 +71,6 @@
                         </div>
                     </div>
 
-                    <!-- Status & Grade -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="flex items-start">
                             <div
@@ -132,7 +128,6 @@
                         @endif
                     </div>
 
-                    <!-- Admin Note -->
                     @if ($report->admin_note)
                         <div>
                             <div class="flex items-center mb-3">
@@ -147,7 +142,6 @@
                         </div>
                     @endif
 
-                    <!-- Download Button -->
                     <div class="pt-4 border-t border-gray-200">
                         <a href="{{ route('download', ['path' => $report->file_path]) }}" target="_blank"
                             class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 shadow-md hover:shadow-lg transition-all duration-300">
@@ -156,7 +150,6 @@
                         </a>
                     </div>
 
-                    <!-- Project Section -->
                     @php
                         $projectFilesDisplay = $report->project_files ?? null;
                         $projectLinksDisplay = $report->project_links ?? null;
@@ -236,7 +229,6 @@
                         </div>
                     @endif
 
-                    <!-- Activities Section -->
                     @if ($report->activities && count($report->activities))
                         <div class="pt-6 border-t border-gray-200">
                             <div class="flex items-center mb-4">
@@ -260,7 +252,6 @@
                 </div>
             </div>
 
-            <!-- Grading Form -->
             @if (!$report->grade)
                 <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
                     <div class="bg-blue-600 px-6 py-4">

@@ -6,7 +6,6 @@
 <div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 py-8">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <!-- Header -->
         <div class="mb-8">
             <h1 class="text-4xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-2">
                 Detail Logbook
@@ -14,9 +13,8 @@
             <p class="text-gray-600">Informasi lengkap catatan harian anak magang</p>
         </div>
 
-        <!-- Main Content Card -->
         <div class="bg-white rounded-2xl shadow-lg border border-green-100 overflow-hidden">
-            <!-- Profile Section -->
+            
             <div class="bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-6">
                 <div class="flex items-center">
                     @if($logbook->intern->photo_path)
@@ -38,9 +36,8 @@
                 </div>
             </div>
 
-            <!-- Info Section -->
             <div class="p-8">
-                <!-- Date Info -->
+                
                 <div class="mb-8">
                     <div class="inline-flex items-center px-4 py-2 bg-green-50 rounded-xl border border-green-200">
                         <i class="fas fa-calendar-day text-green-600 mr-3 text-lg"></i>
@@ -51,7 +48,7 @@
                     </div>
                 </div>
 
-                <!-- Activity Section -->
+                
                 <div class="mb-8">
                     <div class="flex items-center mb-4">
                         <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
@@ -64,7 +61,6 @@
                     </div>
                 </div>
 
-                <!-- Photo Section -->
                 <div class="mb-8">
                     <div class="flex items-center mb-4">
                         <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
@@ -98,7 +94,6 @@
                     @endif
                 </div>
 
-                <!-- Back Button -->
                 <div class="flex justify-between items-center pt-6 border-t border-gray-200">
                     <a href="{{ url()->previous() }}" 
                        class="inline-flex items-center px-6 py-3 bg-gray-500 text-white font-semibold rounded-xl hover:bg-gray-600 shadow-md hover:shadow-lg transition-all duration-300">

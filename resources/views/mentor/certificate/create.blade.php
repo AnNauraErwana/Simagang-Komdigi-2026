@@ -6,7 +6,6 @@
 <div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 py-8">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <!-- Header -->
         <div class="mb-8 flex justify-between items-center">
             <div>
                 <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-2">
@@ -21,9 +20,8 @@
             </a>
         </div>
 
-        <!-- Main Form Card -->
         <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
-            <!-- Profile Header -->
+            
             <div class="bg-gradient-to-r from-blue-600 to-cyan-600 px-6 py-6">
                 <div class="flex items-center">
                     @if($selectedIntern && $selectedIntern->photo_path)
@@ -45,7 +43,6 @@
                 </div>
             </div>
 
-            <!-- Form Content -->
             <div class="p-8">
                 <form method="POST" 
                       action="{{ $mode === 'edit'
@@ -58,7 +55,6 @@
                     
                     <input type="hidden" name="intern_id" value="{{ $selectedIntern ? $selectedIntern->id : '' }}">
 
-                    <!-- Issue Date -->
                     <div class="mb-8">
                         <label for="issue_date" class="block text-sm font-bold text-gray-700 mb-3">
                             <i class="fas fa-calendar-alt text-blue-600 mr-2"></i>
@@ -69,8 +65,7 @@
                                value="{{ old('issue_date', $certificate?->issue_date?->format('Y-m-d') ?? date('Y-m-d')) }}">
                     </div>
 
-                    <!-- Grading Criteria Info -->
-                    <div class="mb-8 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border-2 border-blue-200">
+                   <div class="mb-8 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border-2 border-blue-200">
                         <div class="flex items-start">
                             <i class="fas fa-info-circle text-blue-600 text-xl mr-3 mt-1"></i>
                             <div>
@@ -88,7 +83,6 @@
                         </div>
                     </div>
 
-                    <!-- Assessment Fields Grid -->
                     <div class="space-y-6">
                         <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
                             <i class="fas fa-clipboard-list text-blue-600 mr-3"></i>
@@ -96,7 +90,6 @@
                         </h3>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Disiplin dan Kehadiran -->
                             <div>
                                 <label for="discipline_attendance" class="block text-sm font-bold text-gray-700 mb-2">
                                     <i class="fas fa-user-clock text-green-600 mr-2"></i>
@@ -109,7 +102,6 @@
                                        value="{{ old('discipline_attendance', $certificate->score->discipline_attendance ?? '') }}">
                             </div>
 
-                            <!-- Tanggung Jawab -->
                             <div>
                                 <label for="responsibility" class="block text-sm font-bold text-gray-700 mb-2">
                                     <i class="fas fa-tasks text-purple-600 mr-2"></i>
@@ -122,7 +114,6 @@
                                        value="{{ old('responsibility', $certificate->score->responsibility ?? '') }}">
                             </div>
 
-                            <!-- Kerja Sama dan Komunikasi -->
                             <div>
                                 <label for="teamwork_communication" class="block text-sm font-bold text-gray-700 mb-2">
                                     <i class="fas fa-users text-blue-600 mr-2"></i>
@@ -135,7 +126,6 @@
                                        value="{{ old('teamwork_communication', $certificate->score->teamwork_communication ?? '') }}">
                             </div>
 
-                            <!-- Keterampilan Teknik -->
                             <div>
                                 <label for="technical_skill" class="block text-sm font-bold text-gray-700 mb-2">
                                     <i class="fas fa-cogs text-orange-600 mr-2"></i>
@@ -148,7 +138,6 @@
                                        value="{{ old('technical_skill', $certificate->score->technical_skill ?? '') }}">
                             </div>
 
-                            <!-- Etika dan Sikap Kerja -->
                             <div>
                                 <label for="work_ethic" class="block text-sm font-bold text-gray-700 mb-2">
                                     <i class="fas fa-handshake text-teal-600 mr-2"></i>
@@ -161,7 +150,6 @@
                                        value="{{ old('work_ethic', $certificate->score->work_ethic ?? '') }}">
                             </div>
 
-                            <!-- Inisiatif dan Kreativitas -->
                             <div>
                                 <label for="initiative_creativity" class="block text-sm font-bold text-gray-700 mb-2">
                                     <i class="fas fa-lightbulb text-yellow-600 mr-2"></i>
@@ -175,7 +163,6 @@
                             </div>
                         </div>
 
-                        <!-- Micro Skill -->
                         <div class="pt-6 border-t border-gray-200">
                             <label for="micro_skill" class="block text-sm font-bold text-gray-700 mb-2">
                                 <i class="fas fa-graduation-cap text-indigo-600 mr-2"></i>
@@ -193,7 +180,6 @@
                         </div>
                     </div>
 
-                    <!-- Action Buttons -->
                     <div class="flex flex-col sm:flex-row justify-end gap-3 mt-8 pt-6 border-t border-gray-200">
                         @if ($mode === 'edit' && $certificate && $certificate->score)
                             <a href="{{ route('mentor.certificates.print', $certificate->id) }}"
@@ -220,7 +206,6 @@
             </div>
         </div>
 
-        <!-- Info Card -->
         <div class="mt-6 bg-white rounded-xl shadow-md border border-blue-100 p-6">
             <div class="flex items-start">
                 <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">

@@ -6,7 +6,6 @@
 <div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <!-- Header -->
         <div class="mb-8">
             <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
                 Detail Anak Magang
@@ -14,7 +13,6 @@
             <p class="text-gray-600">Informasi lengkap dan aktivitas anak magang</p>
         </div>
 
-        <!-- Profile Card -->
         <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden mb-6">
             <div class="p-8">
                 <div class="flex flex-col md:flex-row items-start space-y-6 md:space-y-0 md:space-x-8">
@@ -31,7 +29,6 @@
                         @endif
                     </div>
                     
-                    <!-- Info -->
                     <div class="flex-1">
                         <h2 class="text-3xl font-bold text-gray-900 mb-4">{{ $intern->name }}</h2>
                         
@@ -99,7 +96,6 @@
                     </div>
                 </div>
 
-                <!-- Stats Cards -->
                 <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200">
                         <div class="flex items-center justify-between">
@@ -140,7 +136,6 @@
             </div>
         </div>
 
-        <!-- Absensi & Logbook -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <!-- Absensi Terbaru -->
             <div class="bg-white rounded-2xl shadow-md border border-blue-100 overflow-hidden">
@@ -194,7 +189,6 @@
                 </div>
             </div>
 
-            <!-- Logbook Terbaru -->
             <div class="bg-white rounded-2xl shadow-md border border-green-100 overflow-hidden">
                 <div class="bg-green-600 px-6 py-4">
                     <h2 class="text-xl font-bold text-white flex items-center">
@@ -234,7 +228,6 @@
             </div>
         </div>
 
-        <!-- Laporan Akhir -->
         <div class="bg-white rounded-2xl shadow-md border border-purple-100 overflow-hidden">
             <div class="bg-purple-600 px-6 py-4">
                 <h2 class="text-xl font-bold text-white flex items-center">
