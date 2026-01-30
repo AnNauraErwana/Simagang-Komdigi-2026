@@ -7,23 +7,18 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             <div class="mb-8">
-                <h1 class="text-4xl font-bold text-blue-600 mb-3">Laporan Akhir Anak Bimbingan
-                </h1>
-                <p class="text-gray-600">Kelola dan nilai laporan akhir serta sertifikat anak magang</p>
+                <h1 class="text-3xl sm:text-4xl font-bold text-blue-600 mb-3">Laporan Akhir Anak Bimbingan</h1>
+                <p class="text-sm sm:text-base text-gray-600">Kelola dan nilai laporan akhir serta sertifikat anak magang</p>
             </div>
 
-            <div class="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="mb-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                 <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
-                    <div class="p-4">
+                    <div class="p-3 sm:p-4">
                         <div class="flex items-center justify-between gap-3">
                             <div class="flex-1 min-w-0">
                                 <p class="text-xs font-medium text-gray-600 mb-1">Approved</p>
-                                <h3 class="text-2xl font-bold text-gray-900">
+                                <h3 class="text-xl sm:text-2xl font-bold text-gray-900">
                                     {{ $reports->where('status', 'approved')->count() }}</h3>
-                            </div>
-                            <div
-                                class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center flex-shrink-0 transform group-hover:scale-110 transition-transform duration-300">
-                                <i class="fas fa-check-circle text-white text-lg"></i>
                             </div>
                         </div>
                     </div>
@@ -32,16 +27,12 @@
 
                 <div
                     class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
-                    <div class="p-4">
+                    <div class="p-3 sm:p-4">
                         <div class="flex items-center justify-between gap-3">
                             <div class="flex-1 min-w-0">
                                 <p class="text-xs font-medium text-gray-600 mb-1">Pending</p>
-                                <h3 class="text-2xl font-bold text-gray-900">
+                                <h3 class="text-xl sm:text-2xl font-bold text-gray-900">
                                     {{ $reports->where('status', 'pending')->count() }}</h3>
-                            </div>
-                            <div
-                                class="w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center flex-shrink-0 transform group-hover:scale-110 transition-transform duration-300">
-                                <i class="fas fa-clock text-white text-lg"></i>
                             </div>
                         </div>
                     </div>
@@ -50,16 +41,12 @@
 
                 <div
                     class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
-                    <div class="p-4">
+                    <div class="p-3 sm:p-4">
                         <div class="flex items-center justify-between gap-3">
                             <div class="flex-1 min-w-0">
                                 <p class="text-xs font-medium text-gray-600 mb-1">Rejected</p>
-                                <h3 class="text-2xl font-bold text-gray-900">
+                                <h3 class="text-xl sm:text-2xl font-bold text-gray-900">
                                     {{ $reports->where('status', 'rejected')->count() }}</h3>
-                            </div>
-                            <div
-                                class="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center flex-shrink-0 transform group-hover:scale-110 transition-transform duration-300">
-                                <i class="fas fa-times-circle text-white text-lg"></i>
                             </div>
                         </div>
                     </div>
@@ -68,16 +55,12 @@
 
                 <div
                     class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
-                    <div class="p-4">
+                    <div class="p-3 sm:p-4">
                         <div class="flex items-center justify-between gap-3">
                             <div class="flex-1 min-w-0">
                                 <p class="text-xs font-medium text-gray-600 mb-1">Perlu Revisi</p>
-                                <h3 class="text-2xl font-bold text-gray-900">
+                                <h3 class="text-xl sm:text-2xl font-bold text-gray-900">
                                     {{ $reports->where('needs_revision', true)->count() }}</h3>
-                            </div>
-                            <div
-                                class="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center flex-shrink-0 transform group-hover:scale-110 transition-transform duration-300">
-                                <i class="fas fa-exclamation-triangle text-white text-lg"></i>
                             </div>
                         </div>
                     </div>
@@ -86,13 +69,12 @@
             </div>
 
             <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden mb-6">
-                <div class="bg-blue-600 px-6 py-4">
-                    <h2 class="text-xl font-bold text-white flex items-center">
-                        <i class="fas fa-filter mr-3"></i>
+                <div class="bg-blue-600 px-4 sm:px-6 py-3 sm:py-4">
+                    <h2 class="text-lg sm:text-xl font-bold text-white">
                         Filter Data
                     </h2>
                 </div>
-                <div class="p-6">
+                <div class="p-3 sm:p-6">
                     <form method="GET" action="{{ route('mentor.report.index') }}">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                             <div>
@@ -193,20 +175,20 @@
                             <tbody class="bg-white divide-y divide-gray-100">
                                 @forelse($reports as $r)
                                     <tr class="hover:bg-blue-50 transition-colors duration-150">
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex items-center">
+                                        <td class="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
+                                            <div class="flex items-center gap-2">
                                                 @if ($r->intern->photo_path)
                                                     <img src="{{ url('storage/' . $r->intern->photo_path) }}"
-                                                        class="w-8 h-8 rounded-full object-cover border-2 border-blue-200 mr-3"
+                                                        class="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover object-center border-2 border-blue-200 flex-shrink-0 aspect-square"
                                                         alt="{{ $r->intern->name }}" />
                                                 @else
                                                     <div
-                                                        class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center mr-3">
+                                                        class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center flex-shrink-0 aspect-square">
                                                         <i class="fas fa-user text-white text-xs"></i>
                                                     </div>
                                                 @endif
                                                 <span
-                                                    class="text-sm font-medium text-gray-900">{{ $r->intern->name }}</span>
+                                                    class="text-xs sm:text-sm font-medium text-gray-900 truncate">{{ $r->intern->name }}</span>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
@@ -260,26 +242,29 @@
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
-                                            
-                                                {{-- Aksi Laporan --}}
-                                                @if (!$r->grade)
-                                                    <a href="{{ route('mentor.report.show', $r) }}"
-                                                        class="text-green-600 hover:text-green-800 mr-3 transition-color" title="beri nilai laporan akhir">
-                                                        <i class="fas fa-star mr-1"></i>
-                                                        
-                                                    </a>
-                                                @else
-                                                    <a href="{{ route('mentor.report.show', $r) }}"
-                                                        class="text-green-600 hover:text-green-800 mr-3 transition-color" title="lihat nilai laporan akhir">
-                                                        <i class="fas fa-eye mr-1"></i>
-                                                    </a>
-                                                @endif
 
-                                                <a href="{{ route('mentor.certificates.create', ['intern_id' => $r->intern->id]) }}"
-                                                    class="text-yellow-400 hover:text-yellow-300 inline-block transition-color" title="penilaian sertifikat">
-                                                    <i class="fas fa-certificate mr-1"></i>
+                                            {{-- Aksi Laporan --}}
+                                            @if (!$r->grade)
+                                                <a href="{{ route('mentor.report.show', $r) }}"
+                                                    class="text-green-600 hover:text-green-800 mr-3 transition-color"
+                                                    title="beri nilai laporan akhir">
+                                                    <i class="fas fa-star mr-1"></i>
+
                                                 </a>
-                                            
+                                            @else
+                                                <a href="{{ route('mentor.report.show', $r) }}"
+                                                    class="text-green-600 hover:text-green-800 mr-3 transition-color"
+                                                    title="lihat nilai laporan akhir">
+                                                    <i class="fas fa-eye mr-1"></i>
+                                                </a>
+                                            @endif
+
+                                            <a href="{{ route('mentor.certificates.create', ['intern_id' => $r->intern->id]) }}"
+                                                class="text-yellow-400 hover:text-yellow-300 inline-block transition-color"
+                                                title="penilaian sertifikat">
+                                                <i class="fas fa-certificate mr-1"></i>
+                                            </a>
+
                                         </td>
                                     </tr>
                                 @empty

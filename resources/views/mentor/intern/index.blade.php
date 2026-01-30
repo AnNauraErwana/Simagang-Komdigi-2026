@@ -7,24 +7,23 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             <div class="mb-8">
-                <h1 class="text-4xl font-bold text-blue-600 mb-3">
+                <h1 class="text-3xl sm:text-4xl font-bold text-blue-600 mb-3">
                     Anak Magang Bimbingan
-                </class=>
-                <p class="text-gray-600 text-lg">Kelola dan pantau perkembangan anak magang Anda</p>
+                </h1>
+                <p class="text-sm sm:text-base text-gray-600">Kelola dan pantau perkembangan anak magang Anda</p>
             </div>
 
             <div
                 class="bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-xl border border-blue-200 overflow-hidden mb-6">
-                <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-5">
-                    <h2 class="text-xl font-bold text-white flex items-center">
-                        <i class="fas fa-search mr-3"></i>
+                <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-4 sm:px-6 py-3 sm:py-5">
+                    <h2 class="text-lg sm:text-xl font-bold text-white">
                         Cari Anak Magang
                     </h2>
                 </div>
-                <div class="p-6">
+                <div class="p-3 sm:p-6">
 
-                    <form method="GET" action="{{ route('mentor.intern.index') }}" class="mb-6">
-                        <div class="flex gap-3">
+                    <form method="GET" action="{{ route('mentor.intern.index') }}" class="mb-4 sm:mb-6">
+                        <div class="flex gap-2">
                             <div class="flex-1 relative group">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i
@@ -32,16 +31,16 @@
                                 </div>
                                 <input type="text" name="search" id="search" value="{{ request('search') }}"
                                     placeholder="Cari nama anak magang..."
-                                    class="block w-full pl-10 pr-3 py-3 border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all hover:border-blue-400">
+                                    class="block w-full pl-10 pr-3 py-3 border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all hover:border-blue-400 text-sm">
                             </div>
                             <button type="submit"
-                                class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                                class="inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold text-sm rounded-xl hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-300 flex-shrink-0 whitespace-nowrap">
                                 <i class="fas fa-search mr-2"></i>
                                 Cari
                             </button>
                             @if (request()->filled('search'))
                                 <a href="{{ route('mentor.intern.index') }}"
-                                    class="inline-flex items-center justify-center bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold py-3 px-6 rounded-xl transition duration-200 shadow-md hover:shadow-lg transform hover:scale-105">
+                                    class="inline-flex items-center justify-center bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold py-3 px-4 rounded-xl transition duration-200 shadow-md hover:shadow-lg flex-shrink-0">
                                     <i class="fas fa-times"></i>
                                 </a>
                             @endif
@@ -49,38 +48,42 @@
                     </form>
 
                     <div class="overflow-x-auto rounded-xl shadow-inner">
-                        <table class="min-w-full divide-y divide-gray-200">
+                        <table class="w-full divide-y divide-gray-200">
                             <thead>
                                 <tr class="bg-gradient-to-r from-blue-500 to-indigo-500">
                                     <th
-                                        class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider rounded-tl-lg">
+                                        class="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                                         Foto</th>
-                                    <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
+                                    <th
+                                        class="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                                         Nama</th>
-                                    <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
+                                    <th
+                                        class="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider hidden sm:table-cell">
                                         Institusi</th>
-                                    <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
+                                    <th
+                                        class="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider hidden md:table-cell">
                                         Logbook</th>
-                                    <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
+                                    <th
+                                        class="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                                         Absensi</th>
                                     <th
-                                        class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider rounded-tr-lg">
-                                        Mikro Skill</th>
+                                        class="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
+                                        Mikro</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-100">
                                 @forelse($interns as $intern)
                                     <tr
                                         class="hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200">
-                                        <td class="px-6 py-4 whitespace-nowrap">
+                                        <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                             @if ($intern->photo_path)
                                                 <img src="{{ url('storage/' . $intern->photo_path) }}"
-                                                    class="w-14 h-14 rounded-full object-cover border-3 border-blue-300 shadow-lg ring-2 ring-blue-100 hover:ring-blue-400 transition-all"
+                                                    class="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover object-center border-3 border-blue-300 shadow-lg ring-2 ring-blue-100 hover:ring-blue-400 transition-all flex-shrink-0 aspect-square"
                                                     alt="{{ $intern->name }}" />
                                             @else
                                                 <div
-                                                    class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center shadow-lg ring-2 ring-blue-100 hover:ring-blue-400 transition-all">
-                                                    <i class="fas fa-user text-white text-xl"></i>
+                                                    class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center shadow-lg ring-2 ring-blue-100 hover:ring-blue-400 transition-all flex-shrink-0 aspect-square">
+                                                    <i class="fas fa-user text-white text-lg"></i>
                                                 </div>
                                             @endif
                                         </td>
@@ -92,7 +95,6 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-700 flex items-center font-medium">
-                                                <i class="fas fa-university mr-2 text-blue-500"></i>
                                                 {{ $intern->institution }}
                                             </div>
                                         </td>
@@ -106,14 +108,12 @@
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <span
                                                 class="px-3 py-2 inline-flex text-sm leading-5 font-bold rounded-full bg-gradient-to-r from-green-100 to-emerald-200 text-green-800 shadow-sm hover:shadow-md transition-all">
-                                                <i class="fas fa-calendar-check mr-2"></i>
                                                 {{ $intern->attendances_count }}
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <span
                                                 class="px-3 py-2 inline-flex text-sm leading-5 font-bold rounded-full bg-gradient-to-r from-indigo-100 to-blue-200 text-indigo-800 shadow-sm hover:shadow-md transition-all">
-                                                <i class="fas fa-graduation-cap mr-2"></i>
                                                 {{ $intern->micro_skills_count }}
                                             </span>
                                         </td>
