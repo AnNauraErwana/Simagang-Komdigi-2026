@@ -9,7 +9,7 @@
             <!-- Profile Header -->
             <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
                 <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-8">
-                    <div class="flex flex-col md:flex-row items-start justify-between space-y-4 md:space-y-0">
+                    <div class="flex flex-col md:flex-row items-center md:items-start justify-between space-y-4 md:space-y-0">
                         <div
                             class="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
                             @if ($intern->photo_path)
@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         @if ($certificate && ($certificate->issue_date->isToday() || $certificate->issue_date->isPast()))
-                            <div class="self-start">
+                            <div class="self-center md:self-start">
                                 <a href="{{ route('intern.certificates.print', $certificate->id) }}" target="_blank"
                                     class="inline-flex items-center justify-center px-4 py-2 bg-yellow-400 text-white font-semibold rounded-lg hover:bg-yellow-300 transition-all duration-300 shadow-md">
                                     <i class="fas fa-award mr-2"></i>Lihat Sertifikat
@@ -47,19 +47,17 @@
             </div>
 
             <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-6 mb-8">
                 <!-- Card 1: Hari Hadir -->
-                <div
-                    class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
-                    <div class="p-6">
-                        <div class="flex items-center justify-between">
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-gray-500 truncate">Hari Hadir</p>
-                                <dd class="text-lg font-medium text-gray-900">{{ $totalHadir }}</dd>
+                <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                    <div class="p-4 sm:p-6">
+                        <div class="flex flex-row items-center justify-between gap-3">
+                            <div class="flex-1 min-w-0 flex flex-col">
+                                <p class="text-sm font-medium text-gray-700 truncate">Hari Hadir</p>
+                                <dd class="text-xl sm:text-lg font-medium text-gray-900 truncate">{{ $totalHadir }}</dd>
                             </div>
-                            <div
-                                class="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                                <i class="fas fa-calendar-check text-white text-2xl"></i>
+                            <div class="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 bg-blue-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-calendar-check text-white text-xl sm:text-2xl"></i>
                             </div>
                         </div>
                     </div>
@@ -67,17 +65,15 @@
                 </div>
 
                 <!-- Card 2: Izin -->
-                <div
-                    class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
-                    <div class="p-6">
-                        <div class="flex items-center justify-between">
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-gray-500 truncate">Izin</p>
-                                <dd class="text-lg font-medium text-gray-900">{{ $totalIzin }}</dd>
+                <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                        <div class="p-4 sm:p-6">
+                        <div class="flex flex-row items-center justify-between gap-3">
+                            <div class="flex-1 min-w-0 flex flex-col">
+                                <p class="text-sm font-medium text-gray-700 truncate">Izin</p>
+                                <dd class="text-xl sm:text-lg font-medium text-gray-900 truncate">{{ $totalIzin }}</dd>
                             </div>
-                            <div
-                                class="w-16 h-16 bg-yellow-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                                <i class="fas fa-calendar-times text-white text-2xl"></i>
+                            <div class="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 bg-yellow-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-calendar-times text-white text-xl sm:text-2xl"></i>
                             </div>
                         </div>
                     </div>
@@ -85,17 +81,15 @@
                 </div>
 
                 <!-- Card 3: Sakit -->
-                <div
-                    class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
-                    <div class="p-6">
-                        <div class="flex items-center justify-between">
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-gray-500 truncate">Sakit</p>
-                                <dd class="text-lg font-medium text-gray-900">{{ $totalSakit }}</dd>
+                <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                        <div class="p-4 sm:p-6">
+                        <div class="flex flex-row items-center justify-between gap-3">
+                            <div class="flex-1 min-w-0 flex flex-col">
+                                <p class="text-sm font-medium text-gray-700 truncate">Sakit</p>
+                                <dd class="text-xl sm:text-lg font-medium text-gray-900 truncate">{{ $totalSakit }}</dd>
                             </div>
-                            <div
-                                class="w-16 h-16 bg-red-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                                <i class="fas fa-calendar-minus text-white text-2xl"></i>
+                            <div class="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 bg-red-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-calendar-minus text-white text-xl sm:text-2xl"></i>
                             </div>
                         </div>
                     </div>
@@ -103,18 +97,16 @@
                 </div>
 
                 <!-- Card 4: Laporan -->
-                <div
-                    class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
-                    <div class="p-6">
-                        <div class="flex items-center justify-between">
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-gray-500 truncate">Laporan</p>
-                                <dd class="text-lg font-medium text-gray-900">{{ $hasFinalReport ? 'Sudah' : 'Belum' }}
+                <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                        <div class="p-4 sm:p-6">
+                        <div class="flex flex-row items-center justify-between gap-3">
+                            <div class="flex-1 min-w-0 flex flex-col">
+                                <p class="text-sm font-medium text-gray-700 truncate">Laporan</p>
+                                <dd class="text-xl sm:text-lg font-medium text-gray-900 truncate">{{ $hasFinalReport ? 'Sudah' : 'Belum' }}
                                 </dd>
                             </div>
-                            <div
-                                class="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                                <i class="fas fa-file-alt text-white text-2xl"></i>
+                            <div class="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 bg-green-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-file-alt text-white text-xl sm:text-2xl"></i>
                             </div>
                         </div>
                     </div>
@@ -122,18 +114,16 @@
                 </div>
 
                 <!-- Card 5: Mikro Skill -->
-                <div
-                    class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
-                    <div class="p-6">
-                        <div class="flex items-center justify-between">
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-gray-500 truncate">Mikro Skill</p>
-                                <dd class="text-lg font-medium text-gray-900">{{ $microSkillApproved }} /
+                <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                        <div class="p-4 sm:p-6">
+                        <div class="flex flex-row items-center justify-between gap-3">
+                            <div class="flex-1 min-w-0 flex flex-col">
+                                <p class="text-sm font-medium text-gray-700 truncate">Mikro Skill</p>
+                                <dd class="text-xl sm:text-lg font-medium text-gray-900 truncate">{{ $microSkillApproved }} /
                                     {{ $microSkillTotal }}</dd>
                             </div>
-                            <div
-                                class="w-16 h-16 bg-purple-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                                <i class="fas fa-graduation-cap text-white text-2xl"></i>
+                            <div class="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 bg-purple-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-graduation-cap text-white text-xl sm:text-2xl"></i>
                             </div>
                         </div>
                     </div>
@@ -291,7 +281,6 @@
                                     <!-- Score Badge -->
                                     <span
                                         class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-xs font-semibold">
-                                        <i class="fas fa-star mr-1"></i>
                                         {{ $row['total'] }} course
                                     </span>
                                 </div>

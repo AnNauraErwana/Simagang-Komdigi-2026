@@ -82,9 +82,11 @@
                                     <i class="fas fa-image mr-2 text-blue-500"></i>
                                     Foto Saat Ini
                                 </p>
-                                <img src="{{ asset('storage/'.$submission->photo_path) }}" 
-                                     alt="Current Photo" 
-                                     class="max-w-xs h-auto rounded-lg border-2 border-blue-300 shadow-md">
+                                  <div class="flex justify-center">
+                                     <img src="{{ asset('storage/'.$submission->photo_path) }}"
+                                         alt="Current Photo"
+                                         class="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg h-auto rounded-lg border-2 border-blue-300 shadow-md mx-auto object-contain">
+                                  </div>
                             </div>
                         </div>
                     @endif
