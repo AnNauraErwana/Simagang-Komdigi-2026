@@ -7,14 +7,71 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             <div class="mb-8">
-                <h1 class="text-4xl font-bold text-blue-600 mb-3">
+                <h1
+                    class="text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-3">
                     Mikro Skill Anak Bimbingan
                 </h1>
-                <p class="text-gray-600">Pantau pencapaian dan pengembangan keterampilan anak magang</p>
+                <p class="text-gray-600 text-lg">Pantau pencapaian dan pengembangan keterampilan anak magang</p>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden mb-6">
-                <div class="bg-blue-600 px-6 py-4">
+            <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div
+                    class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-blue-100">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-medium text-gray-600 mb-1">Total Submissions</p>
+                                <h3 class="text-2xl font-bold text-gray-900">{{ $submissions->total() }}</h3>
+                            </div>
+                            <div
+                                class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-list-check text-white text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h-1 bg-gradient-to-r from-blue-500 to-blue-600"></div>
+                </div>
+
+                <div
+                    class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-blue-100">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-medium text-gray-600 mb-1">Unique Interns</p>
+                                <h3 class="text-2xl font-bold text-gray-900">
+                                    {{ $submissions->pluck('intern_id')->unique()->count() }}</h3>
+                            </div>
+                            <div
+                                class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-users text-white text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h-1 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+                </div>
+
+                <div
+                    class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-blue-100">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-medium text-gray-600 mb-1">Showing Page</p>
+                                <h3 class="text-2xl font-bold text-gray-900">{{ $submissions->currentPage() }} /
+                                    {{ $submissions->lastPage() }}</h3>
+                            </div>
+                            <div
+                                class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-file-alt text-white text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h-1 bg-gradient-to-r from-blue-500 to-blue-600"></div>
+                </div>
+            </div>
+
+            <div
+                class="bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-xl border border-blue-200 overflow-hidden mb-6">
+                <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-5">
                     <h2 class="text-xl font-bold text-white flex items-center">
                         <i class="fas fa-filter mr-3"></i>
                         Filter Data
@@ -22,16 +79,16 @@
                 </div>
                 <div class="p-6">
                     <form method="GET" action="{{ route('mentor.microskill.index') }}">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="flex justify-between gap-5">
                             <!-- Anak Magang -->
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                    <i class="fas fa-user-graduate mr-1 text-blue-500"></i>
-                                    Anak Magang
+                            <div class="w-full flex flex-col">
+                                <label class="block text-sm font-semibold text-gray-700 mb-3">
+                                    <i class="fas fa-user-graduate mr-1.5 text-blue-600 text-base"></i>
+                                    <span>Anak Magang</span>
                                 </label>
                                 <select name="intern_id"
-                                    class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
-                                    <option value="">Semua</option>
+                                    class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-xl text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all hover:border-blue-400 appearance-none bg-white cursor-pointer shadow-sm hover:shadow-md">
+                                    <option value="">-- Semua Anak Magang --</option>
                                     @foreach ($interns as $intern)
                                         <option value="{{ $intern->id }}" @selected(request('intern_id') == $intern->id)>{{ $intern->name }}
                                         </option>
@@ -40,16 +97,16 @@
                             </div>
 
                             <!-- Buttons -->
-                            <div class="flex items-end space-x-2">
+                            <div class="flex items-end gap-3">
                                 <button type="submit"
-                                    class="flex-1 inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 shadow-md hover:shadow-lg transition-all duration-300">
+                                    class="flex-1 inline-flex items-center justify-center px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-300">
                                     <i class="fas fa-search mr-2"></i>
-                                    Filter
+                                    <span>Cari</span>
                                 </button>
                                 @if (request()->filled('intern_id'))
                                     <a href="{{ route('mentor.microskill.index') }}"
-                                        class="inline-flex items-center justify-center bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold py-3 px-6 rounded-xl transition duration-200">
-                                        <i class="fas fa-times"></i>
+                                        class="inline-flex items-center justify-center bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold py-2.5 px-4 rounded-xl transition duration-200 shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95">
+                                        <i class="fas fa-times text-lg"></i>
                                     </a>
                                 @endif
                             </div>
@@ -58,89 +115,90 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
-                <div class="bg-blue-600 px-6 py-4">
+            <div class="bg-white rounded-2xl shadow-xl border border-blue-100 overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-5">
                     <h2 class="text-xl font-bold text-white flex items-center">
                         <i class="fas fa-graduation-cap mr-3"></i>
                         Data Mikro Skill
                     </h2>
                 </div>
                 <div class="p-6">
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto rounded-xl border border-gray-200">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead>
-                                <tr class="bg-blue-50">
-                                    <th
-                                        class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider rounded-tl-lg">
+                                <tr class="bg-gradient-to-r from-blue-600 to-indigo-600">
+                                    <th class="px-6 py-5 text-left text-xs font-bold text-white uppercase tracking-widest">
                                         Nama</th>
-                                    <th
-                                        class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">
+                                    <th class="px-6 py-5 text-left text-xs font-bold text-white uppercase tracking-widest">
                                         Judul Course</th>
-                                    <th
-                                        class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">
+                                    <th class="px-6 py-5 text-left text-xs font-bold text-white uppercase tracking-widest">
                                         Waktu Submit</th>
-                                    <th
-                                        class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider rounded-tr-lg">
-                                        Bukti Sertifikat</th>
+                                    <th class="px-6 py-5 text-left text-xs font-bold text-white uppercase tracking-widest">
+                                        Dokumentasi</th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-gray-100">
+                            <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse($submissions as $s)
-                                    <tr class="hover:bg-blue-50 transition-colors duration-150">
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex items-center">
+                                    <tr
+                                        class="hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-300 border-b border-gray-200">
+                                        <td class="px-6 py-5 whitespace-nowrap">
+                                            <div class="flex items-center gap-3">
                                                 @if ($s->intern->photo_path)
                                                     <img src="{{ url('storage/' . $s->intern->photo_path) }}"
-                                                        class="w-8 h-8 rounded-full object-cover border-2 border-blue-200 mr-3"
+                                                        class="w-12 h-12 rounded-full object-cover border-2 border-blue-300 shadow-md ring-2 ring-blue-100"
                                                         alt="{{ $s->intern->name }}" />
                                                 @else
                                                     <div
-                                                        class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center mr-3">
-                                                        <i class="fas fa-user text-white text-xs"></i>
+                                                        class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center shadow-md ring-2 ring-blue-100">
+                                                        <i class="fas fa-user text-white text-base"></i>
                                                     </div>
                                                 @endif
                                                 <span
-                                                    class="text-sm font-medium text-gray-900">{{ $s->intern->name }}</span>
+                                                    class="text-sm font-semibold text-gray-900">{{ $s->intern->name }}</span>
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4">
-                                            <div class="flex items-center">
-                                                <i class="fas fa-book-open text-blue-500 mr-2"></i>
-                                                <span class="text-sm font-semibold text-gray-900">{{ $s->title }}</span>
+                                        <td class="px-6 py-5">
+                                            <div class="flex items-center gap-2">
+                                                <i class="fas fa-book-open text-blue-600 text-sm"></i>
+                                                <span
+                                                    class="text-sm font-medium text-gray-900">{{ Str::limit($s->title, 40) }}</span>
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex items-center text-sm text-gray-600">
-                                                <i class="fas fa-clock text-blue-500 mr-2"></i>
-                                                {{ $s->submitted_at ? \Carbon\Carbon::parse($s->submitted_at)->format('d M Y H:i') : '-' }}
+                                        <td class="px-6 py-5 whitespace-nowrap">
+                                            <div class="flex items-center gap-2 text-sm">
+                                                <i class="fas fa-clock text-blue-500 text-sm"></i>
+                                                <span
+                                                    class="text-gray-700 font-medium">{{ $s->submitted_at ? \Carbon\Carbon::parse($s->submitted_at)->format('d M Y') : '-' }}</span>
+                                                <span
+                                                    class="text-gray-500 text-xs">{{ $s->submitted_at ? \Carbon\Carbon::parse($s->submitted_at)->format('H:i') : '' }}</span>
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
+                                        <td class="px-6 py-5 whitespace-nowrap">
                                             @if ($s->photo_path)
-                                                <div class="relative group">
-                                                    <img src="{{ url('storage/' . $s->photo_path) }}" alt="Certificate"
-                                                        class="w-16 h-16 object-cover rounded-lg border-2 border-blue-200 cursor-pointer hover:border-blue-400 transition-all shadow-sm hover:shadow-md"
-                                                        onclick="window.open('{{ url('storage/' . $s->photo_path) }}', '_blank')"
-                                                        title="Klik untuk melihat sertifikat" />
-                                                    <div
-                                                        class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded-lg transition-all duration-300 flex items-center justify-center">
-                                                        <i
-                                                            class="fas fa-search-plus text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
-                                                    </div>
-                                                </div>
+                                                <img src="{{ url('storage/' . $s->photo_path) }}" alt="Documentation"
+                                                    class="w-12 h-12 object-cover rounded-lg border-2 border-blue-200 cursor-pointer hover:border-blue-400 transition-all shadow-sm hover:shadow-lg transform hover:scale-110"
+                                                    onclick="window.open('{{ url('storage/' . $s->photo_path) }}', '_blank')"
+                                                    title="Klik untuk melihat full size" />
                                             @else
-                                                <span class="text-gray-400">-</span>
+                                                <div
+                                                    class="inline-flex items-center justify-center w-12 h-12 bg-gray-100 rounded-lg border-2 border-gray-200">
+                                                    <i class="fas fa-image text-gray-300 text-lg"></i>
+                                                </div>
                                             @endif
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="4" class="px-6 py-8 text-center">
-                                            <div class="flex flex-col items-center justify-center text-gray-500">
-                                                <i class="fas fa-certificate text-5xl mb-3 text-gray-300"></i>
-                                                <p class="text-sm font-medium">Tidak ada data mikro skill.</p>
-                                                <p class="text-xs text-gray-400 mt-1">Data akan muncul ketika anak magang
-                                                    submit course</p>
+                                        <td colspan="4" class="px-6 py-12 text-center">
+                                            <div class="flex flex-col items-center justify-center">
+                                                <div
+                                                    class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mb-5 shadow-md">
+                                                    <i class="fas fa-certificate text-5xl text-gray-300"></i>
+                                                </div>
+                                                <p class="text-lg font-bold text-gray-700 mb-2">Tidak ada data mikro skill
+                                                </p>
+                                                <p class="text-sm text-gray-500">Data akan muncul ketika anak magang
+                                                    mensubmit course</p>
                                             </div>
                                         </td>
                                     </tr>
@@ -149,54 +207,12 @@
                         </table>
                     </div>
 
-                    <div class="mt-6">
+                    <div class="mt-8">
                         {{ $submissions->links() }}
                     </div>
                 </div>
             </div>
 
-            <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="bg-white rounded-xl shadow-md border border-blue-100 p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600 mb-1">Total Submissions</p>
-                            <h3 class="text-2xl font-bold text-gray-900">{{ $submissions->total() }}</h3>
-                        </div>
-                        <div
-                            class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-list-check text-white text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-md border border-blue-100 p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600 mb-1">Unique Interns</p>
-                            <h3 class="text-2xl font-bold text-gray-900">
-                                {{ $submissions->pluck('intern_id')->unique()->count() }}</h3>
-                        </div>
-                        <div
-                            class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-users text-white text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-md border border-blue-100 p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600 mb-1">Showing Page</p>
-                            <h3 class="text-2xl font-bold text-gray-900">{{ $submissions->currentPage() }} /
-                                {{ $submissions->lastPage() }}</h3>
-                        </div>
-                        <div
-                            class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-file-alt text-white text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
         </div>
     </div>

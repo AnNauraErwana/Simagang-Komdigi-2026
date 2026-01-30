@@ -259,29 +259,27 @@
                                                 {{ $r->submitted_at ? \Carbon\Carbon::parse($r->submitted_at)->format('d M Y H:i') : '-' }}
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex flex-col items-center space-y-2">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
+                                            
                                                 {{-- Aksi Laporan --}}
                                                 @if (!$r->grade)
                                                     <a href="{{ route('mentor.report.show', $r) }}"
-                                                        class="inline-flex items-center px-3 py-1.5 bg-indigo-600 text-white text-xs font-semibold rounded-lg hover:bg-indigo-700 shadow-sm hover:shadow-md transition-all duration-300 w-full justify-center">
+                                                        class="text-green-600 hover:text-green-800 mr-3 transition-color" title="beri nilai laporan akhir">
                                                         <i class="fas fa-star mr-1"></i>
-                                                        Beri Nilai
+                                                        
                                                     </a>
                                                 @else
                                                     <a href="{{ route('mentor.report.show', $r) }}"
-                                                        class="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 shadow-sm hover:shadow-md transition-all duration-300 w-full justify-center">
+                                                        class="text-green-600 hover:text-green-800 mr-3 transition-color" title="lihat nilai laporan akhir">
                                                         <i class="fas fa-eye mr-1"></i>
-                                                        Lihat Nilai
                                                     </a>
                                                 @endif
 
                                                 <a href="{{ route('mentor.certificates.create', ['intern_id' => $r->intern->id]) }}"
-                                                    class="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 shadow-sm hover:shadow-md transition-all duration-300 w-full justify-center">
+                                                    class="text-yellow-400 hover:text-yellow-300 inline-block transition-color" title="penilaian sertifikat">
                                                     <i class="fas fa-certificate mr-1"></i>
-                                                    Sertifikat
                                                 </a>
-                                            </div>
+                                            
                                         </td>
                                     </tr>
                                 @empty
