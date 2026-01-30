@@ -39,7 +39,7 @@ class MonitoringExport implements
         $endOfMonth = null;
 
         if (!empty($this->filters['month'])) {
-        $month = Carbon::createFromFormat('Y-m', $this->filters['month']);
+        $month = Carbon::createFromFormat('Y-m-d', $this->filters['month'] . '-01');
 
         $startOfMonth = $month->copy()->startOfMonth();
         $endOfMonth   = $month->copy()->endOfMonth();

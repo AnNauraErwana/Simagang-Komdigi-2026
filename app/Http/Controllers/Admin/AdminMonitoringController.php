@@ -8,6 +8,7 @@ use App\Models\Mentor;
 use App\Exports\MonitoringExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -15,36 +16,41 @@ class AdminMonitoringController extends Controller
 {
     public function index(Request $request)
     {
-        // Get filter inputs
-        $selectedMonth = $request->input('month', now()->format('Y-m'));
-        $selectedStatus = $request->input('status', 'all');
+        // Normalize and get filter inputs
+        $selectedMonth = $request->input('month', now()->format('Y-m-d', '01'));
+        // Normalize status: allow both "akan-pelepasan" and "akan_pelepasan"
+        $rawStatus = $request->input('status', 'all');
+        $selectedStatus = str_replace('-', '_', $rawStatus);
         $selectedMentor = $request->input('mentor_id', null);
         $selectedYear = Carbon::createFromFormat('Y-m', $selectedMonth)->year;
         
         // Parse month
-        $month = Carbon::createFromFormat('Y-m', $selectedMonth);
+        $month = Carbon::createFromFormat('Y-m-d', $selectedMonth . '-01');
         $startOfMonth = $month->copy()->startOfMonth();
         $endOfMonth = $month->copy()->endOfMonth();
+        $year = $month->year;
+        $mon = $month->month;
 
-        // Get interns that started in this month (masuk)
-        $internsMasuk = Intern::whereBetween('start_date', [$startOfMonth, $endOfMonth])
+        // Debug: log selected month
+        Log::debug('Monitoring selectedMonth', ['selectedMonth' => $selectedMonth, 'year' => $year, 'month' => $mon]);
+
+        // Get interns that started in this month (masuk) - use year/month for robustness
+        $internsMasuk = Intern::whereYear('start_date', $year)
+            ->whereMonth('start_date', $mon)
             ->with(['mentor', 'user'])
             ->orderBy('start_date', 'asc')
             ->get();
 
-        // Get interns that ended in this month (keluar/pelepasan)
-        $internsKeluar = Intern::whereBetween('end_date', [$startOfMonth, $endOfMonth])
+        // Get interns that ended in this month (keluar/pelepasan) - based on end_date (rencana)
+        $internsKeluar = Intern::whereYear('end_date', $year)
+            ->whereMonth('end_date', $mon)
             ->with(['mentor', 'user'])
             ->orderBy('end_date', 'asc')
             ->get();
 
         // Get active interns (still active in this month) - ordered by end_date (earliest first)
         $internsAktif = Intern::where('is_active', true)
-            ->where('start_date', '<=', $endOfMonth)
-            ->where(function($query) use ($startOfMonth) {
-                $query->whereNull('end_date')
-                    ->orWhere('end_date', '>=', $startOfMonth);
-            })
+            ->whereDate('start_date', '<=', $endOfMonth)
             ->with(['mentor', 'user'])
             ->orderBy('end_date', 'asc')
             ->orderBy('name', 'asc')
@@ -52,15 +58,16 @@ class AdminMonitoringController extends Controller
 
         // Get interns that will be released (akan pelepasan) - end_date in the selected month
         $internsAkanPelepasan = Intern::where('is_active', true)
-            ->whereBetween('end_date', [$startOfMonth, $endOfMonth])
+            ->whereYear('end_date', $year)
+            ->whereMonth('end_date', $mon)
             ->with(['mentor', 'user'])
             ->orderBy('end_date', 'asc')
             ->get();
 
-        // Get interns that completed (pelepasan) in this month - based on when status was changed
+        // Get interns that completed (pelepasan) in this month - based on when status was changed (updated_at)
         $internsPelepasan = Intern::where('is_active', false)
-            ->whereYear('updated_at', $month->year)
-            ->whereMonth('updated_at', $month->month)
+            ->whereYear('updated_at', $year)
+            ->whereMonth('updated_at', $mon)
             ->with(['mentor', 'user'])
             ->orderBy('updated_at', 'desc')
             ->get();
@@ -70,7 +77,6 @@ class AdminMonitoringController extends Controller
         $filteredInterns = collect();
 
         // Check if any filter is actually applied (not default values)
-        // $isFilterApplied = ($selectedStatus !== 'all' || $selectedMentor !== null || $request->has('status') || $request->has('mentor_id'));
         $isFilterApplied = (($request->filled('status') && $selectedStatus !== 'all') || ($request->filled('mentor_id') && $selectedMentor !== '')|| ($request->filled('institution') && $request->institution !== 'all'));
         
         if ($isFilterApplied) {
@@ -80,19 +86,24 @@ class AdminMonitoringController extends Controller
             // Filter by status
             if ($selectedStatus === 'masuk') {
                 // Interns that entered in the selected month (based on start_date)
-                $query->whereBetween('start_date', [$startOfMonth, $endOfMonth]);
+                $query->whereYear('start_date', $year)
+                    ->whereMonth('start_date', $mon);
             } elseif ($selectedStatus === 'aktif') {
-                // Active interns during the selected month
+                // Active interns during the selected month (consider start/end dates)
                 $query->where('is_active', true);
             } elseif ($selectedStatus === 'akan_pelepasan') {
                 // Will be released in the selected month (based on end_date)
                 $query->where('is_active', true)
-                    ->whereBetween('end_date', [$startOfMonth, $endOfMonth]);
+                    ->whereNotNull('end_date')
+                    ->whereBetween('end_date', [
+                        $month->copy()->startOfMonth(),
+                        $month->copy()->endOfMonth()
+                    ]);
             } elseif ($selectedStatus === 'pelepasan') {
                 // Released in the selected month (based on updated_at - when status was changed)
                 $query->where('is_active', false)
-                    ->whereYear('updated_at', $month->year)
-                    ->whereMonth('updated_at', $month->month);
+                    ->whereYear('updated_at', $year)
+                    ->whereMonth('updated_at', $mon);
             }
 
             // Filter by mentor
@@ -110,37 +121,34 @@ class AdminMonitoringController extends Controller
                 ->orderBy('name', 'asc')
                 ->paginate(15);
 
-
         } else {
             // Default: show all interns with activity in the selected month
-            // Urutan: Akan Pelepasan → Aktif → Pelepasan (di bawah)
-            $filteredInterns = Intern::where(function($query) use ($startOfMonth, $endOfMonth, $month) {
-                // Interns active during this month
-                $query->where(function($q) use ($startOfMonth, $endOfMonth) {
-                    $q->where('is_active', true)
-                        ->where('start_date', '<=', $endOfMonth)
-                        ->where(function($q2) use ($startOfMonth) {
-                            $q2->whereNull('end_date')
-                                ->orWhere('end_date', '>=', $startOfMonth);
-                        });
-                })
-                // OR interns that were released in this month
-                ->orWhere(function($q) use ($month) {
-                    $q->where('is_active', false)
-                        ->whereYear('updated_at', $month->year)
-                        ->whereMonth('updated_at', $month->month);
-                });
-            })
-                ->with(['mentor', 'user'])
-                ->orderByRaw('CASE WHEN is_active = true THEN 0 ELSE 1 END')
-                ->orderBy('end_date', 'asc')
-                ->orderBy('name', 'asc')
-                ->paginate(15);
+            $filteredInterns = Intern::where(function ($query) use ($endOfMonth) {
+
+            // SEMUA INTERN YANG MASIH AKTIF
+            $query->where('is_active', true)
+                ->whereDate('start_date', '<=', $endOfMonth->toDateString());
+
+        })
+        ->orWhere(function ($q) use ($month) {
+
+            // INTERN YANG SUDAH DILEPAS (MANUAL) DI BULAN TERPILIH
+            $q->where('is_active', false)
+            ->whereYear('updated_at', $month->year)
+            ->whereMonth('updated_at', $month->month);
+
+        })
+        ->with(['mentor', 'user'])
+        ->orderByRaw('CASE WHEN is_active = true THEN 0 ELSE 1 END')
+        ->orderBy('end_date', 'asc')
+        ->orderBy('name', 'asc')
+        ->paginate(15);
+
         }
 
-        // Get interns released this month for monitoring section
-        $releasedThisMonth = Intern::where('is_active', false)
-            ->whereBetween('end_date', [$startOfMonth, $endOfMonth])
+        // Get interns released this month for monitoring section (rencana pelepasan berdasarkan end_date)
+        $releasedThisMonth = Intern::whereYear('end_date', $year)
+            ->whereMonth('end_date', $mon)
             ->with(['mentor', 'user'])
             ->orderBy('end_date', 'desc')
             ->get();
@@ -179,53 +187,55 @@ class AdminMonitoringController extends Controller
 
         // Statistics based on SELECTED MONTH (not current month)
         // Masuk: start_date in selected month
-        $masukCount = Intern::whereBetween('start_date', [$startOfMonth, $endOfMonth])->count();
+        $masukCount = Intern::whereYear('start_date', $year)
+            ->whereMonth('start_date', $mon)
+            ->count();
         
         // Keluar/Pelepasan: end_date (rencana pelepasan) in selected month
-        $keluarCount = Intern::whereBetween('end_date', [$startOfMonth, $endOfMonth])->count();
+        $keluarCount = Intern::where('is_active', true)
+            ->whereNotNull('end_date')
+            ->whereYear('end_date', $year)
+            ->whereMonth('end_date', $mon)
+            ->count();
         
         // Aktif: is_active=true during selected month
-        $aktifCount = Intern::where('is_active', true)
-            ->where('start_date', '<=', $endOfMonth)
-            ->where(function($query) use ($startOfMonth) {
-                $query->whereNull('end_date')
-                    ->orWhere('end_date', '>=', $startOfMonth);
-            })
-            ->count();
+        $aktifCount = Intern::where('is_active', true)->count();
 
         // Statistics for last 12 months (for chart) - Based on selected month baseline
-        $monthlyStats = [];
-        for ($i = 11; $i >= 0; $i--) {
-            $checkMonth = now()->subMonths($i);
-            $checkStart = $checkMonth->copy()->startOfMonth();
-            $checkEnd = $checkMonth->copy()->endOfMonth();
+        // Statistics for last 12 months (for chart)
+$monthlyStats = [];
+for ($i = 11; $i >= 0; $i--) {
+    $checkMonth = $month->copy()->subMonths($i);
+    $checkYear = $checkMonth->year;
+    $checkMon = $checkMonth->month;
+    
+    // Pastikan kita menggunakan tanggal yang valid untuk bulan tersebut
+    $startOfCheckMonth = $checkMonth->copy()->startOfMonth();
+    $endOfCheckMonth = $checkMonth->copy()->endOfMonth();
 
-            // Masuk: start_date in this month
-            $masuk = Intern::whereBetween('start_date', [$checkStart, $checkEnd])->count();
-            
-            // Keluar: is_active changed to false (updated_at) in this month
-            $keluar = Intern::where('is_active', false)
-                ->whereYear('updated_at', $checkMonth->year)
-                ->whereMonth('updated_at', $checkMonth->month)
-                ->count();
-            
-            // Aktif: is_active=true during this month
-            $aktif = Intern::where('is_active', true)
-                ->where('start_date', '<=', $checkEnd)
-                ->where(function($query) use ($checkStart) {
-                    $query->whereNull('end_date')
-                        ->orWhere('end_date', '>=', $checkStart);
-                })
-                ->count();
+    // Masuk: start_date in this month
+    $masuk = Intern::whereYear('start_date', $checkYear)
+        ->whereMonth('start_date', $checkMon)
+        ->count();
+    
+    // Keluar: is_active changed to false (updated_at) in this month
+    $keluar = Intern::where('is_active', false)
+        ->whereYear('updated_at', $checkYear)
+        ->whereMonth('updated_at', $checkMon)
+        ->count();
+    
+    // Aktif: is_active=true during this month (diperbaiki)
+    $aktif = Intern::where('is_active', true)
+        ->where('start_date', '<=', $endOfCheckMonth)
+        ->count();
 
-            $monthlyStats[] = [
-                'month' => $checkMonth->format('M Y'),
-                'masuk' => $masuk,
-                'keluar' => $keluar,
-                'aktif' => $aktif,
-            ];
-        }
-
+    $monthlyStats[] = [
+        'month' => $checkMonth->format('M Y'),
+        'masuk' => $masuk,
+        'keluar' => $keluar,
+        'aktif' => $aktif,
+    ];
+}
         // Get all mentors for filter
         $mentors = Mentor::where('is_active', true)->orderBy('name')->get();
 
@@ -236,8 +246,9 @@ class AdminMonitoringController extends Controller
             ->take(10)
             ->get();
 
-        // Top Institutions for selected month
-        $topInstitutionsThisMonth = Intern::whereBetween('start_date', [$startOfMonth, $endOfMonth])
+        // Top Institutions for selected month (based on start_date)
+        $topInstitutionsThisMonth = Intern::whereYear('start_date', $year)
+            ->whereMonth('start_date', $mon)
             ->select('institution', DB::raw('count(*) as total'))
             ->groupBy('institution')
             ->orderBy('total', 'desc')
@@ -325,7 +336,6 @@ class AdminMonitoringController extends Controller
         $filename = 'Laporan_Monitoring_' . now()->format('Y-m-d_His') . '.xlsx';
 
         // Export
-        // return Excel::download(new MonitoringExport($filters), $filename);
         return Excel::download(
             new MonitoringExport([
                 'month'       => $request->month,

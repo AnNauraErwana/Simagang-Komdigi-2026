@@ -62,7 +62,7 @@
                         <!-- Bulan -->
                         <div>
                             <label for="month" class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-calendar mr-1"></i> Pilih Bulan
+                                <i></i> Pilih Bulan
                             </label>
                             <input
                                 type="month"
@@ -75,7 +75,7 @@
                         <!-- Status -->
                         <div>
                             <label for="status" class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-info-circle mr-1"></i> Status Anak Magang
+                                <i></i> Status Anak Magang
                             </label>
                             <select
                                 name="status"
@@ -92,7 +92,7 @@
                         <!-- Mentor -->
                         <div>
                             <label for="mentor_id" class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-chalkboard-teacher mr-1"></i> Mentor
+                                <i></i> Mentor
                             </label>
                             <select
                                 name="mentor_id"
@@ -110,7 +110,7 @@
                         <!-- Kampus -->
                         <div>
                             <label for="institution" class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-university mr-1"></i> Kampus
+                                <i></i> Kampus
                             </label>
                             <select
                                 name="institution"
@@ -200,7 +200,7 @@
                 <div class="p-6">
                     <div class="flex items-center justify-between">
                         <div class="flex-1">
-                            <p class="text-sm font-medium text-gray-600 mb-1">Pelepasan</p>
+                            <p class="text-sm font-medium text-gray-600 mb-1">Pelepasan {{ Carbon\Carbon::parse($selectedMonth)->format('F Y') }}</p>
                             <h3 class="text-3xl font-bold text-gray-900">{{ $internsPelepasan->count() }}</h3>
                         </div>
                         <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
