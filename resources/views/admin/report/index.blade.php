@@ -70,7 +70,7 @@
                 </h2>
             </div>
             <div class="p-6">
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto overflow-y-auto max-h-[500px]">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr class="bg-blue-50">

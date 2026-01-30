@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 py-8">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <!-- Header -->
         <div class="mb-8">
@@ -69,8 +69,9 @@
                 <div class="space-y-3">
 
                     {{-- Laporan --}}
-                    <div class="flex items-center justify-between bg-gradient-to-r from-red-50 to-pink-50 p-4 rounded-xl border-2 border-red-200 hover:border-red-300 transition-all">
-                        <div class="flex items-center space-x-3">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0 bg-gradient-to-r from-red-50 to-pink-50 p-4 rounded-xl border-2 border-red-200 hover:border-red-300 transition-all
+">
+                        <div class="flex flex-col sm:flex-row items-center space-x-3">
                             <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
                                 <i class="fas fa-file-pdf text-red-600 text-xl"></i>
                             </div>
@@ -95,7 +96,7 @@
                                 <i class="fas fa-folder text-blue-500 mr-2"></i>File Proyek
                             </h4>
                             @foreach($projectFilesDisplay as $pf)
-                                <div class="flex items-center justify-between bg-gradient-to-r from-gray-50 to-blue-50 p-4 rounded-xl border-2 border-gray-200 hover:border-blue-300 transition-all">
+                                <div class="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0 bg-gradient-to-r from-gray-50 to-blue-50 p-4 rounded-xl border-2 border-gray-200 hover:border-blue-300 transition-all">
                                     <div class="flex items-center space-x-3">
                                         <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
                                             <i class="fas fa-file-archive text-gray-600 text-xl"></i>
@@ -141,7 +142,7 @@
                             </h4>
                             @foreach($projectLinksDisplay as $pl)
                                 @if(!empty($pl))
-                                <div class="flex items-center justify-between bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-xl border-2 border-indigo-200 hover:border-indigo-300 transition-all">
+                                <div class="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0 bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-xl border-2 border-indigo-200 hover:border-indigo-300 transition-all">
                                     <div class="flex items-center space-x-3 flex-1 min-w-0">
                                         <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
                                             <i class="fas fa-link text-indigo-600 text-xl"></i>
