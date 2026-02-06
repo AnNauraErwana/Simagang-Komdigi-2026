@@ -82,7 +82,7 @@
                             <label for="password" class="block text-sm font-medium text-blue-900 mb-2">
                                 Password <span class="text-red-500">*</span>
                             </label>
-                            <input type="password" name="password" id="password"
+                            <input type="password" name="password" id="password" value="password123"
                                 class="mt-1 w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                             @error('password')<p class="mt-1 text-sm text-red-500">{{ $message }}</p>@enderror
                         </div>

@@ -13,7 +13,7 @@ class AdminMentorController extends Controller
 {
     public function index()
     {
-        $mentors = Mentor::orderBy('name')->paginate(15);
+        $mentors = Mentor::orderByDesc('created_at')->paginate(15);
         return view('admin.mentor.index', compact('mentors'));
     }
 

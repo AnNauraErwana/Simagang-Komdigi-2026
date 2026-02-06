@@ -249,7 +249,7 @@
                             <label class="text-sm font-medium text-blue-900 mb-2">
                                 Password <span class="text-red-500">*</span>
                             </label>
-                            <input type="password" name="password" required
+                            <input type="password" name="password" value="password123" required
                                 class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300
                                     focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                             @error('password')<p class="text-sm text-red-500 mt-1">{{ $message }}</p>@enderror
