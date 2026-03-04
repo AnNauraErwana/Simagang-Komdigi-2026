@@ -17,7 +17,16 @@ class LogbookController extends Controller
             ->orderBy('date', 'desc')
             ->paginate(15);
 
-        return view('intern.logbook.index', compact('logbooks'));
+        // Aggregate counts across all logbook records for this intern
+        $totalLogbooks = Logbook::where('intern_id', $intern->id)->count();
+        $withPhotoCount = Logbook::where('intern_id', $intern->id)
+            ->whereNotNull('photo_path')
+            ->count();
+        $thisMonthCount = Logbook::where('intern_id', $intern->id)
+            ->where('date', '>=', now()->startOfMonth())
+            ->count();
+
+        return view('intern.logbook.index', compact('logbooks', 'totalLogbooks', 'withPhotoCount', 'thisMonthCount'));
     }
 
     public function create()

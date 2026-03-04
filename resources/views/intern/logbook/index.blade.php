@@ -22,7 +22,7 @@
             </div>
         </div>
 
-        <!-- Statistics Cards (Optional - untuk informasi tambahan) -->
+                <!-- Statistics Cards (Optional - untuk informasi tambahan) -->
         @if($logbooks->count() > 0)
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <!-- Total Logbook -->
@@ -31,7 +31,7 @@
                         <div class="flex items-center justify-between">
                             <div class="flex-1">
                                 <p class="text-sm font-medium text-gray-600 mb-1">Total Logbook</p>
-                                <h3 class="text-3xl font-bold text-gray-900">{{ $logbooks->total() }}</h3>
+                                <h3 class="text-3xl font-bold text-gray-900">{{ $totalLogbooks ?? $logbooks->total() }}</h3>
                             </div>
                             <div class="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
                                 <i class="fas fa-book text-white text-2xl"></i>
@@ -47,7 +47,7 @@
                         <div class="flex items-center justify-between">
                             <div class="flex-1">
                                 <p class="text-sm font-medium text-gray-600 mb-1">Dengan Foto</p>
-                                <h3 class="text-3xl font-bold text-gray-900">{{ $logbooks->where('photo_path', '!=', null)->count() }}</h3>
+                                <h3 class="text-3xl font-bold text-gray-900">{{ $withPhotoCount ?? $logbooks->where('photo_path', '!=', null)->count() }}</h3>
                             </div>
                             <div class="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
                                 <i class="fas fa-image text-white text-2xl"></i>
@@ -63,7 +63,7 @@
                         <div class="flex items-center justify-between">
                             <div class="flex-1">
                                 <p class="text-sm font-medium text-gray-600 mb-1">Bulan Ini</p>
-                                <h3 class="text-3xl font-bold text-gray-900">{{ $logbooks->where('date', '>=', now()->startOfMonth())->count() }}</h3>
+                                <h3 class="text-3xl font-bold text-gray-900">{{ $thisMonthCount ?? $logbooks->where('date', '>=', now()->startOfMonth())->count() }}</h3>
                             </div>
                             <div class="w-16 h-16 bg-purple-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
                                 <i class="fas fa-calendar-alt text-white text-2xl"></i>
