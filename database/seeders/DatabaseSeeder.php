@@ -179,5 +179,9 @@ class DatabaseSeeder extends Seeder
 
         $this->command->info('Sample intern users created');
         $this->command->info('Default intern password: password123');
+
+        $this->call([
+        TeamSeeder::class,
+    ]);
     }
 }

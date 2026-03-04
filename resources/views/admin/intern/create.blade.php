@@ -152,44 +152,53 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        {{-- Mentor Dropdown --}}
                         <div>
-                            <label class="text-sm font-medium text-blue-900 mb-2">Mentor</label>
-                            <select name="mentor_id"
-                                    class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300
-                                        focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <label class="text-sm font-medium text-blue-900 mb-2">
+                                Mentor <span class="text-red-500">*</span>
+                            </label>
+
+                            <select name="mentor_id" id="mentorSelect" required
+                                class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300
+                                    focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+
                                 <option value="">Pilih Mentor</option>
-                                @foreach(\App\Models\Mentor::where('is_active', true)->orderBy('name')->get() as $mentor)
-                                    <option value="{{ $mentor->id }}" {{ old('mentor_id')==$mentor->id?'selected':'' }}>
-                                        {{ $mentor->name }} @if($mentor->position) - {{ $mentor->position }} @endif
+
+                                @foreach($mentors as $mentor)
+                                    <option value="{{ $mentor->id }}"
+                                            data-team="{{ $mentor->team?->name ?? 'Belum masuk dalam tim' }}"
+                                            {{ old('mentor_id') == $mentor->id ? 'selected' : '' }}>
+                                        {{ $mentor->name }}
+                                        @if($mentor->position)
+                                            - {{ $mentor->position }}
+                                        @endif
                                     </option>
                                 @endforeach
                             </select>
-                            @error('mentor_id')<p class="text-sm text-red-500 mt-1">{{ $message }}</p>@enderror
+
+                            @error('mentor_id')
+                                <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
+                        {{-- Tim Otomatis --}}
                         <div>
-                            <label class="text-sm font-medium text-blue-900 mb-2">Tim</label>
-                            <select name="team"
-                                    class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300
-                                        focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                                <option value="">Pilih Tim</option>
-                                @foreach([
-                                    'TIM DEA','TIM GTA','TIM VSGA','TIM TA','TIM Microskill',
-                                    'TIM Media (DiaPus)','TIM Tata Usaha (Umum)','FGA','Keuangan',
-                                    'Tim PUSDATIN','Tim Perencanaan, Anggaran, Dan Kerja Sama',
-                                    'Tim Kepegawaian, Persuratan dan Kearsipan'
-                                ] as $team)
-                                    <option value="{{ $team }}" {{ old('team')==$team?'selected':'' }}>
-                                        {{ $team }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('team')<p class="text-sm text-red-500 mt-1">{{ $message }}</p>@enderror
+                            <label class="text-sm font-medium text-blue-900 mb-2">
+                                Tim
+                            </label>
+
+                            <input type="text"
+                                id="teamDisplay"
+                                readonly
+                                value="Pilih mentor terlebih dahulu"
+                                class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300
+                                        bg-gray-100 text-gray-700 cursor-not-allowed">
                         </div>
+
                     </div>
                 </div>
 
-            
                 <div class="p-8 bg-gray-50 border-b">
                     <div class="flex items-center gap-3 mb-6">
                         <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
@@ -249,7 +258,7 @@
                             <label class="text-sm font-medium text-blue-900 mb-2">
                                 Password <span class="text-red-500">*</span>
                             </label>
-                            <input type="password" name="password" value="password123" required
+                            <input type="password" name="password" required
                                 class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300
                                     focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                             @error('password')<p class="text-sm text-red-500 mt-1">{{ $message }}</p>@enderror
@@ -289,4 +298,28 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+    <script>
+        const mentorSelect = document.getElementById('mentorSelect');
+        const teamDisplay = document.getElementById('teamDisplay');
+
+        function updateTeamDisplay() {
+            const selectedOption = mentorSelect.options[mentorSelect.selectedIndex];
+
+            if (mentorSelect.value === "") {
+                teamDisplay.value = "Pilih mentor terlebih dahulu";
+                return;
+            }
+
+            const teamName = selectedOption.getAttribute('data-team');
+            teamDisplay.value = teamName ?? "Belum masuk dalam tim";
+        }
+
+        mentorSelect.addEventListener('change', updateTeamDisplay);
+
+        // Jalankan saat halaman load (untuk old value)
+        document.addEventListener('DOMContentLoaded', updateTeamDisplay);
+    </script>
+@endpush
 @endsection

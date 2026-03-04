@@ -71,6 +71,14 @@
                             <i class="fas fa-chart-line w-5 mr-3"></i>
                             Monitoring
                         </a>
+                        <a href="{{ route('admin.team.index') }}" class="{{ request()->routeIs('admin.team.index.*') ? 'bg-blue-50 border-r-4 border-blue-500 text-blue-700' : 'text-gray-600 hover:bg-gray-50' }} flex items-center px-4 py-3 text-sm font-medium">
+                            <i class="fas fa-users w-5 mr-3"></i>
+                            Manage Tim
+                        </a>
+                        {{-- <a href="{{ route('admin.monitoring.index') }}" class="{{ request()->routeIs('admin.monitoring.*') ? 'bg-blue-50 border-r-4 border-blue-500 text-blue-700' : 'text-gray-600 hover:bg-gray-50' }} flex items-center px-4 py-3 text-sm font-medium">
+                            <i class="fas fa-chart-line w-5 mr-3"></i>
+                            Manage Admin
+                        </a> --}}
                     @elseif(auth()->user()->isMentor())
                         <a href="{{ route('mentor.dashboard') }}" class="{{ request()->routeIs('mentor.dashboard') ? 'bg-blue-50 border-r-4 border-blue-500 text-blue-700' : 'text-gray-600 hover:bg-gray-50' }} flex items-center px-4 py-3 text-sm font-medium">
                             <i class="fas fa-home w-5 mr-3"></i>

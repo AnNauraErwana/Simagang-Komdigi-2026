@@ -24,6 +24,7 @@ class Intern extends Model
         'end_date',
         'photo_path',
         'is_active',
+        'team_id',
     ];
 
     protected $casts = [
@@ -71,4 +72,10 @@ class Intern extends Model
     {
         return $this->hasMany(FinalReport::class, 'intern_id');
     }
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
+    }
+    
 }

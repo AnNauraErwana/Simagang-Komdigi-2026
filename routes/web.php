@@ -27,6 +27,7 @@ use App\Http\Controllers\Intern\MicroSkillLeaderboardController as InternMicroSk
 use App\Http\Controllers\Intern\ProfileController;
 use App\Http\Controllers\Mentor\CertificateController;
 use App\Http\Controllers\Admin\AdminCertificateController;
+use App\Http\Controllers\Admin\TeamController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -177,6 +178,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
             [AdminCertificateController::class, 'print']
         )->name('certificates.print');
     });
+
+    // Manafe Tim Routes
+    Route::get('/admin/team', [TeamController::class, 'index'])->name('admin.team.index');
+    Route::get('/admin/team/create', [TeamController::class, 'create'])->name('admin.team.create');
+    Route::post('/admin/team', [TeamController::class, 'store'])->name('admin.team.store');
+    Route::get('/admin/team/{team}/edit', [TeamController::class, 'edit'])->name('admin.team.edit');
+    Route::put('/admin/team/{team}', [TeamController::class, 'update'])->name('admin.team.update');
+    Route::delete('/admin/team/{team}', [TeamController::class, 'destroy'])->name('admin.team.destroy');   
+    
 
 
 
