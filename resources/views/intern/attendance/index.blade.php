@@ -28,7 +28,7 @@
                         <div class="flex items-center justify-between">
                             <div class="flex-1">
                                 <p class="text-sm font-medium text-gray-600 mb-1">Total Hadir</p>
-                                <h3 class="text-3xl font-bold text-gray-900">{{ $attendances->where('status', 'hadir')->count() }}</h3>
+                                <h3 class="text-3xl font-bold text-gray-900">{{ $totalHadir }}</h3>
                             </div>
                             <div class="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
                                 <i class="fas fa-calendar-check text-white text-2xl"></i>
@@ -44,7 +44,7 @@
                         <div class="flex items-center justify-between">
                             <div class="flex-1">
                                 <p class="text-sm font-medium text-gray-600 mb-1">Total Izin</p>
-                                <h3 class="text-3xl font-bold text-gray-900">{{ $attendances->where('status', 'izin')->count() }}</h3>
+                                <h3 class="text-3xl font-bold text-gray-900">{{ $totalIzin }}</h3>
                             </div>
                             <div class="w-16 h-16 bg-yellow-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
                                 <i class="fas fa-calendar-times text-white text-2xl"></i>
@@ -60,7 +60,7 @@
                         <div class="flex items-center justify-between">
                             <div class="flex-1">
                                 <p class="text-sm font-medium text-gray-600 mb-1">Total Sakit</p>
-                                <h3 class="text-3xl font-bold text-gray-900">{{ $attendances->where('status', 'sakit')->count() }}</h3>
+                                <h3 class="text-3xl font-bold text-gray-900">{{ $totalSakit }}</h3>
                             </div>
                             <div class="w-16 h-16 bg-red-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
                                 <i class="fas fa-calendar-minus text-white text-2xl"></i>
@@ -76,7 +76,7 @@
                         <div class="flex items-center justify-between">
                             <div class="flex-1">
                                 <p class="text-sm font-medium text-gray-600 mb-1">Total Absensi</p>
-                                <h3 class="text-3xl font-bold text-gray-900">{{ $attendances->total() }}</h3>
+                                <h3 class="text-3xl font-bold text-gray-900">{{ $totalAbsensi }}</h3>
                             </div>
                             <div class="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
                                 <i class="fas fa-clipboard-list text-white text-2xl"></i>

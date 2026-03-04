@@ -16,11 +16,15 @@ class AttendanceController extends Controller
     public function index()
     {
         $intern = Auth::user()->intern;
+        $totalHadir = Attendance::where('intern_id', $intern->id)->where('status', 'hadir')->count();
+        $totalIzin = Attendance::where('intern_id', $intern->id)->where('status', 'izin')->count();
+        $totalSakit = Attendance::where('intern_id', $intern->id)->where('status', 'sakit')->count();
+        $totalAbsensi = Attendance::where('intern_id', $intern->id)->count();
         $attendances = Attendance::where('intern_id', $intern->id)
             ->orderBy('date', 'desc')
             ->paginate(15);
 
-        return view('intern.attendance.index', compact('attendances'));
+        return view('intern.attendance.index', compact('attendances', 'totalHadir', 'totalIzin', 'totalSakit', 'totalAbsensi'));
     }
 
     public function create()
