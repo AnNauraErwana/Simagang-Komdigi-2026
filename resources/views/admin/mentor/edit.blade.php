@@ -68,6 +68,49 @@
                 </div>
             </div>
 
+            <!-- Penempatan -->
+            <div class="p-8 border-b">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                            <i class="fas fa-users text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-bold text-blue-900">Penempatan</h2>
+                            <p class="text-sm text-gray-600">Tim yang ditugaskan</p>
+                        </div>
+                    </div>
+
+                    <div>
+
+                        {{-- Tim Dropdown --}}
+                        <div>
+                            <label class="text-sm font-medium text-blue-900 mb-2">
+                                Pilih Tim <span class="text-red-500">*</span>
+                            </label>
+
+                            <select name="team_id" id="mentorSelect" required
+                                class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300
+                                    focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+
+                                <option value="">Pilih Tim</option>
+
+                                @foreach($teams as $team)
+                                    <option value="{{ $team->id }}"
+                                            data-team="{{ $team->name }}"
+                                            {{ old('team_id', $mentor->team_id) == $team->id ? 'selected' : '' }}>
+                                        {{ $team->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            @error('team_id')
+                                <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>  
+                    </div>
+                </div>
+            
+
             <div class="p-8">
                 <div class="flex items-center mb-6">
                     <div class="bg-blue-100 rounded-full p-3 mr-4">

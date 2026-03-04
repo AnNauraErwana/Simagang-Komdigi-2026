@@ -13,13 +13,15 @@ class AdminMentorController extends Controller
 {
     public function index()
     {
-        $mentors = Mentor::orderByDesc('created_at')->paginate(15);
-        return view('admin.mentor.index', compact('mentors'));
+        $teams = \App\Models\Team::orderBy('name')->get()->keyBy('id');
+        $mentors = Mentor::orderBy('name')->paginate(15);
+        return view('admin.mentor.index', compact('mentors', 'teams'));
     }
 
     public function create()
     {
-        return view('admin.mentor.create');
+        $teams = \App\Models\Team::orderBy('name')->get();
+        return view('admin.mentor.create', compact('teams'));
     }
 
     public function store(Request $request)
@@ -29,6 +31,7 @@ class AdminMentorController extends Controller
             'email' => ['nullable', 'string', 'email', 'max:255', 'unique:users,email'],
             'position' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50'],
+            'team_id' => ['nullable', 'exists:teams,id'],
             'is_active' => ['boolean'],
             'password' => ['nullable', Password::defaults()],
         ]);
@@ -50,6 +53,7 @@ class AdminMentorController extends Controller
             'email' => $validated['email'] ?? null,
             'position' => $validated['position'] ?? null,
             'phone' => $validated['phone'] ?? null,
+            'team_id' => $validated['team_id'] ?? null,
             'is_active' => $request->boolean('is_active', true),
             'user_id' => $userId,
         ]);
@@ -58,8 +62,9 @@ class AdminMentorController extends Controller
     }
 
     public function edit(Mentor $mentor)
-    {
-        return view('admin.mentor.edit', compact('mentor'));
+    {   
+        $teams = \App\Models\Team::orderBy('name')->get();
+        return view('admin.mentor.edit', compact('mentor', 'teams'));
     }
 
     public function update(Request $request, Mentor $mentor)
@@ -69,6 +74,7 @@ class AdminMentorController extends Controller
             'email' => ['nullable', 'string', 'email', 'max:255', 'unique:users,email,' . ($mentor->user_id ?? 'NULL')],
             'position' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50'],
+            'team_id' => ['nullable', 'exists:teams,id'],
             'is_active' => ['boolean'],
             'password' => ['nullable', Password::defaults()],
         ]);
@@ -97,6 +103,7 @@ class AdminMentorController extends Controller
         $mentor->name = $validated['name'];
         $mentor->email = $validated['email'] ?? null;
         $mentor->position = $validated['position'] ?? null;
+        $mentor->team_id = $validated['team_id'] ?? null;
         $mentor->phone = $validated['phone'] ?? null;
         $mentor->is_active = $request->boolean('is_active', true);
         $mentor->save();
@@ -117,5 +124,3 @@ class AdminMentorController extends Controller
         return redirect()->route('admin.mentor.index')->with('success', 'Mentor berhasil dihapus.');
     }
 }
-
-

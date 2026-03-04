@@ -210,13 +210,18 @@
                                 <label for="mentor_id" class="block text-sm font-bold text-blue-900 mb-2">
                                     Mentor
                                 </label>
-                                <select name="mentor_id" id="mentor_id"
-                                    class="w-full px-4 py-3 border-2 border-blue-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+                                <select name="mentor_id" id="mentorSelect"
+                                    class="w-full px-4 py-3 border-2 border-blue-200 rounded-lg shadow-sm
+                                        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+
                                     <option value="">Pilih Mentor (Opsional)</option>
-                                    @foreach (\App\Models\Mentor::where('is_active', true)->orderBy('name')->get() as $mentor)
+
+                                    @foreach ($mentors as $mentor)
                                         <option value="{{ $mentor->id }}"
+                                            data-team="{{ $mentor->team?->name ?? 'Belum masuk dalam tim' }}"
                                             {{ old('mentor_id', $intern->mentor_id) == $mentor->id ? 'selected' : '' }}>
-                                            {{ $mentor->name }} @if ($mentor->position)
+                                            {{ $mentor->name }}
+                                            @if ($mentor->position)
                                                 - {{ $mentor->position }}
                                             @endif
                                         </option>
@@ -232,40 +237,12 @@
                                 <label for="team" class="block text-sm font-bold text-blue-900 mb-2">
                                     TIM
                                 </label>
-                                <select name="team" id="team"
-                                    class="w-full px-4 py-3 border-2 border-blue-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
-                                    <option value="">Pilih TIM (Opsional)</option>
-                                    <option value="TIM DEA"
-                                        {{ old('team', $intern->team) == 'TIM DEA' ? 'selected' : '' }}>TIM DEA</option>
-                                    <option value="TIM GTA"
-                                        {{ old('team', $intern->team) == 'TIM GTA' ? 'selected' : '' }}>TIM GTA</option>
-                                    <option value="TIM VSGA"
-                                        {{ old('team', $intern->team) == 'TIM VSGA' ? 'selected' : '' }}>TIM VSGA</option>
-                                    <option value="TIM TA" {{ old('team', $intern->team) == 'TIM TA' ? 'selected' : '' }}>
-                                        TIM TA</option>
-                                    <option value="TIM Microskill"
-                                        {{ old('team', $intern->team) == 'TIM Microskill' ? 'selected' : '' }}>TIM
-                                        Microskill</option>
-                                    <option value="TIM Media (DiaPus)"
-                                        {{ old('team', $intern->team) == 'TIM Media (DiaPus)' ? 'selected' : '' }}>TIM
-                                        Media (DiaPus)</option>
-                                    <option value="TIM Tata Usaha (Umum)"
-                                        {{ old('team', $intern->team) == 'TIM Tata Usaha (Umum)' ? 'selected' : '' }}>TIM
-                                        Tata Usaha (Umum)</option>
-                                    <option value="FGA" {{ old('team', $intern->team) == 'FGA' ? 'selected' : '' }}>FGA
-                                    </option>
-                                    <option value="Keuangan"
-                                        {{ old('team', $intern->team) == 'Keuangan' ? 'selected' : '' }}>Keuangan</option>
-                                    <option value="Tim PUSDATIN"
-                                        {{ old('team', $intern->team) == 'Tim PUSDATIN' ? 'selected' : '' }}>Tim PUSDATIN
-                                    </option>
-                                    <option value="Tim Perencanaan, Anggaran, Dan Kerja Sama"
-                                        {{ old('team', $intern->team) == 'Tim Perencanaan, Anggaran, Dan Kerja Sama' ? 'selected' : '' }}>
-                                        Tim Perencanaan, Anggaran, Dan Kerja Sama</option>
-                                    <option value="Tim Kepegawaian, Persuratan dan Kearsipan"
-                                        {{ old('team', $intern->team) == 'Tim Kepegawaian, Persuratan dan Kearsipan' ? 'selected' : '' }}>
-                                        Tim Kepegawaian, Persuratan dan Kearsipan</option>
-                                </select>
+                                <input type="text"
+                                        id="teamDisplay"
+                                        readonly
+                                        value="{{ $intern->mentor?->team?->name ?? 'Belum masuk dalam tim' }}"
+                                        class="w-full px-4 py-3 border-2 border-blue-200 rounded-lg shadow-sm
+                                            bg-blue-50 text-gray-700 cursor-not-allowed">
                                 @error('team')
                                     <p class="mt-2 text-sm text-red-600 flex items-center"><i
                                             class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</p>
@@ -408,4 +385,25 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+        <script>
+            const mentorSelect = document.getElementById('mentorSelect');
+            const teamDisplay = document.getElementById('teamDisplay');
+
+            function updateTeam() {
+                const selected = mentorSelect.options[mentorSelect.selectedIndex];
+
+                if (!mentorSelect.value) {
+                    teamDisplay.value = "Belum masuk dalam tim";
+                    return;
+                }
+
+                teamDisplay.value = selected.getAttribute('data-team');
+            }
+
+            mentorSelect.addEventListener('change', updateTeam);
+            document.addEventListener('DOMContentLoaded', updateTeam);
+        </script>
+    @endpush
 @endsection

@@ -46,7 +46,12 @@ class AdminInternController extends Controller
 
     public function create()
     {
-        return view('admin.intern.create');
+        $mentors = \App\Models\Mentor::with('team')
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get();
+
+        return view('admin.intern.create', compact('mentors'));
     }
 
     public function store(Request $request)
@@ -75,8 +80,8 @@ class AdminInternController extends Controller
             'phone' => ['nullable', 'string', 'max:255'],
             'institution' => ['required', 'string', 'max:255'],
             'purpose' => ['nullable', 'string', 'in:Magang,KKN Profesi,PKL,Praktek Industri,Magang Industri,Guru Magang Industri,Job on Training'],
-            'mentor_id' => ['nullable', 'exists:mentors,id'],
-            'team' => ['nullable', 'string', Rule::in($validTeams)],
+            'mentor_id' => ['required', 'exists:mentors,id'],
+            // 'team' => ['nullable', 'string', Rule::in($validTeams)],
             'start_date' => ['required', 'date'],
             'end_date' => ['required', 'date', 'after:start_date'],
             'photo' => ['required', 'image', 'max:2048'],
@@ -121,6 +126,12 @@ class AdminInternController extends Controller
             $institution = $validated['custom_institution'];
         }
 
+        $mentor = Mentor::with('team')->find($validated['mentor_id']);
+
+        if (!$mentor) {
+            return back()->withErrors(['mentor_id' => 'Mentor tidak ditemukan.']);
+        }
+
         Intern::create([
             'user_id' => $user->id,
             'name' => $validated['name'],
@@ -130,8 +141,8 @@ class AdminInternController extends Controller
             'phone' => $validated['phone'],
             'institution' => $institution,
             'purpose' => $validated['purpose'] ?? null,
-            'mentor_id' => $validated['mentor_id'] ?? null,
-            'team' => $validated['team'] ?? null,
+            'mentor_id' => $mentor->id,
+            'team_id' => $mentor->team_id,
             'start_date' => $validated['start_date'],
             'end_date' => $validated['end_date'],
             'photo_path' => $photoPath,
@@ -163,7 +174,12 @@ class AdminInternController extends Controller
 
     public function edit(Intern $intern)
     {
-        return view('admin.intern.edit', compact('intern'));
+        $mentors = \App\Models\Mentor::with('team')
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get();
+
+        return view('admin.intern.edit', compact('intern', 'mentors'));
     }
 
     public function update(Request $request, Intern $intern)
@@ -192,8 +208,8 @@ class AdminInternController extends Controller
             'phone' => ['nullable', 'string', 'max:255'],
             'institution' => ['required', 'string', 'max:255'],
             'purpose' => ['nullable', 'string', 'in:Magang,KKN Profesi,PKL,Praktek Industri,Magang Industri,Guru Magang Industri,Job on Training'],
-            'mentor_id' => ['nullable', 'exists:mentors,id'],
-            'team' => ['nullable', 'string', Rule::in($validTeams)],
+            'mentor_id' => ['required', 'exists:mentors,id'],
+            // 'team' => ['nullable', 'string', Rule::in($validTeams)],
             'start_date' => ['required', 'date'],
             'end_date' => ['required', 'date', 'after:start_date'],
             'photo' => ['nullable', 'image', 'max:2048'],
@@ -218,6 +234,8 @@ class AdminInternController extends Controller
             $institution = $validated['custom_institution'];
         }
 
+        $mentor = Mentor::with('team')->find($validated['mentor_id']);
+
         $data = [
             'name' => $validated['name'],
             'gender' => $validated['gender'],
@@ -226,8 +244,8 @@ class AdminInternController extends Controller
             'phone' => $validated['phone'],
             'institution' => $institution,
             'purpose' => $validated['purpose'] ?? null,
-            'mentor_id' => $validated['mentor_id'] ?? null,
-            'team' => $validated['team'] ?? null,
+            'mentor_id' => $mentor->id,
+            'team_id' => $mentor->team_id,
             'start_date' => $validated['start_date'],
             'end_date' => $validated['end_date'],
             'is_active' => $request->has('is_active') ? $request->boolean('is_active') : false,

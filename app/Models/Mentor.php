@@ -16,6 +16,7 @@ class Mentor extends Model
         'phone',
         'is_active',
         'user_id',
+        'team_id',
     ];
 
     protected $casts = [
@@ -31,4 +32,9 @@ class Mentor extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
+    }
+    
 }
