@@ -103,21 +103,21 @@
                                         </td>
                                         <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                             <span
-                                                class="px-2.5 sm:px-3 py-1.5 sm:py-2 inline-flex text-xs sm:text-sm leading-5 font-bold rounded-full bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800 shadow-sm hover:shadow-md transition-all">
+                                                class="px-2.5 sm:px-3 py-1.5 sm:py-2 inline-flex items-center justify-center text-xs sm:text-sm leading-5 font-bold rounded-full bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800 shadow-sm hover:shadow-md transition-all">
                                                 <i class="fas fa-book mr-1.5 sm:mr-2"></i>
                                                 {{ $intern->logbooks_count }}
                                             </span>
                                         </td>
                                         <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                             <span
-                                                class="px-2.5 sm:px-3 py-1.5 sm:py-2 inline-flex text-xs sm:text-sm leading-5 font-bold rounded-full bg-gradient-to-r from-green-100 to-emerald-200 text-green-800 shadow-sm hover:shadow-md transition-all">
+                                                class="px-2.5 sm:px-3 py-1.5 sm:py-2 inline-flex items-center justify-center text-xs sm:text-sm leading-5 font-bold rounded-full bg-gradient-to-r from-green-100 to-green-200 text-green-800 shadow-sm hover:shadow-md transition-all">
                                                 <i class="fas fa-check-circle mr-1.5 sm:mr-2"></i>
                                                 {{ $intern->attendances_count }}
                                             </span>
                                         </td>
                                         <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                             <span
-                                                class="px-2.5 sm:px-3 py-1.5 sm:py-2 inline-flex text-xs sm:text-sm leading-5 font-bold rounded-full bg-gradient-to-r from-indigo-100 to-blue-200 text-indigo-800 shadow-sm hover:shadow-md transition-all">
+                                                class="px-2.5 sm:px-3 py-1.5 sm:py-2 inline-flex items-center justify-center text-xs sm:text-sm leading-5 font-bold rounded-full bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 shadow-sm hover:shadow-md transition-all">
                                                 <i class="fas fa-graduation-cap mr-1.5 sm:mr-2"></i>
                                                 {{ $intern->micro_skills_count }}
                                             </span>
