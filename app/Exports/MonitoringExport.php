@@ -91,11 +91,15 @@ class MonitoringExport implements
                     break;
 
                 case 'pelepasan':
-                    $query->where('is_active', 0)
-                        ->whereBetween('end_date', [
+                    // Jika bulan disediakan, filter pelepasan berdasarkan `updated_at` atau `end_date` di bulan itu.
+                    $query->where('is_active', 0);
+                    if ($startOfMonth && $endOfMonth) {
+                        // gunakan updated_at untuk merepresentasikan kapan status diubah menjadi pelepasan
+                        $query->whereBetween('updated_at', [
                             $startOfMonth,
                             $endOfMonth
                         ]);
+                    }
                     break;
             }
         }

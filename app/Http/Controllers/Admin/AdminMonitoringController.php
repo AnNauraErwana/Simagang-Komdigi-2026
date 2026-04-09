@@ -87,79 +87,50 @@ $selectedYear = $month->year;
             ->orderBy('updated_at', 'desc')
             ->get();
 
-        // Apply filter based on status selection
+        // Prepare two separate paginators: active interns and alumni (pelepasan)
         $hasFilter = false;
-        $filteredInterns = collect();
+        $activeQuery = Intern::with(['mentor', 'user'])->where('is_active', true)
+            ->whereDate('start_date', '<=', $endOfMonth->toDateString());
+
+        $alumniQuery = Intern::with(['mentor', 'user'])->where('is_active', false);
 
         // Check if any filter is actually applied (not default values)
         $isFilterApplied = (($request->filled('status') && $selectedStatus !== 'all') || ($request->filled('mentor_id') && $selectedMentor !== '')|| ($request->filled('institution') && $request->institution !== 'all'));
-        
+
         if ($isFilterApplied) {
             $hasFilter = true;
-            $query = Intern::with(['mentor', 'user']);
 
-            // Filter by status
-            if ($selectedStatus === 'masuk') {
-                // Interns that entered in the selected month (based on start_date)
-                $query->whereYear('start_date', $year)
-                    ->whereMonth('start_date', $mon);
-            } elseif ($selectedStatus === 'aktif') {
-                // Active interns during the selected month (consider start/end dates)
-                $query->where('is_active', true);
-            } elseif ($selectedStatus === 'akan_pelepasan') {
-                // Will be released in the selected month (based on end_date)
-                $query->where('is_active', true)
-                    ->whereNotNull('end_date')
-                    ->whereBetween('end_date', [
-                        $month->copy()->startOfMonth(),
-                        $month->copy()->endOfMonth()
-                    ]);
-            } elseif ($selectedStatus === 'pelepasan') {
-                // Released in the selected month (based on updated_at - when status was changed)
-                $query->where('is_active', false)
-                    ->whereYear('updated_at', $year)
-                    ->whereMonth('updated_at', $mon);
-            }
-
-            // Filter by mentor
+            // Apply mentor filter to both queries if provided
             if ($selectedMentor !== null && $selectedMentor !== '') {
-                $query->where('mentor_id', $selectedMentor);
+                $activeQuery->where('mentor_id', $selectedMentor);
+                $alumniQuery->where('mentor_id', $selectedMentor);
             }
 
-            // Filter by institution (kampus)
+            // Apply institution filter to both queries
             if ($request->filled('institution') && $request->institution !== 'all') {
-                $query->where('institution', $request->institution);
+                $activeQuery->where('institution', $request->institution);
+                $alumniQuery->where('institution', $request->institution);
             }
 
-
-            $filteredInterns = $query->orderBy('end_date', 'asc')
-                ->orderBy('name', 'asc')
-                ->paginate(15);
-
-        } else {
-            // Default: show all interns with activity in the selected month
-            $filteredInterns = Intern::where(function ($query) use ($endOfMonth) {
-
-            // SEMUA INTERN YANG MASIH AKTIF
-            $query->where('is_active', true)
-                ->whereDate('start_date', '<=', $endOfMonth->toDateString());
-
-        })
-        ->orWhere(function ($q) use ($month) {
-
-            // INTERN YANG SUDAH DILEPAS (MANUAL) DI BULAN TERPILIH
-            $q->where('is_active', false)
-            ->whereYear('updated_at', $month->year)
-            ->whereMonth('updated_at', $month->month);
-
-        })
-        ->with(['mentor', 'user'])
-        ->orderByRaw('CASE WHEN is_active = true THEN 0 ELSE 1 END')
-        ->orderBy('end_date', 'asc')
-        ->orderBy('name', 'asc')
-        ->paginate(15);
-
+            // Apply status-specific adjustments
+            if ($selectedStatus === 'masuk') {
+                $activeQuery->whereYear('start_date', $year)->whereMonth('start_date', $mon);
+            } elseif ($selectedStatus === 'aktif') {
+                // already limited to active
+            } elseif ($selectedStatus === 'akan_pelepasan') {
+                $activeQuery->whereNotNull('end_date')
+                    ->whereBetween('end_date', [$month->copy()->startOfMonth(), $month->copy()->endOfMonth()]);
+            } elseif ($selectedStatus === 'pelepasan') {
+                // alumni released in selected month (based on updated_at)
+                $alumniQuery->whereYear('updated_at', $year)->whereMonth('updated_at', $mon);
+                // if status=pelepasan we don't include active interns
+                $activeQuery->whereRaw('1 = 0');
+            }
         }
+
+        // Order and paginate separately to avoid merging active+alumni
+        $activeInterns = $activeQuery->orderBy('end_date', 'asc')->orderBy('name', 'asc')->paginate(15, ['*'], 'active_page');
+        $alumniInterns = $alumniQuery->orderBy('updated_at', 'desc')->orderBy('name', 'asc')->paginate(15, ['*'], 'alumni_page');
 
         // Get interns released this month for monitoring section (rencana pelepasan berdasarkan end_date)
         $releasedThisMonth = Intern::whereYear('end_date', $year)
@@ -285,7 +256,8 @@ for ($i = 11; $i >= 0; $i--) {
             'selectedStatus',
             'selectedMentor',
             'hasFilter',
-            'filteredInterns',
+            'activeInterns',
+            'alumniInterns',
             'releasedThisMonth',
             'internsMasuk',
             'internsKeluar',

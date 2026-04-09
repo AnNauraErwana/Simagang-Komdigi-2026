@@ -85,7 +85,7 @@
                                 <option value="masuk" {{ $selectedStatus === 'masuk' ? 'selected' : '' }}>Masuk</option>
                                 <option value="aktif" {{ $selectedStatus === 'aktif' ? 'selected' : '' }}>Aktif</option>
                                 <option value="akan_pelepasan" {{ $selectedStatus === 'akan_pelepasan' ? 'selected' : '' }}>Akan Pelepasan</option>
-                                <option value="pelepasan" {{ $selectedStatus === 'pelepasan' ? 'selected' : '' }}>Pelepasan</option>
+                                {{-- <option value="pelepasan" {{ $selectedStatus === 'pelepasan' ? 'selected' : '' }}>Pelepasan</option> --}}
                             </select>
                         </div>
 
@@ -279,10 +279,10 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-100">
-                            @if($filteredInterns->count() > 0)
-                                @foreach($filteredInterns as $index => $intern)
+                            @if($activeInterns->count() > 0)
+                                @foreach($activeInterns as $index => $intern)
                                     <tr class="hover:bg-blue-50 transition-colors duration-150">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $filteredInterns->firstItem() + $index }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $activeInterns->firstItem() + $index }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm font-medium text-gray-900">{{ $intern->name }}</div>
                                         </td>
@@ -356,10 +356,86 @@
                     </table>
                 </div>
 
-                <!-- Pagination -->
-                @if($filteredInterns->count() > 0)
+                <!-- Pagination for Active Interns -->
+                @if($activeInterns->count() > 0)
                     <div class="mt-6">
-                        {{ $filteredInterns->links() }}
+                        {{ $activeInterns->links() }}
+                    </div>
+                @endif
+            </div>
+        </div>
+
+        <!-- Data Alumni (tabel terpisah untuk yang sudah pelepasan) -->
+        <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden mb-8">
+            <div class="bg-gradient-to-r from-gray-600 to-gray-800 px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-bold text-white flex items-center">
+                        <i class="fas fa-user-graduate mr-3"></i>
+                        Data Alumni
+                    </h2>
+
+                    <form method="GET" action="{{ route('admin.monitoring.export') }}">
+                        <input type="hidden" name="month" value="{{ request('month') }}">
+                        <input type="hidden" name="status" value="pelepasan">
+                        <input type="hidden" name="mentor_id" value="{{ request('mentor_id') }}">
+                        <input type="hidden" name="institution" value="{{ request('institution') }}">
+                        <button type="submit" class="bg-white text-gray-800 hover:bg-gray-100 font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 whitespace-nowrap">
+                            <i class="fas fa-download mr-2"></i>Export Alumni
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-900 uppercase tracking-wider rounded-tl-lg">No</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">Nama</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">Kampus</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">Mentor</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">Tgl Mulai</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">Tgl Rencana Pelepasan</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-900 uppercase tracking-wider rounded-tr-lg">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-100">
+                            @if($alumniInterns->count() > 0)
+                                @foreach($alumniInterns as $index => $intern)
+                                    <tr class="hover:bg-gray-50 transition-colors duration-150">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $alumniInterns->firstItem() + $index }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">{{ $intern->name }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-600">{{ $intern->institution }}</td>
+                                        <td class="px-6 py-4 text-sm text-gray-600">{{ $intern->mentor ? $intern->mentor->name : '-' }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $intern->start_date->format('d/m/Y') }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $intern->end_date ? \Carbon\Carbon::parse($intern->end_date)->format('d/m/Y') : '-' }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2 flex gap-2">
+                                            <a href="{{ route('admin.intern.show', $intern->id) }}" class="text-blue-600 hover:text-blue-900 inline-block transition-colors" title="Lihat detail"><i class="fas fa-eye"></i></a>
+                                            <button onclick="confirmActive({{ $intern->id }}, '{{ $intern->name }}')" class="text-green-600 hover:text-green-900 inline-block transition-colors" title="Kembalikan menjadi aktif"><i class="fas fa-undo"></i></button>
+                                            <form id="form-active-{{ $intern->id }}" action="{{ route('admin.monitoring.mark-active', $intern->id) }}" method="POST" class="hidden">@csrf</form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="7" class="px-6 py-12 text-center">
+                                        <div class="flex flex-col items-center justify-center text-gray-500">
+                                            <i class="fas fa-box-open text-5xl mb-3 text-gray-300"></i>
+                                            <p class="text-lg">Belum ada alumni untuk filter saat ini.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination for Alumni -->
+                @if($alumniInterns->count() > 0)
+                    <div class="mt-6">
+                        {{ $alumniInterns->links() }}
                     </div>
                 @endif
             </div>
