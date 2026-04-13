@@ -167,23 +167,24 @@
         .btn-outline:hover { background: rgba(255,255,255,0.22); }
         .hero-image-wrap {
             width: 100%;
-            max-width: 560px;
+            max-width: 100%;
             transition: transform 0.35s;
             margin-bottom: 0;
             display: flex;
             justify-content: flex-end;
         }
+        .hero-image-card {
+            position: static;
+            width: 100%;
+        }
         .hero-image-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at top left, rgba(56,189,248,0.22), transparent 36%);
-            pointer-events: none;
+            display: none;
         }
         .hero-image-card img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
             display: block;
         }
     
@@ -475,22 +476,25 @@
 
         /* ── RESPONSIVE ── */
         @media (max-width: 1024px) {
-            .hero-inner { grid-template-columns: 1fr; padding: 4rem 1.5rem; text-align: center; }
+            .hero { min-height: auto; padding: 4rem 0; }
+            .hero-inner { grid-template-columns: 1fr; padding: 4rem 1.5rem; gap: 2.5rem; text-align: center; }
             .hero-btns { justify-content: center; }
             .hero-stats { justify-content: center; }
-            .hero-image-wrap { max-width: 520px; margin: 0 auto; order: -1; }
+            .hero-image-wrap { max-width: 520px; margin: 0 auto; order: -1; justify-content: center; }
             .card-top, .card-bottom { display: none; }
             .process-grid { grid-template-columns: 1fr; }
             .step-block { grid-template-columns: 1fr; gap: 2rem; }
-            .step-block .order-swap { order: -1; }
+            .step-block .order-swap { order: 0; }
+            .step-block .step-image-wrap { order: -1; }
             .testi-grid { grid-template-columns: 1fr; }
             .partners-grid { grid-template-columns: repeat(2, 1fr); }
             .cta-inner { grid-template-columns: 1fr; }
             .nav-links { display: none; }
         }
         @media (max-width: 640px) {
+            .hero-inner { padding: 2.5rem 1rem; gap: 1.5rem; }
             .partners-grid { grid-template-columns: 1fr 1fr; }
-            .hero-title { font-size: 1.9rem; }
+            .hero-title { font-size: 1.8rem; }
             .hero-image-wrap { max-width: 100%; }
         }
     </style>
@@ -607,18 +611,18 @@
 
         <!-- Step 1 -->
         <div class="step-block reveal">
-            <div class="flex justify-center">
+            <div class="step-image-wrap flex justify-center">
                 <img src="{{ asset('storage/tutorial/dashboardLP.png') }}" alt="Login Dashboard" class="step-image" style="width:50%;">
             </div>
             <div>
                 <div class="step-badge"><i class="fas fa-flag" style="font-size:10px"></i> Langkah 1</div>
                 <div class="step-icon-wrap"><i class="fas fa-play"></i></div>
-                <h3 class="step-title">Masuk & Pilih Role</h3>
-                <p class="step-desc">Login ke dalam sistem menggunakan akun yang telah terdaftar, lalu pilih role sesuai dengan peran Anda.</p>
+                <h3 class="step-title">Lihat Ringkasan Dashboard</h3>
+                <p class="step-desc">Setelah login, Anda akan melihat ringkasan aktivitas magang, status absensi, dan akses cepat untuk laporan serta mikro skill.</p>
                 <ul class="step-list">
-                    <li>Role Intern untuk peserta magang</li>
-                    <li>Role Mentor untuk pembimbing lapangan</li>
-                    <li>Role Admin untuk pengelola sistem</li>
+                    <li>Informasi hadir, izin, dan sakit secara real time</li>
+                    <li>Status laporan dan mikroskill langsung terlihat</li>
+                    <li>Tombol pintas untuk akses absensi dan logbook</li>
                 </ul>
             </div>
         </div>
@@ -636,18 +640,34 @@
                     <li>Notifikasi otomatis ke mentor</li>
                 </ul>
             </div>
-            <div>
+            <div class="step-image-wrap">
                 <img src="{{ asset('storage/tutorial/absen.jpeg') }}" alt="Absensi" class="step-image">
             </div>
         </div>
 
         <!-- Step 3 -->
         <div class="step-block reveal">
-            <div>
-                <img src="{{ asset('storage/tutorial/logbook.png') }}" alt="Upload Laporan" class="step-image">
+            <div class="step-image-wrap">
+                <img src="{{ asset('storage/tutorial/logbook.png') }}" alt="Logbook" class="step-image">
             </div>
             <div>
                 <div class="step-badge"><i class="fas fa-flag" style="font-size:10px"></i> Langkah 3</div>
+                <div class="step-icon-wrap"><i class="fas fa-book"></i></div>
+                <h3 class="step-title">Kelola Logbook</h3>
+                <p class="step-desc">Catat kehadiran harian dan isi logbook aktivitas magang secara rutin agar perkembangan kerja dapat dipantau dengan lebih terstruktur.</p>
+                <ul class="step-list">
+                    <li>Absensi real time dengan verifikasi lokasi</li>
+                    <li>Logbook aktivitas harian yang terstruktur</li>
+                    <li>Notifikasi otomatis ke mentor</li>
+                </ul>
+            </div>
+        </div>
+
+
+        <!-- Step 4 -->
+        <div class="step-block reveal">
+            <div class="order-swap">
+                <div class="step-badge"><i class="fas fa-flag" style="font-size:10px"></i> Langkah 4</div>
                 <div class="step-icon-wrap"><i class="fas fa-file-alt"></i></div>
                 <h3 class="step-title">Upload Laporan Akhir</h3>
                 <p class="step-desc">Upload laporan akhir magang dan lihat feedback dari mentor untuk evaluasi hasil kerja secara menyeluruh.</p>
@@ -657,43 +677,29 @@
                     <li>Sertifikat digital otomatis setelah selesai</li>
                 </ul>
             </div>
-        </div>
-
-
-        <!-- Step 4 -->
-        <div class="step-block reveal">
-            <div class="order-swap">
-                <div class="step-badge"><i class="fas fa-flag" style="font-size:10px"></i> Langkah 2</div>
-                <div class="step-icon-wrap"><i class="fas fa-calendar-check"></i></div>
-                <h3 class="step-title">Kelola Laporan</h3>
-                <p class="step-desc">Catat kehadiran harian dan isi logbook aktivitas magang secara rutin agar perkembangan kerja dapat dipantau dengan lebih terstruktur.</p>
-                <ul class="step-list">
-                    <li>Absensi real time dengan verifikasi lokasi</li>
-                    <li>Logbook aktivitas harian yang terstruktur</li>
-                    <li>Notifikasi otomatis ke mentor</li>
-                </ul>
-            </div>
-            <div>
-                <img src="{{ asset('storage/tutorial/laporan.png') }}" alt="laporan" class="step-image">
+            <div class="step-image-wrap">
+                <img src="{{ asset('storage/tutorial/laporan.png') }}" alt="Laporan Akhir" class="step-image">
             </div>
         </div>
 
 
         <!-- Step 5 -->
         <div class="step-block reveal">
-            <div class="flex justify-center">
-                <img src="{{ asset('storage/tutorial/mikroskill.png') }}" alt="Upload Laporan" class="step-image" style="width:50%;">
+            <div class="step-image-wrap flex justify-center">
+                <img src="{{ asset('storage/tutorial/mikroskill.png') }}" alt="Mikroskill" class="step-image" style="width:50%;">
             </div>
             <div>
-                <div class="step-badge"><i class="fas fa-flag" style="font-size:10px"></i> Langkah 3</div>
-                <div class="step-icon-wrap"><i class="fas fa-file-alt"></i></div>
+                <div class="step-badge"><i class="fas fa-flag" style="font-size:10px"></i> Langkah 5</div>
+                <div class="step-icon-wrap"><i class="fas fa-star"></i></div>
                 <h3 class="step-title">Upload Mikroskill</h3>
-                <p class="step-desc">Upload laporan akhir magang dan lihat feedback dari mentor untuk evaluasi hasil kerja secara menyeluruh.</p>
+                <p class="step-desc">Unggah bukti kemampuan mikro skill untuk melengkapi laporan magang dan mendapatkan penilaian mentor yang lebih jelas.</p>
                 <ul class="step-list">
-                    <li>Upload dokumen dalam berbagai format</li>
-                    <li>Feedback mentor langsung di platform</li>
-                    <li>Sertifikat digital otomatis setelah selesai</li>
+                    <li>Unggah hasil mikroskill sesuai instruksi</li>
+                    <li>Pantau progres kompetensi setiap hari</li>
+                    <li>Dapatkan nilai dan sertifikat kegiatan</li>
                 </ul>
+            </div>
+        </div>
             </div>
         </div>
 
@@ -830,7 +836,7 @@
 
 <!-- ===== FOOTER ===== -->
 <footer class="footer">
-    <p style="margin:0">&copy; 2025 <span>Simagang</span> — Kementerian Komunikasi & Digital Republik Indonesia. Seluruh hak dilindungi.</p>
+    <p style="margin:0">&copy; 2026 <span>Simagang</span> — Kementerian Komunikasi & Digital Republik Indonesia. Seluruh hak dilindungi.</p>
 </footer>
 
 <script>
