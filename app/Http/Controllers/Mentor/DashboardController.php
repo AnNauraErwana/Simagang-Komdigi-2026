@@ -15,11 +15,21 @@ class DashboardController extends Controller
         $user = Auth::user();
         $mentor = $user->mentor;
 
-        $interns = $mentor ? $mentor->interns()->withCount(['attendances', 'microSkills'])->with(['attendances' => function ($q) {
-            $q->whereDate('date', now()->toDateString());
-        }])->get() : collect();
+        // Active interns for this mentor (default shown in dashboard)
+        $interns = $mentor ? $mentor->interns()->where('is_active', true)
+            ->withCount(['attendances', 'microSkills'])
+            ->with(['attendances' => function ($q) {
+                $q->whereDate('date', now()->toDateString());
+            }])->get() : collect();
+
+        // Alumni / released interns: only those explicitly marked inactive (exclude active even if end_date passed)
+        $alumni = $mentor ? $mentor->interns()
+            ->where('is_active', false)
+            ->withCount(['attendances', 'microSkills'])
+            ->get() : collect();
 
         $today = now()->toDateString();
+
         $todayAttendances = Attendance::whereIn('intern_id', $interns->pluck('id') ?: [0])
             ->whereDate('date', $today)
             ->with('intern')
@@ -50,7 +60,7 @@ class DashboardController extends Controller
                 ];
             });
 
-        return view('mentor.dashboard', compact('mentor', 'interns', 'todayAttendances', 'microPending', 'microTotal', 'topMicroSkills'));
+        return view('mentor.dashboard', compact('mentor', 'interns', 'alumni', 'todayAttendances', 'microPending', 'microTotal', 'topMicroSkills'));
     }
 }
 

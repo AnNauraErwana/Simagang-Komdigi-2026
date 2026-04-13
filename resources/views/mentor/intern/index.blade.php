@@ -58,6 +58,9 @@
                                         class="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                                         Nama</th>
                                     <th
+                                        class="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
+                                        Status</th>
+                                    <th
                                         class="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider hidden sm:table-cell">
                                         Institusi</th>
                                     <th
@@ -95,6 +98,19 @@
                                                 href="{{ route('mentor.intern.show', $intern) }}">
                                                 {{ $intern->name }}
                                             </a>
+                                        </td>
+                                        <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                                            @if ($intern->is_active)
+                                                <span
+                                                    class="px-2.5 sm:px-3 py-1.5 sm:py-2 inline-flex items-center justify-center text-xs sm:text-sm leading-5 font-bold rounded-full bg-green-100 text-green-800 shadow-sm">
+                                                    Aktif
+                                                </span>
+                                            @else
+                                                <span
+                                                    class="px-2.5 sm:px-3 py-1.5 sm:py-2 inline-flex items-center justify-center text-xs sm:text-sm leading-5 font-bold rounded-full bg-gray-100 text-gray-800 shadow-sm">
+                                                    Alumni
+                                                </span>
+                                            @endif
                                         </td>
                                         <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap hidden sm:table-cell">
                                             <div class="text-xs sm:text-sm text-gray-700 flex items-center font-medium">

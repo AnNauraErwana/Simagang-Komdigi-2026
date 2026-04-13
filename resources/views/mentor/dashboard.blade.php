@@ -16,9 +16,23 @@
                     ringkasan anak magang Anda.</p>
             </div>
 
+            @php
+                // Prepare an alumni collection fallback when controller doesn't provide $alumni
+                if (!isset($alumni)) {
+                    $alumniCollection = $interns->filter(function ($i) {
+                        $s = strtolower($i->status ?? '');
+                        // common variations for released/inactive statuses
+                        return in_array($s, ['tidak aktif', 'inactive', 'pelepasan', 'released', 'alumni']);
+                    });
+                } else {
+                    $alumniCollection = $alumni;
+                }
+                $alumniCount = is_countable($alumniCollection) ? $alumniCollection->count() : 0;
+            @endphp
+
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
 
-                <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group flex flex-col justify-between h-full">
                     <div class="p-4">
                         <div class="flex items-center justify-between gap-3">
                             <div class="flex-1 min-w-0">
@@ -35,7 +49,7 @@
                 </div>
 
                 <div
-                    class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                    class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group flex flex-col justify-between h-full">
                     <div class="p-4">
                         <div class="flex items-center justify-between gap-3">
                             <div class="flex-1 min-w-0">
@@ -53,7 +67,7 @@
                 </div>
 
                 <div
-                    class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                    class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group flex flex-col justify-between h-full">
                     <div class="p-4">
                         <div class="flex items-center justify-between gap-3">
                             <div class="flex-1 min-w-0">
@@ -71,7 +85,7 @@
                 </div>
 
                 <div
-                    class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                    class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group flex flex-col justify-between h-full">
                     <div class="p-4">
                         <div class="flex items-center justify-between gap-3">
                             <div class="flex-1 min-w-0">
@@ -89,7 +103,7 @@
                 </div>
 
                 <div
-                    class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                    class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group flex flex-col justify-between h-full">
                     <div class="p-4">
                         <div class="flex items-center justify-between gap-3">
                             <div class="flex-1 min-w-0">
@@ -103,6 +117,23 @@
                         </div>
                     </div>
                     <div class="h-1 bg-gradient-to-r from-indigo-500 to-purple-600"></div>
+                </div>
+
+                <div
+                    class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                    <div class="p-4">
+                        <div class="flex items-center justify-between gap-3">
+                            <div class="flex-1 min-w-0">
+                                <p class="text-xs font-medium text-gray-600 mb-1">Alumni</p>
+                                <h3 class="text-2xl font-bold text-gray-900">{{ $alumniCount }}</h3>
+                            </div>
+                            <div
+                                class="w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-600 rounded-xl flex items-center justify-center flex-shrink-0 transform group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-user-graduate text-white text-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h-1 bg-gradient-to-r from-pink-500 to-rose-600"></div>
                 </div>
             </div>
 
@@ -173,6 +204,66 @@
                     </div>
                 </div>
             </div>
+
+                    <div class="bg-white rounded-2xl shadow-md border border-blue-100 overflow-hidden mb-8">
+                        <div class="bg-blue-600 px-4 sm:px-6 py-3 sm:py-4">
+                            <h2 class="text-lg sm:text-xl font-bold text-white flex items-center">
+                                <i class="fas fa-user-graduate mr-2 sm:mr-3"></i>
+                                <span>Alumni</span>
+                            </h2>
+                        </div>
+                        <div class="p-3 sm:p-6 overflow-x-auto">
+                            <div class="min-w-full overflow-x-auto">
+                                <table class="w-full divide-y divide-gray-200">
+                                    <thead>
+                                        <tr class="bg-blue-50">
+                                            <th class="px-3 sm:px-6 py-2 sm:py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Nama</th>
+                                            <th class="px-3 sm:px-6 py-2 sm:py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Institusi</th>
+                                            <th class="px-3 sm:px-6 py-2 sm:py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Absensi</th>
+                                            <th class="px-3 sm:px-6 py-2 sm:py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Mikro</th>
+                                            <th class="px-3 sm:px-6 py-2 sm:py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Tanggal Pelepasan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-100">
+                                        @forelse($alumniCollection as $a)
+                                            <tr class="hover:bg-blue-50 transition-colors duration-150">
+                                                <td class="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
+                                                    <div class="text-xs sm:text-sm font-medium text-gray-900 truncate">{{ $a->name }}</div>
+                                                </td>
+                                                <td class="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
+                                                    <div class="text-xs sm:text-sm text-gray-600 truncate">{{ $a->institution }}</div>
+                                                </td>
+                                                <td class="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
+                                                    <span class="px-2 sm:px-3 py-1 inline-flex items-center justify-center text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                        <i class="fas fa-calendar-alt mr-0.5 sm:mr-1"></i>
+                                                        {{ $a->attendances_count ?? 0 }}
+                                                    </span>
+                                                </td>
+                                                <td class="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
+                                                    <span class="px-2 sm:px-3 py-1 inline-flex items-center justify-center text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">
+                                                        <i class="fas fa-book mr-0.5 sm:mr-1"></i>
+                                                        {{ $a->micro_skills_count ?? 0 }}
+                                                    </span>
+                                                </td>
+                                                <td class="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-600">
+                                                    {{ optional($a->end_date)->format('d/m/Y') ?: '-' }}
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="5" class="px-3 sm:px-6 py-6 sm:py-8 text-center">
+                                                    <div class="flex flex-col items-center justify-center text-gray-500">
+                                                        <i class="fas fa-inbox text-3xl sm:text-4xl mb-3 text-gray-300"></i>
+                                                        <p class="text-xs sm:text-sm">Belum ada data alumni.</p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
 
             <div class="bg-white rounded-2xl shadow-md border border-blue-100 overflow-hidden mb-8">
                 <div class="bg-blue-600 px-4 sm:px-6 py-3 sm:py-4">
