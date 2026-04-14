@@ -33,12 +33,28 @@
                                     placeholder="Cari nama anak magang..."
                                     class="block w-full pl-10 pr-3 py-3 border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all hover:border-blue-400 text-sm">
                             </div>
+                            <div class="relative group w-40 sm:w-44">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-filter text-gray-400 group-focus-within:text-blue-500 transition-colors"></i>
+                                </div>
+                                <select name="status" id="status"
+                                    class="block w-full pl-10 pr-10 py-3 appearance-none border-2 border-gray-300 rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all hover:border-blue-400 text-sm">
+                                    <option value="" {{ request('status') == '' ? 'selected' : '' }}>Semua</option>
+                                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Aktif</option>
+                                    <option value="alumni" {{ request('status') == 'alumni' ? 'selected' : '' }}>Alumni</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                            </div>
                             <button type="submit"
                                 class="inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold text-sm rounded-xl hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-300 flex-shrink-0 whitespace-nowrap">
                                 <i class="fas fa-search mr-2"></i>
                                 Cari
                             </button>
-                            @if (request()->filled('search'))
+                            @if (request()->filled('search') || request()->filled('status'))
                                 <a href="{{ route('mentor.intern.index') }}"
                                     class="inline-flex items-center justify-center bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold py-3 px-4 rounded-xl transition duration-200 shadow-md hover:shadow-lg flex-shrink-0">
                                     <i class="fas fa-times"></i>
@@ -141,7 +157,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="px-6 py-12 text-center">
+                                        <td colspan="7" class="px-6 py-12 text-center">
                                             <div class="flex flex-col items-center justify-center text-gray-500">
                                                 <div
                                                     class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mb-4">

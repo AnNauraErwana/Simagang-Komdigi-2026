@@ -20,6 +20,15 @@ class InternController extends Controller
             $query->where('name', 'like', '%' . $request->search . '%');
         }
 
+        // Filter by status (active / alumni)
+        if ($request->filled('status')) {
+            if ($request->status === 'active') {
+                $query->where('is_active', true);
+            } elseif ($request->status === 'alumni') {
+                $query->where('is_active', false);
+            }
+        }
+
         $interns = $query
             ->withCount(['attendances', 'logbooks', 'microSkills'])
             ->orderBy('name')
