@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
         @font-face {
             font-family: 'Etna';
@@ -20,7 +20,7 @@
         html { scroll-behavior: smooth; }
 
         body {
-            font-family: 'Inter', system-ui, sans-serif;
+            font-family:  'Poppins', sans-serif;
             background: #f0f7ff;
             color: #0f2d4a;
             margin: 0;
@@ -335,13 +335,13 @@
         .process-desc { font-size: 0.95rem; color: #4b6580; line-height: 1.6; margin: 0; }
 
         /* ── FEATURES / USAGE ── */
-        .section-usage { background: #f0f7ff; padding: 6rem 0; }
+        .section-usage { background: #f0f7ff; padding: 6rem 1.5rem; }
         .step-block {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 4rem;
             align-items: center;
-            padding: 3.5rem 0;
+            padding: 3.5rem 1rem;
         }
         .step-block + .step-block { border-top: 1px solid #bfdbfe; }
         .step-badge {
@@ -547,6 +547,13 @@
 
         /* ── RESPONSIVE ── */
         @media (max-width: 1024px) {
+            .section-usage {
+                padding: 4rem 1.25rem;
+            }
+
+            .step-block {
+                padding: 2rem 1rem; 
+            }
             .hero { min-height: auto; padding: 4rem 0; }
             .hero-inner { grid-template-columns: 1fr; padding: 4rem 1.5rem; gap: 2.5rem; text-align: center; }
             .hero-btns { justify-content: center; }
@@ -565,6 +572,15 @@
             .btn-login { display: none; }
         }
         @media (max-width: 640px) {
+            @media (max-width: 640px) {
+                .section-usage {
+                    padding: 3rem 1rem;
+                }
+
+                .step-block {
+                    padding: 1.5rem 0.75rem;
+                }
+            }
             .hero-inner { padding: 2.5rem 1rem; gap: 1.5rem; }
             .partners-grid { grid-template-columns: 1fr 1fr; }
             .hero-title { font-size: 1.8rem; }
