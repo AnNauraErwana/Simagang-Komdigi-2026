@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Mentor;
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\MicroSkillSubmission;
+use App\Services\HolidayService;
+use App\Services\TimeService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -12,36 +14,38 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
-        $mentor = $user->mentor;
+        $user    = Auth::user();
+        $mentor  = $user->mentor;
+        $nowWita = TimeService::nowWita();
+        $today   = $nowWita->toDateString();
 
-        // Active interns for this mentor (default shown in dashboard)
         $interns = $mentor ? $mentor->interns()->where('is_active', true)
             ->withCount(['attendances', 'microSkills'])
-            ->with(['attendances' => function ($q) {
-                $q->whereDate('date', now()->toDateString());
+            ->with(['attendances' => function ($q) use ($today) {
+                $q->whereDate('date', $today);
             }])->get() : collect();
 
-        // Alumni / released interns: only those explicitly marked inactive (exclude active even if end_date passed)
         $alumni = $mentor ? $mentor->interns()
             ->where('is_active', false)
             ->withCount(['attendances', 'microSkills'])
             ->get() : collect();
 
-        $today = now()->toDateString();
-
-        $todayAttendances = Attendance::whereIn('intern_id', $interns->pluck('id') ?: [0])
+        $todayAttendances = Attendance::whereIn('intern_id', $interns->pluck('id')->toArray() ?: [0])
             ->whereDate('date', $today)
             ->with('intern')
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Micro skill summary for mentor's interns
+        $todayAbsentInterns = collect();
+        if (!HolidayService::isHoliday($nowWita) && $mentor) {
+            $presentIds = $todayAttendances->pluck('intern_id')->toArray();
+            $todayAbsentInterns = $interns->whereNotIn('id', $presentIds);
+        }
+
         $internIds = $interns->pluck('id');
         $microPending = MicroSkillSubmission::whereIn('intern_id', $internIds)->where('status', 'pending')->count();
         $microTotal = MicroSkillSubmission::whereIn('intern_id', $internIds)->count();
 
-        // Leaderboard for mentor's interns (semua, termasuk yang 0)
         $topMicroSkills = \App\Models\Intern::leftJoin('micro_skill_submissions', 'interns.id', '=', 'micro_skill_submissions.intern_id')
             ->whereIn('interns.id', $internIds)
             ->select('interns.id as intern_id', 'interns.name', 'interns.institution', 'interns.photo_path', DB::raw('COUNT(micro_skill_submissions.id) as total'))
@@ -60,7 +64,7 @@ class DashboardController extends Controller
                 ];
             });
 
-        return view('mentor.dashboard', compact('mentor', 'interns', 'alumni', 'todayAttendances', 'microPending', 'microTotal', 'topMicroSkills'));
+        return view('mentor.dashboard', compact('mentor', 'interns', 'alumni', 'todayAttendances', 'todayAbsentInterns', 'today', 'microPending', 'microTotal', 'topMicroSkills'));
     }
 }
 

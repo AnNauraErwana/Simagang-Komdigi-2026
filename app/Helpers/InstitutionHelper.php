@@ -6,12 +6,10 @@ use App\Services\InstitutionApiService;
 
 class InstitutionHelper
 {
-    /**
-     * Get list of universities/colleges (S1/D4)
-     */
+
     public static function getUniversities(bool $useApi = false): array
     {
-        // Static list
+
         return [
             // PTN (Perguruan Tinggi Negeri)
             'Universitas Indonesia (UI)',

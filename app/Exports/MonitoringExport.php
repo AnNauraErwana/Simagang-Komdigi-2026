@@ -28,9 +28,7 @@ class MonitoringExport implements
         $this->filters = $filters;
     }
 
-    /**
-     * Ambil data SESUAI filter halaman monitoring
-     */
+   
     public function collection()
     {
         $query = Intern::with(['mentor', 'user']);
@@ -45,11 +43,7 @@ class MonitoringExport implements
         $endOfMonth   = $month->copy()->endOfMonth();
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | FILTER BULAN (OVERLAP LOGIC)
-        |--------------------------------------------------------------------------
-        */
+    
         if ($startOfMonth && $endOfMonth) {
             $query->where('start_date', '<=', $endOfMonth)
                 ->where(function ($q) use ($startOfMonth) {
@@ -58,11 +52,7 @@ class MonitoringExport implements
                 });
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | FILTER STATUS
-        |--------------------------------------------------------------------------
-        */
+     
         if (!empty($this->filters['status']) && $this->filters['status'] !== 'all') {
             switch ($this->filters['status']) {
 
@@ -91,10 +81,8 @@ class MonitoringExport implements
                     break;
 
                 case 'pelepasan':
-                    // Jika bulan disediakan, filter pelepasan berdasarkan `updated_at` atau `end_date` di bulan itu.
                     $query->where('is_active', 0);
                     if ($startOfMonth && $endOfMonth) {
-                        // gunakan updated_at untuk merepresentasikan kapan status diubah menjadi pelepasan
                         $query->whereBetween('updated_at', [
                             $startOfMonth,
                             $endOfMonth
@@ -105,29 +93,16 @@ class MonitoringExport implements
         }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | FILTER MENTOR
-        |--------------------------------------------------------------------------
-        */
         if (!empty($this->filters['mentor_id'])) {
             $query->where('mentor_id', $this->filters['mentor_id']);
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | FILTER KAMPUS
-        |--------------------------------------------------------------------------
-        */
+
         if (!empty($this->filters['institution'])) {
             $query->where('institution', $this->filters['institution']);
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | URUTAN DATA (SAMA SEPERTI INDEX)
-        |--------------------------------------------------------------------------
-        */
+
         return $query
             ->orderByRaw("
                 CASE
@@ -143,11 +118,6 @@ class MonitoringExport implements
             ->get();
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | HEADER EXCEL
-    |--------------------------------------------------------------------------
-    */
     public function headings(): array
     {
         return [
@@ -168,11 +138,7 @@ class MonitoringExport implements
         ];
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | MAPPING DATA PER BARIS
-    |--------------------------------------------------------------------------
-    */
+
     public function map($intern): array
     {
         $this->rowNumber++;
@@ -215,21 +181,13 @@ class MonitoringExport implements
         ];
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | NAMA SHEET
-    |--------------------------------------------------------------------------
-    */
+ 
     public function title(): string
     {
         return 'Monitoring Magang';
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | STYLE EXCEL
-    |--------------------------------------------------------------------------
-    */
+
     public function styles(Worksheet $sheet)
     {
         return [

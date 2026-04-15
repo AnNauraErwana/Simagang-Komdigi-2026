@@ -20,7 +20,7 @@
             </div>
         </div>
 <!-- Statistics Cards (Optional - untuk informasi tambahan) -->
-        @if($attendances->count() > 0)
+        @if($attendances->count() > 0 || $todayVirtualAbsent)
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
                 <!-- Total Hadir -->
                 <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
@@ -70,21 +70,22 @@
                     <div class="h-1 bg-red-500"></div>
                 </div>
 
-                <!-- Total Records -->
+                <!-- Total Tidak Hadir -->
                 <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
                     <div class="p-6">
                         <div class="flex items-center justify-between">
                             <div class="flex-1">
-                                <p class="text-sm font-medium text-gray-600 mb-1">Total Absensi</p>
-                                <h3 class="text-3xl font-bold text-gray-900">{{ $totalAbsensi }}</h3>
+                                <p class="text-sm font-medium text-gray-600 mb-1">Tidak Hadir</p>
+                                <h3 class="text-3xl font-bold text-gray-900">{{ $totalTidakHadir + ($todayVirtualAbsent ? 1 : 0) }}</h3>
                             </div>
-                            <div class="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                                <i class="fas fa-clipboard-list text-white text-2xl"></i>
+                            <div class="w-16 h-16 bg-red-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-user-times text-white text-2xl"></i>
                             </div>
                         </div>
                     </div>
-                    <div class="h-1 bg-blue-500"></div>
+                    <div class="h-1 bg-red-500"></div>
                 </div>
+
             </div>
         @endif
 
@@ -112,6 +113,25 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-100">
+                            {{-- Baris virtual hari ini: belum absen di hari kerja --}}
+                            @if($todayVirtualAbsent)
+                                <tr class="bg-red-50">
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <span class="text-sm font-medium text-gray-900">
+                                            {{ \Carbon\Carbon::parse($todayWita)->format('d/m/Y') }}
+                                        </span>
+                                        <span class="ml-1 text-xs text-gray-400">(Hari ini)</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                            Tidak Hadir
+                                        </span>
+                                    </td>
+                                    <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-400 italic">
+                                        Belum melakukan absensi hari ini
+                                    </td>
+                                </tr>
+                            @endif
                             @forelse($attendances as $attendance)
                                 <tr class="hover:bg-blue-50 transition-colors duration-150">
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
@@ -121,9 +141,14 @@
                                         <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
                                             @if($attendance->status == 'hadir') bg-green-100 text-green-800
                                             @elseif($attendance->status == 'izin') bg-yellow-100 text-yellow-800
+                                            @elseif($attendance->status == 'sakit') bg-orange-100 text-orange-800
                                             @else bg-red-100 text-red-800
                                             @endif">
-                                            {{ ucfirst($attendance->status) }}
+                                            @if($attendance->status == 'alfa')
+                                                Tidak Hadir
+                                            @else
+                                                {{ ucfirst($attendance->status) }}
+                                            @endif
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 text-center">

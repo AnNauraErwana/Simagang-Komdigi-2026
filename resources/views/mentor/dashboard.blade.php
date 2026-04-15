@@ -91,7 +91,7 @@
                             <div class="flex-1 min-w-0">
                                 <p class="text-xs font-medium text-gray-600 mb-1">Tidak Hadir</p>
                                 <h3 class="text-2xl font-bold text-gray-900">
-                                    {{ $todayAttendances->where('status', 'alfa')->count() }}</h3>
+                                    {{ $todayAttendances->where('status', 'alfa')->count() + $todayAbsentInterns->count() }}</h3>
                             </div>
                             <div
                                 class="w-12 h-12 bg-gradient-to-br from-gray-500 to-gray-600 rounded-xl flex items-center justify-center flex-shrink-0 transform group-hover:scale-110 transition-transform duration-300">
@@ -298,6 +298,25 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-100">
+                                {{-- Baris virtual: intern belum absen hari ini --}}
+                                @foreach($todayAbsentInterns as $absentIntern)
+                                    <tr class="bg-red-50">
+                                        <td class="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
+                                            <div class="text-xs sm:text-sm font-medium text-gray-900 truncate">
+                                                {{ $absentIntern->name }}
+                                            </div>
+                                        </td>
+                                        <td class="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
+                                            <span class="px-2 sm:px-3 py-0.5 sm:py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                                Tidak Hadir
+                                            </span>
+                                        </td>
+                                        <td colspan="4" class="px-3 sm:px-6 py-2 sm:py-4 text-xs text-gray-400 italic">
+                                            Belum melakukan absensi hari ini
+                                        </td>
+                                    </tr>
+                                @endforeach
+
                                 @forelse($todayAttendances as $attendance)
                                     <tr class="hover:bg-blue-50 transition-colors duration-150">
                                         <td class="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
@@ -306,13 +325,14 @@
                                             </div>
                                         </td>
                                         <td class="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
-                                            <span
-                                                class="px-2 sm:px-3 py-0.5 sm:py-1 inline-flex text-xs leading-5 font-semibold rounded-full capitalize
-                                            @if ($attendance->status == 'hadir') bg-green-100 text-green-800
-                                            @elseif($attendance->status == 'izin') bg-yellow-100 text-yellow-800
-                                            @elseif($attendance->status == 'sakit') bg-red-100 text-red-800
-                                            @else bg-gray-200 text-gray-800 @endif">
-                                                {{ $attendance->status }}
+                                            <span class="px-2 sm:px-3 py-0.5 sm:py-1 inline-flex text-xs leading-5 font-semibold rounded-full
+                                                @if ($attendance->status == 'hadir') bg-green-100 text-green-800
+                                                @elseif($attendance->status == 'izin') bg-yellow-100 text-yellow-800
+                                                @elseif($attendance->status == 'sakit') bg-orange-100 text-orange-800
+                                                @else bg-red-100 text-red-800 @endif">
+                                                @if($attendance->status == 'alfa') Tidak Hadir
+                                                @else {{ ucfirst($attendance->status) }}
+                                                @endif
                                             </span>
                                         </td>
                                         <td

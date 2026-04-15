@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use App\Services\HolidayService;
 use App\Services\TimeService;
 
 class AttendanceController extends Controller
@@ -16,26 +17,53 @@ class AttendanceController extends Controller
     public function index()
     {
         $intern = Auth::user()->intern;
-        $totalHadir = Attendance::where('intern_id', $intern->id)->where('status', 'hadir')->count();
-        $totalIzin = Attendance::where('intern_id', $intern->id)->where('status', 'izin')->count();
-        $totalSakit = Attendance::where('intern_id', $intern->id)->where('status', 'sakit')->count();
-        $totalAbsensi = Attendance::where('intern_id', $intern->id)->count();
-        $attendances = Attendance::where('intern_id', $intern->id)
+        $nowWita = TimeService::nowWita();
+        $todayWita = $nowWita->toDateString();
+
+        $totalHadir      = Attendance::where('intern_id', $intern->id)->where('status', 'hadir')->count();
+        $totalIzin       = Attendance::where('intern_id', $intern->id)->where('status', 'izin')->count();
+        $totalSakit      = Attendance::where('intern_id', $intern->id)->where('status', 'sakit')->count();
+        $totalTidakHadir = Attendance::where('intern_id', $intern->id)->where('status', 'alfa')->count();
+        $attendances     = Attendance::where('intern_id', $intern->id)
             ->orderBy('date', 'desc')
             ->paginate(15);
 
-        return view('intern.attendance.index', compact('attendances', 'totalHadir', 'totalIzin', 'totalSakit', 'totalAbsensi'));
+
+        $todayVirtualAbsent = false;
+        $isWorkday = !HolidayService::isHoliday($nowWita);
+        $hasTodayRecord = Attendance::where('intern_id', $intern->id)
+            ->whereDate('date', $todayWita)
+            ->exists();
+
+        if ($isWorkday && !$hasTodayRecord) {
+            $todayVirtualAbsent = true;
+        }
+
+        return view('intern.attendance.index', compact(
+            'attendances', 'totalHadir', 'totalIzin', 'totalSakit', 'totalTidakHadir',
+            'todayVirtualAbsent', 'todayWita'
+        ));
     }
 
     public function create()
     {
         $intern = Auth::user()->intern;
-        
-        // Gunakan waktu server WITA (Asia/Makassar)
+
         $nowWita = TimeService::nowWita();
         $todayWita = $nowWita->toDateString();
 
-        // Batasi akses form check-in sesuai waktu WITA (default 08:00-12:00)
+        if (HolidayService::isWeekend($nowWita)) {
+            $dayName = $nowWita->isSaturday() ? 'Sabtu' : 'Minggu';
+            return redirect()->route('intern.attendance.index')
+                ->with('info', "Hari ini {$dayName} — hari libur, tidak ada absensi.");
+        }
+
+        if (HolidayService::isNationalHoliday($nowWita)) {
+            $holidayName = HolidayService::getHolidayName($nowWita) ?? 'Hari Libur Nasional';
+            return redirect()->route('intern.attendance.index')
+                ->with('info', "Hari ini libur nasional ({$holidayName}), tidak ada absensi.");
+        }
+
         $checkInStart = env('ATTENDANCE_CHECKIN_START', '08:00');
         $checkInEnd = env('ATTENDANCE_CHECKIN_END', '12:00');
         $currentTime = $nowWita->format('H:i');
@@ -45,7 +73,6 @@ class AttendanceController extends Controller
                 ->with('info', 'Form absensi masuk hanya tersedia pukul ' . $checkInStart . ' - ' . $checkInEnd . ' WITA.');
         }
 
-        // Check if already has attendance today (berdasarkan tanggal WITA)
         $todayAttendance = Attendance::where('intern_id', $intern->id)
             ->whereDate('date', $todayWita)
             ->first();
@@ -62,11 +89,19 @@ class AttendanceController extends Controller
     {
         $intern = Auth::user()->intern;
 
-        // Gunakan waktu server WITA (Asia/Makassar)
         $nowWita = TimeService::nowWita();
         $todayWita = $nowWita->toDateString();
 
-        // Check if already has attendance today (berdasarkan tanggal WITA)
+        if (HolidayService::isWeekend($nowWita)) {
+            $dayName = $nowWita->isSaturday() ? 'Sabtu' : 'Minggu';
+            return back()->withErrors(['error' => "Hari ini {$dayName} — hari libur, tidak bisa melakukan absensi."]);
+        }
+
+        if (HolidayService::isNationalHoliday($nowWita)) {
+            $holidayName = HolidayService::getHolidayName($nowWita) ?? 'Hari Libur Nasional';
+            return back()->withErrors(['error' => "Hari ini libur nasional ({$holidayName}), tidak bisa melakukan absensi."]);
+        }
+
         $todayAttendance = Attendance::where('intern_id', $intern->id)
             ->whereDate('date', $todayWita)
             ->first();
@@ -85,13 +120,11 @@ class AttendanceController extends Controller
 
         $data = [
             'intern_id' => $intern->id,
-            // Simpan tanggal WITA agar konsisten
             'date' => $todayWita,
             'status' => $validated['status'],
         ];
 
         if ($validated['status'] === 'hadir') {
-            // Validasi jam masuk hanya boleh dalam rentang tertentu (default 08:00-12:00 WITA)
             $checkInStart = env('ATTENDANCE_CHECKIN_START', '08:00');
             $checkInEnd = env('ATTENDANCE_CHECKIN_END', '12:00');
             $currentTime = $nowWita->format('H:i');
@@ -102,7 +135,6 @@ class AttendanceController extends Controller
             $photoPath = null;
             
             if ($request->hasFile('photo')) {
-                // Handle file upload
                 $photo = $request->file('photo');
                 if ($photo->isValid() && $photo->getError() === UPLOAD_ERR_OK) {
                     try {
@@ -130,7 +162,6 @@ class AttendanceController extends Controller
                     return back()->withErrors(['photo' => 'File foto tidak valid.'])->withInput();
                 }
             } elseif ($request->filled('photo_data')) {
-                // Handle base64 image from camera
                 $imageData = $request->input('photo_data');
                 if (preg_match('/^data:image\/(\w+);base64,/', $imageData, $type)) {
                     $imageData = substr($imageData, strpos($imageData, ',') + 1);
@@ -209,7 +240,6 @@ class AttendanceController extends Controller
 
     public function checkOut(Request $request)
     {
-        // Gunakan waktu server WITA (Asia/Makassar)
         $nowWita = TimeService::nowWita();
 
         $validated = $request->validate([
@@ -232,16 +262,13 @@ class AttendanceController extends Controller
             return back()->withErrors(['error' => 'Anda sudah melakukan absensi keluar hari ini.']);
         }
 
-        // Validasi jam keluar minimal 16:45 WITA
         if ($nowWita->format('H:i') < '16:00') {
             return back()->withErrors(['error' => 'Absensi keluar hanya bisa mulai pukul 16:45 WITA.']);
         }
 
-        // Handle photo upload for checkout
         $photoCheckoutPath = null;
         
         if ($request->hasFile('photo')) {
-            // Handle file upload
             $photo = $request->file('photo');
             if ($photo->isValid() && $photo->getError() === UPLOAD_ERR_OK) {
                 try {
@@ -269,7 +296,6 @@ class AttendanceController extends Controller
                 return back()->withErrors(['photo' => 'File foto tidak valid.'])->withInput();
             }
         } elseif ($request->filled('photo_data')) {
-            // Handle base64 image from camera
             $imageData = $request->input('photo_data');
             if (preg_match('/^data:image\/(\w+);base64,/', $imageData, $type)) {
                 $imageData = substr($imageData, strpos($imageData, ',') + 1);
@@ -301,7 +327,6 @@ class AttendanceController extends Controller
         }
 
         $todayAttendance->update([
-            // Simpan waktu check-out berdasarkan WITA
             'check_out' => $nowWita,
             'photo_checkout' => $photoCheckoutPath,
         ]);

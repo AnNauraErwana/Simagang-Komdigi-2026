@@ -16,7 +16,6 @@ class AdminInternController extends Controller
 {
     public function index(Request $request)
     {
-        // Build base query and apply common filters (except is_active)
         $baseQuery = Intern::with(['user', 'mentor', 'team']);
 
         if ($request->filled('search')) {
@@ -31,14 +30,12 @@ class AdminInternController extends Controller
             $baseQuery->where('mentor_id', $request->mentor_id);
         }
 
-        // Active interns (is_active = true)
         $activeInterns = (clone $baseQuery)
             ->where('is_active', true)
             ->orderByDesc('created_at')
             ->paginate(15, ['*'], 'active_page')
             ->withQueryString();
 
-        // Alumni / inactive interns (is_active = false)
         $alumniInterns = (clone $baseQuery)
             ->where('is_active', false)
             ->orderByDesc('created_at')

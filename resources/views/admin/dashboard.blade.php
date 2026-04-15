@@ -135,6 +135,23 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-100">
+                            {{-- Baris virtual: intern belum absen hari ini --}}
+                            @foreach($todayAbsentInterns as $absentIntern)
+                                <tr class="bg-red-50">
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <div class="text-sm font-medium text-gray-900">{{ $absentIntern->name }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                            Tidak Hadir
+                                        </span>
+                                    </td>
+                                    <td colspan="4" class="px-6 py-4 text-sm text-gray-400 italic text-center">
+                                        Belum melakukan absensi hari ini
+                                    </td>
+                                </tr>
+                            @endforeach
+
                             @forelse($todayAttendances as $attendance)
                                 <tr class="hover:bg-blue-50 transition-colors duration-150">
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
@@ -144,10 +161,12 @@
                                         <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
                                             @if($attendance->status == 'hadir') bg-green-100 text-green-800
                                             @elseif($attendance->status == 'izin') bg-yellow-100 text-yellow-800
-                                            @elseif($attendance->status == 'sakit') bg-red-100 text-red-800
-                                            @else bg-gray-200 text-gray-800
+                                            @elseif($attendance->status == 'sakit') bg-orange-100 text-orange-800
+                                            @else bg-red-100 text-red-800
                                             @endif">
-                                            {{ ucfirst($attendance->status) }}
+                                            @if($attendance->status == 'alfa') Tidak Hadir
+                                            @else {{ ucfirst($attendance->status) }}
+                                            @endif
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 text-center">

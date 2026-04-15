@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Attendance;
 use App\Models\Intern;
+use App\Services\HolidayService;
 use App\Services\TimeService;
 use Illuminate\Console\Command;
 
@@ -11,7 +12,7 @@ class MarkAlfaCommand extends Command
 {
     protected $signature = 'attendance:mark-alfa';
 
-    protected $description = 'Tandai otomatis alfa (tidak hadir) setelah batas check-in untuk intern yang belum absen';
+    protected $description = 'Tandai otomatis alfa (tidak hadir) di akhir hari untuk intern yang belum absen pada hari kerja';
 
     public function handle(): int
     {
@@ -19,6 +20,20 @@ class MarkAlfaCommand extends Command
         $todayWita = $nowWita->toDateString();
 
         $this->info('Memproses alfa tanggal ' . $todayWita . ' (WITA) ...');
+
+        // Skip jika hari Sabtu atau Minggu
+        if (HolidayService::isWeekend($nowWita)) {
+            $dayName = $nowWita->isSaturday() ? 'Sabtu' : 'Minggu';
+            $this->info("Hari ini {$dayName} — tidak ada proses alfa.");
+            return self::SUCCESS;
+        }
+
+        // Skip jika tanggal merah nasional
+        if (HolidayService::isNationalHoliday($nowWita)) {
+            $holidayName = HolidayService::getHolidayName($nowWita) ?? 'Hari Libur Nasional';
+            $this->info("Hari ini libur ({$holidayName}) — tidak ada proses alfa.");
+            return self::SUCCESS;
+        }
 
         $interns = Intern::query()
             ->where('is_active', true)

@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AdminMentorController;
 use App\Http\Controllers\Admin\AdminMonitoringController;
 use App\Http\Controllers\Admin\AdminReportController;
 use App\Http\Controllers\Admin\AdminLogbookController;
+use App\Http\Controllers\Api\HolidayController;
 use App\Http\Controllers\Api\InstitutionController;
 use App\Http\Controllers\Intern\MicroSkillController as InternMicroSkillController;
 use App\Http\Controllers\Mentor\MicroSkillController as MentorMicroSkillController;
@@ -75,6 +76,9 @@ Route::get('/convert-font', function () {
 // API Routes for Institution Search
 Route::get('/api/institutions/search', [InstitutionController::class, 'searchUniversities'])->name('api.institutions.search');
 Route::get('/api/institutions/all', [InstitutionController::class, 'getAllUniversities'])->name('api.institutions.all');
+
+// API Route cek hari libur (real-time, butuh auth)
+Route::middleware('auth')->get('/api/attendance/is-holiday', [HolidayController::class, 'check'])->name('api.attendance.is-holiday');
 
 // Authentication Routes
 Route::middleware('guest')->group(function () {

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\Intern;
 use App\Models\MicroSkillSubmission;
+use App\Services\HolidayService;
+use App\Services\TimeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -13,24 +15,34 @@ class AdminDashboardController extends Controller
 {
     public function index()
     {
-        $activeInterns = Intern::where('is_active', true)->count();
-        $totalInterns = Intern::count();
-        
-        $totalHadir = Attendance::where('status', 'hadir')->count();
-        $totalIzin = Attendance::where('status', 'izin')->count();
-        $totalSakit = Attendance::where('status', 'sakit')->count();
-        $totalAlfa = Attendance::where('status', 'alfa')->count();
+        $nowWita = TimeService::nowWita();
+        $today   = $nowWita->toDateString();
 
-        // Micro Skill summary
+        $activeInterns = Intern::where('is_active', true)->count();
+        $totalInterns  = Intern::count();
+
+        $totalHadir = Attendance::where('status', 'hadir')->count();
+        $totalIzin  = Attendance::where('status', 'izin')->count();
+        $totalSakit = Attendance::where('status', 'sakit')->count();
+        $totalAlfa  = Attendance::where('status', 'alfa')->count();
+
         $microTotal = MicroSkillSubmission::count();
-        
-        $todayAttendances = Attendance::whereDate('date', today())
+
+        $todayAttendances = Attendance::whereDate('date', $today)
             ->with('intern')
             ->orderBy('created_at', 'desc')
             ->take(10)
             ->get();
 
-        // Leaderboard Mikro Skill (Top 10 all interns, termasuk yang 0)
+        $todayAbsentInterns = collect();
+        if (!HolidayService::isHoliday($nowWita)) {
+            $presentIds = Attendance::whereDate('date', $today)->pluck('intern_id')->toArray();
+            $todayAbsentInterns = Intern::where('is_active', true)
+                ->whereNotIn('id', $presentIds)
+                ->orderBy('name')
+                ->get();
+        }
+
         $topMicroSkills = Intern::leftJoin('micro_skill_submissions', 'interns.id', '=', 'micro_skill_submissions.intern_id')
             ->select('interns.id as intern_id', 'interns.name', 'interns.institution', 'interns.photo_path', DB::raw('COUNT(micro_skill_submissions.id) as total'))
             ->groupBy('interns.id', 'interns.name', 'interns.institution', 'interns.photo_path')
@@ -57,6 +69,8 @@ class AdminDashboardController extends Controller
             'totalAlfa',
             'microTotal',
             'todayAttendances',
+            'todayAbsentInterns',
+            'today',
             'topMicroSkills'
         ));
     }
