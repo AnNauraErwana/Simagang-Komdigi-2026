@@ -417,6 +417,9 @@
             padding: 2rem;
             position: relative;
             transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            min-height: 380px;
         }
         .testi-card:hover { transform: translateY(-4px); box-shadow: 0 16px 44px rgba(14,99,201,0.1); }
         .testi-quote-icon {
@@ -426,7 +429,7 @@
             margin-bottom: 1rem;
         }
         .testi-stars { color: #f59e0b; font-size: 13px; margin-bottom: 0.75rem; letter-spacing: 2px; }
-        .testi-text { font-size: 1rem; color: #4b6580; line-height: 1.7; margin: 0 0 1.5rem; font-style: italic; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; white-space: normal; }
+        .testi-text { font-size: 1rem; color: #4b6580; line-height: 1.7; margin: 0 0 1.5rem; font-style: italic; flex-grow: 1; }
         .testi-author { display: flex; align-items: center; gap: 12px; padding-top: 1.25rem; border-top: 1px solid #bfdbfe; }
         .testi-avatar {
             width: 48px;
