@@ -47,7 +47,22 @@
             gap: 1rem;
         }
         .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-        .nav-logo img { height: 36px; width: 36px; border-radius: 9999px; }
+        .logo-wrap {
+            width: 36px;
+            height: 36px;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .logo-wrap img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
         .nav-links { display: flex; align-items: center; gap: 4px; }
         .nav-links a {
             text-decoration: none;
@@ -597,7 +612,9 @@
 <header class="navbar">
     <div class="navbar-inner">
         <a href="#hero" class="nav-logo">
-            <img src="{{ url('storage/vendor/logo_komdigi.png') }}" alt="Komdigi" style="height:36px; width:36px; border-radius:9999px; object-fit:cover; border:1.5px solid #bfdbfe; padding:3px; background:#eff6ff;">
+            <div class="logo-wrap">
+                <img src="{{ url('storage/vendor/logo_komdigi.png') }}" alt="Komdigi">
+            </div>
             <div>
                 <div class="font-etna" style="font-size:20px; font-weight:900; line-height:1.1">
                     <span style="color:#9d272a">SI</span><span style="color:#086bb0">MA</span><span style="color:#2dabe2">GA</span><span style="color:#efc400">NG</span>
