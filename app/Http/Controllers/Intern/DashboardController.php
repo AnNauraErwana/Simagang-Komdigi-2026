@@ -42,6 +42,10 @@ class DashboardController extends Controller
             ->where('status', 'sakit')
             ->count();
 
+        $totalTidakHadir = Attendance::where('intern_id', $intern->id)
+            ->where('status', 'tidak hadir')
+            ->count();
+
         $hasFinalReport = $intern->finalReport !== null;
         
         // Micro skill summary
@@ -75,6 +79,7 @@ class DashboardController extends Controller
             'totalHadir',
             'totalIzin',
             'totalSakit',
+            'totalTidakHadir',
             'hasFinalReport',
             'certificate',
             'microSkillTotal',

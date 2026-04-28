@@ -40,17 +40,17 @@
             </div>
 
             <!-- Stats Cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-6 mb-8">
+            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-6 mb-8">
                 <!-- Card 1: Hari Hadir -->
-                <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
-                    <div class="p-4 sm:p-6">
-                        <div class="flex flex-row items-center justify-between gap-3">
-                            <div class="flex-1 min-w-0 flex flex-col">
-                                <p class="text-sm font-medium text-gray-700 truncate">Hari Hadir</p>
-                                <dd class="text-xl sm:text-lg font-medium text-gray-900 truncate">{{ $totalHadir }}</dd>
+                <div class="bg-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                    <div class="p-3 sm:p-6">
+                        <div class="flex flex-col-reverse sm:flex-row items-center sm:items-start justify-center sm:justify-between gap-2 sm:gap-3">
+                            <div class="flex-1 min-w-0 flex flex-col text-center sm:text-left">
+                                <p class="text-xs sm:text-sm font-medium text-gray-700 truncate">Total Hadir</p>
+                                <dd class="text-lg sm:text-2xl font-bold text-gray-900 truncate">{{ $totalHadir }}</dd>
                             </div>
-                            <div class="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 bg-blue-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                                <i class="fas fa-calendar-check text-white text-xl sm:text-2xl"></i>
+                            <div class="flex-shrink-0 w-10 h-10 sm:w-16 sm:h-16 bg-blue-500 rounded-xl sm:rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-calendar-check text-white text-lg sm:text-2xl"></i>
                             </div>
                         </div>
                     </div>
@@ -58,15 +58,15 @@
                 </div>
 
                 <!-- Card 2: Izin -->
-                <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
-                        <div class="p-4 sm:p-6">
-                        <div class="flex flex-row items-center justify-between gap-3">
-                            <div class="flex-1 min-w-0 flex flex-col">
-                                <p class="text-sm font-medium text-gray-700 truncate">Izin</p>
-                                <dd class="text-xl sm:text-lg font-medium text-gray-900 truncate">{{ $totalIzin }}</dd>
+                <div class="bg-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                    <div class="p-3 sm:p-6">
+                        <div class="flex flex-col-reverse sm:flex-row items-center sm:items-start justify-center sm:justify-between gap-2 sm:gap-3">
+                            <div class="flex-1 min-w-0 flex flex-col text-center sm:text-left">
+                                <p class="text-xs sm:text-sm font-medium text-gray-700 truncate">Izin</p>
+                                <dd class="text-lg sm:text-2xl font-bold text-gray-900 truncate">{{ $totalIzin }}</dd>
                             </div>
-                            <div class="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 bg-yellow-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                                <i class="fas fa-calendar-times text-white text-xl sm:text-2xl"></i>
+                            <div class="flex-shrink-0 w-10 h-10 sm:w-16 sm:h-16 bg-yellow-500 rounded-xl sm:rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-calendar-times text-white text-lg sm:text-2xl"></i>
                             </div>
                         </div>
                     </div>
@@ -74,49 +74,63 @@
                 </div>
 
                 <!-- Card 3: Sakit -->
-                <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
-                        <div class="p-4 sm:p-6">
-                        <div class="flex flex-row items-center justify-between gap-3">
-                            <div class="flex-1 min-w-0 flex flex-col">
-                                <p class="text-sm font-medium text-gray-700 truncate">Sakit</p>
-                                <dd class="text-xl sm:text-lg font-medium text-gray-900 truncate">{{ $totalSakit }}</dd>
+                <div class="bg-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                    <div class="p-3 sm:p-6">
+                        <div class="flex flex-col-reverse sm:flex-row items-center sm:items-start justify-center sm:justify-between gap-2 sm:gap-3">
+                            <div class="flex-1 min-w-0 flex flex-col text-center sm:text-left">
+                                <p class="text-xs sm:text-sm font-medium text-gray-700 truncate">Sakit</p>
+                                <dd class="text-lg sm:text-2xl font-bold text-gray-900 truncate">{{ $totalSakit }}</dd>
                             </div>
-                            <div class="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 bg-red-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                                <i class="fas fa-calendar-minus text-white text-xl sm:text-2xl"></i>
+                            <div class="flex-shrink-0 w-10 h-10 sm:w-16 sm:h-16 bg-red-500 rounded-xl sm:rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-calendar-minus text-white text-lg sm:text-2xl"></i>
                             </div>
                         </div>
                     </div>
                     <div class="h-1 bg-red-500"></div>
                 </div>
 
-                <!-- Card 4: Laporan -->
-                <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
-                        <div class="p-4 sm:p-6">
-                        <div class="flex flex-row items-center justify-between gap-3">
-                            <div class="flex-1 min-w-0 flex flex-col">
-                                <p class="text-sm font-medium text-gray-700 truncate">Laporan</p>
-                                <dd class="text-xl sm:text-lg font-medium text-gray-900 truncate">{{ $hasFinalReport ? 'Sudah' : 'Belum' }}
-                                </dd>
+                <!-- Card 4: Tidak Hadir -->
+                <div class="bg-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                    <div class="p-3 sm:p-6">
+                        <div class="flex flex-col-reverse sm:flex-row items-center sm:items-start justify-center sm:justify-between gap-2 sm:gap-3">
+                            <div class="flex-1 min-w-0 flex flex-col text-center sm:text-left">
+                                <p class="text-xs sm:text-sm font-medium text-gray-700 truncate">Tidak Hadir</p>
+                                <dd class="text-lg sm:text-2xl font-bold text-gray-900 truncate">{{ $totalTidakHadir }}</dd>
                             </div>
-                            <div class="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 bg-green-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                                <i class="fas fa-file-alt text-white text-xl sm:text-2xl"></i>
+                            <div class="flex-shrink-0 w-10 h-10 sm:w-16 sm:h-16 bg-orange-500 rounded-xl sm:rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-user-times text-white text-lg sm:text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h-1 bg-orange-500"></div>
+                </div>
+
+                <!-- Card 5: Laporan -->
+                <div class="bg-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                    <div class="p-3 sm:p-6">
+                        <div class="flex flex-col-reverse sm:flex-row items-center sm:items-start justify-center sm:justify-between gap-2 sm:gap-3">
+                            <div class="flex-1 min-w-0 flex flex-col text-center sm:text-left">
+                                <p class="text-xs sm:text-sm font-medium text-gray-700 truncate">Laporan</p>
+                                <dd class="text-lg sm:text-2xl font-bold text-gray-900 truncate">{{ $hasFinalReport ? 'Sudah' : 'Belum' }}</dd>
+                            </div>
+                            <div class="flex-shrink-0 w-10 h-10 sm:w-16 sm:h-16 bg-green-500 rounded-xl sm:rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-file-alt text-white text-lg sm:text-2xl"></i>
                             </div>
                         </div>
                     </div>
                     <div class="h-1 bg-green-500"></div>
                 </div>
 
-                <!-- Card 5: Mikro Skill -->
-                <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
-                        <div class="p-4 sm:p-6">
-                        <div class="flex flex-row items-center justify-between gap-3">
-                            <div class="flex-1 min-w-0 flex flex-col">
-                                <p class="text-sm font-medium text-gray-700 truncate">Mikro Skill</p>
-                                <dd class="text-xl sm:text-lg font-medium text-gray-900 truncate">{{ $microSkillApproved }} /
-                                    {{ $microSkillTotal }}</dd>
+                <!-- Card 6: Mikro Skill -->
+                <div class="bg-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                    <div class="p-3 sm:p-6">
+                        <div class="flex flex-col-reverse sm:flex-row items-center sm:items-start justify-center sm:justify-between gap-2 sm:gap-3">
+                            <div class="flex-1 min-w-0 flex flex-col text-center sm:text-left">
+                                <p class="text-xs sm:text-sm font-medium text-gray-700 truncate">Mikro Skill</p>
+                                <dd class="text-lg sm:text-2xl font-bold text-gray-900 truncate">{{ $microSkillApproved }}/{{ $microSkillTotal }}</dd>
                             </div>
-                            <div class="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 bg-purple-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                                <i class="fas fa-graduation-cap text-white text-xl sm:text-2xl"></i>
+                            <div class="flex-shrink-0 w-10 h-10 sm:w-16 sm:h-16 bg-purple-500 rounded-xl sm:rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-graduation-cap text-white text-lg sm:text-2xl"></i>
                             </div>
                         </div>
                     </div>
