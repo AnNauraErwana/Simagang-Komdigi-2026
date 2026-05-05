@@ -509,16 +509,6 @@
                     </div>
                     @endif
                     <div class="divider"></div>
-                    <div>
-                        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Tingkat Penerimaan</p>
-                        <div class="flex items-center gap-2 mt-1">
-                            <div class="stat-bar-track flex-1">
-                                <div class="stat-bar-fill" style="background: linear-gradient(90deg,#22c55e,#16a34a);" data-width="{{ $pctApproved }}"></div>
-                            </div>
-                            <span class="mono text-xs font-bold text-green-600">{{ $pctApproved }}%</span>
-                        </div>
-                    </div>
-
                 </div>
             </div>
 
