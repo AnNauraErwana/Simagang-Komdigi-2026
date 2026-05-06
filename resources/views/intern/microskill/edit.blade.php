@@ -83,7 +83,10 @@
                                     Foto Saat Ini
                                 </p>
                                   <div class="flex justify-center">
-                                     <img src="{{ asset('storage/'.$submission->photo_path) }}"
+                                     @php
+                                         $filename = basename($submission->photo_path);
+                                     @endphp
+                                     <img src="{{ route('intern.microskill.photo', $filename) }}"
                                          alt="Current Photo"
                                          class="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg h-auto rounded-lg border-2 border-blue-300 shadow-md mx-auto object-contain">
                                   </div>

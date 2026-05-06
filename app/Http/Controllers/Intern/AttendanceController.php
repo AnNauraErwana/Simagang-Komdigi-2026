@@ -143,7 +143,7 @@ class AttendanceController extends Controller
                             $extension = $photo->guessExtension() ?: 'jpg';
                         }
                         $filename = 'attendance_' . time() . '_' . uniqid() . '.' . $extension;
-                        $destinationPath = storage_path('app/public/attendance-photos');
+                        $destinationPath = storage_path('app/private/attendance-photos');
                         
                         if (!file_exists($destinationPath)) {
                             mkdir($destinationPath, 0755, true);
@@ -151,7 +151,7 @@ class AttendanceController extends Controller
                         
                         $fullPath = $destinationPath . DIRECTORY_SEPARATOR . $filename;
                         if ($photo->move($destinationPath, $filename) && file_exists($fullPath)) {
-                            $photoPath = 'attendance-photos/' . $filename;
+                            $photoPath = 'private/attendance-photos/' . $filename;
                         } else {
                             return back()->withErrors(['photo' => 'Gagal menyimpan foto.'])->withInput();
                         }
@@ -173,7 +173,7 @@ class AttendanceController extends Controller
                     }
                     
                     $fileName = 'attendance_' . time() . '_' . uniqid() . '.' . $type;
-                    $destinationPath = storage_path('app/public/attendance-photos');
+                    $destinationPath = storage_path('app/private/attendance-photos');
                     
                     if (!file_exists($destinationPath)) {
                         mkdir($destinationPath, 0755, true);
@@ -181,7 +181,7 @@ class AttendanceController extends Controller
                     
                     $fullPath = $destinationPath . DIRECTORY_SEPARATOR . $fileName;
                     if (file_put_contents($fullPath, $imageData) !== false && file_exists($fullPath)) {
-                        $photoPath = 'attendance-photos/' . $fileName;
+                        $photoPath = 'private/attendance-photos/' . $fileName;
                     } else {
                         return back()->withErrors(['photo' => 'Gagal menyimpan foto dari kamera.']);
                     }
@@ -210,7 +210,7 @@ class AttendanceController extends Controller
                             $extension = $document->guessExtension() ?: 'pdf';
                         }
                         $filename = 'document_' . time() . '_' . uniqid() . '.' . $extension;
-                        $destinationPath = storage_path('app/public/attendance-documents');
+                        $destinationPath = storage_path('app/private/attendance-documents');
                         
                         if (!file_exists($destinationPath)) {
                             mkdir($destinationPath, 0755, true);
@@ -218,7 +218,7 @@ class AttendanceController extends Controller
                         
                         $fullPath = $destinationPath . DIRECTORY_SEPARATOR . $filename;
                         if ($document->move($destinationPath, $filename) && file_exists($fullPath)) {
-                            $data['document_path'] = 'attendance-documents/' . $filename;
+                            $data['document_path'] = 'private/attendance-documents/' . $filename;
                         } else {
                             return back()->withErrors(['document' => 'Gagal menyimpan dokumen.'])->withInput();
                         }
@@ -277,7 +277,7 @@ class AttendanceController extends Controller
                         $extension = $photo->guessExtension() ?: 'jpg';
                     }
                     $filename = 'checkout_' . time() . '_' . uniqid() . '.' . $extension;
-                    $destinationPath = storage_path('app/public/attendance-photos');
+                    $destinationPath = storage_path('app/private/attendance-photos');
                     
                     if (!file_exists($destinationPath)) {
                         mkdir($destinationPath, 0755, true);
@@ -285,7 +285,7 @@ class AttendanceController extends Controller
                     
                     $fullPath = $destinationPath . DIRECTORY_SEPARATOR . $filename;
                     if ($photo->move($destinationPath, $filename) && file_exists($fullPath)) {
-                        $photoCheckoutPath = 'attendance-photos/' . $filename;
+                        $photoCheckoutPath = 'private/attendance-photos/' . $filename;
                     } else {
                         return back()->withErrors(['photo' => 'Gagal menyimpan foto checkout.'])->withInput();
                     }
@@ -307,7 +307,7 @@ class AttendanceController extends Controller
                 }
                 
                 $fileName = 'checkout_' . time() . '_' . uniqid() . '.' . $type;
-                $destinationPath = storage_path('app/public/attendance-photos');
+                $destinationPath = storage_path('app/private/attendance-photos');
                 
                 if (!file_exists($destinationPath)) {
                     mkdir($destinationPath, 0755, true);
@@ -315,7 +315,7 @@ class AttendanceController extends Controller
                 
                 $fullPath = $destinationPath . DIRECTORY_SEPARATOR . $fileName;
                 if (file_put_contents($fullPath, $imageData) !== false && file_exists($fullPath)) {
-                    $photoCheckoutPath = 'attendance-photos/' . $fileName;
+                    $photoCheckoutPath = 'private/attendance-photos/' . $fileName;
                 } else {
                     return back()->withErrors(['photo' => 'Gagal menyimpan foto dari kamera.']);
                 }
@@ -333,5 +333,68 @@ class AttendanceController extends Controller
 
         return redirect()->route('intern.attendance.index')
             ->with('success', 'Absensi keluar berhasil disimpan.');
+    }
+
+    /**
+     * Serve private attendance photo with permission check
+     */
+    public function servePhoto($filename)
+    {
+        $intern = Auth::user()->intern;
+        $filePath = storage_path('app/private/attendance-photos/' . $filename);
+
+        // Validate the file path to prevent directory traversal
+        if (!str_starts_with(realpath($filePath) ?: '', realpath(storage_path('app/private/attendance-photos')) ?: '')) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Check if file exists
+        if (!file_exists($filePath)) {
+            abort(404, 'File not found');
+        }
+
+        // Check if attendance record belongs to authenticated user
+        $attendance = Attendance::where('intern_id', $intern->id)
+            ->where(function($query) use ($filename) {
+                $query->where('photo_path', 'private/attendance-photos/' . $filename)
+                      ->orWhere('photo_checkout', 'private/attendance-photos/' . $filename);
+            })
+            ->first();
+
+        if (!$attendance) {
+            abort(403, 'Unauthorized');
+        }
+
+        return response()->file($filePath);
+    }
+
+    /**
+     * Serve private attendance document with permission check
+     */
+    public function serveDocument($filename)
+    {
+        $intern = Auth::user()->intern;
+        $filePath = storage_path('app/private/attendance-documents/' . $filename);
+
+        // Validate the file path to prevent directory traversal
+        if (!str_starts_with(realpath($filePath) ?: '', realpath(storage_path('app/private/attendance-documents')) ?: '')) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Check if file exists
+        if (!file_exists($filePath)) {
+            abort(404, 'File not found');
+        }
+
+        // Check if document belongs to authenticated user
+        $attendance = Attendance::where('intern_id', $intern->id)
+            ->where('document_path', 'private/attendance-documents/' . $filename)
+            ->first();
+
+        if (!$attendance) {
+            abort(403, 'Unauthorized');
+        }
+
+        return response()->download($filePath);
     }
 }

@@ -57,13 +57,13 @@ class MicroSkillController extends Controller
             if ($photo->isValid() && $photo->getError() === UPLOAD_ERR_OK) {
                 $extension = $photo->getClientOriginalExtension() ?: ($photo->guessExtension() ?: 'jpg');
                 $filename = 'microskill_' . time() . '_' . uniqid() . '.' . $extension;
-                $destinationPath = storage_path('app/public/micro-skills');
+                $destinationPath = storage_path('app/private/micro-skills');
                 if (!file_exists($destinationPath)) {
                     mkdir($destinationPath, 0755, true);
                 }
                 $fullPath = $destinationPath . DIRECTORY_SEPARATOR . $filename;
                 if ($photo->move($destinationPath, $filename) && file_exists($fullPath)) {
-                    $photoPath = 'micro-skills/' . $filename;
+                    $photoPath = 'private/micro-skills/' . $filename;
                 } else {
                     return back()->withErrors(['photo' => 'Gagal menyimpan foto.'])->withInput();
                 }
@@ -118,20 +118,23 @@ class MicroSkillController extends Controller
         if ($request->hasFile('photo')) {
             // Delete old photo if exists
             if ($submission->photo_path) {
-                Storage::disk('public')->delete($submission->photo_path);
+                $oldPath = storage_path('app/private/' . $submission->photo_path);
+                if (file_exists($oldPath)) {
+                    @unlink($oldPath);
+                }
             }
 
             $photo = $request->file('photo');
             if ($photo->isValid() && $photo->getError() === UPLOAD_ERR_OK) {
                 $extension = $photo->getClientOriginalExtension() ?: ($photo->guessExtension() ?: 'jpg');
                 $filename = 'microskill_' . time() . '_' . uniqid() . '.' . $extension;
-                $destinationPath = storage_path('app/public/micro-skills');
+                $destinationPath = storage_path('app/private/micro-skills');
                 if (!file_exists($destinationPath)) {
                     mkdir($destinationPath, 0755, true);
                 }
                 $fullPath = $destinationPath . DIRECTORY_SEPARATOR . $filename;
                 if ($photo->move($destinationPath, $filename) && file_exists($fullPath)) {
-                    $validated['photo_path'] = 'micro-skills/' . $filename;
+                    $validated['photo_path'] = 'private/micro-skills/' . $filename;
                 } else {
                     return back()->withErrors(['photo' => 'Gagal menyimpan foto.'])->withInput();
                 }
@@ -158,11 +161,44 @@ class MicroSkillController extends Controller
 
         // Delete the photo if it exists
         if ($submission->photo_path) {
-            Storage::disk('public')->delete($submission->photo_path);
+            $photoPath = storage_path('app/private/' . $submission->photo_path);
+            if (file_exists($photoPath)) {
+                @unlink($photoPath);
+            }
         }
 
         $submission->delete();
 
         return redirect()->route('intern.microskill.index')->with('success', 'Bukti Mikro Skill berhasil dihapus.');
+    }
+
+    /**
+     * Serve private microskill photo with permission check
+     */
+    public function servePhoto($filename)
+    {
+        $intern = Auth::user()->intern;
+        $filePath = storage_path('app/private/micro-skills/' . $filename);
+
+        // Validate the file path to prevent directory traversal
+        if (!str_starts_with(realpath($filePath) ?: '', realpath(storage_path('app/private/micro-skills')) ?: '')) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Check if file exists
+        if (!file_exists($filePath)) {
+            abort(404, 'File not found');
+        }
+
+        // Check if microskill submission belongs to authenticated user
+        $submission = MicroSkillSubmission::where('intern_id', $intern->id)
+            ->where('photo_path', 'private/micro-skills/' . $filename)
+            ->first();
+
+        if (!$submission) {
+            abort(403, 'Unauthorized');
+        }
+
+        return response()->file($filePath);
     }
 }

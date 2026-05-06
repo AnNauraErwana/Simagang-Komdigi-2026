@@ -107,10 +107,13 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
                                         @if($s->photo_path)
-                                            <img src="{{ asset('storage/'.$s->photo_path) }}" 
+                                            @php
+                                                $filename = basename($s->photo_path);
+                                            @endphp
+                                            <img src="{{ route('intern.microskill.photo', $filename) }}" 
                                                  alt="Bukti" 
                                                  class="w-12 h-12 object-cover rounded-lg border-2 border-blue-200 cursor-pointer hover:border-blue-400 transition-all shadow-sm mx-auto" 
-                                                 onclick="window.open('{{ asset('storage/'.$s->photo_path) }}', '_blank')"
+                                                 onclick="window.open('{{ route('intern.microskill.photo', $filename) }}', '_blank')"
                                                  title="Klik untuk melihat full size">
                                         @else
                                             <span class="text-gray-400">-</span>

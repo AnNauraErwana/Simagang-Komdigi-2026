@@ -111,10 +111,13 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
                                         @if($logbook->photo_path)
-                                            <img src="{{ url('storage/' . $logbook->photo_path) }}" 
+                                            @php
+                                                $filename = basename($logbook->photo_path);
+                                            @endphp
+                                            <img src="{{ route('intern.logbook.photo', $filename) }}" 
                                                 alt="Logbook photo" 
                                                 class="w-12 h-12 object-cover rounded-lg border-2 border-blue-200 cursor-pointer hover:border-blue-400 transition-all shadow-sm mx-auto" 
-                                                onclick="window.open('{{ url('storage/' . $logbook->photo_path) }}', '_blank')"
+                                                onclick="window.open('{{ route('intern.logbook.photo', $filename) }}', '_blank')"
                                                 title="Klik untuk melihat full size">
                                         @else
                                             <span class="text-gray-400">-</span>

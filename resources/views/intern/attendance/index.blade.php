@@ -160,10 +160,13 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
                                         @if($attendance->photo_path)
-                                            <img src="{{ url('storage/' . $attendance->photo_path) }}" 
+                                            @php
+                                                $filename = basename($attendance->photo_path);
+                                            @endphp
+                                            <img src="{{ route('intern.attendance.photo', $filename) }}" 
                                                 alt="Check In" 
                                                 class="w-12 h-12 object-cover rounded-lg border-2 border-blue-200 cursor-pointer hover:border-blue-400 transition-all shadow-sm mx-auto" 
-                                                onclick="window.open('{{ url('storage/' . $attendance->photo_path) }}', '_blank')"
+                                                onclick="window.open('{{ route('intern.attendance.photo', $filename) }}', '_blank')"
                                                 title="Klik untuk melihat full size">
                                         @else
                                             <span class="text-gray-400">-</span>
@@ -178,10 +181,13 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
                                         @if($attendance->photo_checkout)
-                                            <img src="{{ url('storage/' . $attendance->photo_checkout) }}" 
+                                            @php
+                                                $filename = basename($attendance->photo_checkout);
+                                            @endphp
+                                            <img src="{{ route('intern.attendance.photo', $filename) }}" 
                                                 alt="Check Out" 
                                                 class="w-12 h-12 object-cover rounded-lg border-2 border-blue-200 cursor-pointer hover:border-blue-400 transition-all shadow-sm mx-auto" 
-                                                onclick="window.open('{{ url('storage/' . $attendance->photo_checkout) }}', '_blank')"
+                                                onclick="window.open('{{ route('intern.attendance.photo', $filename) }}', '_blank')"
                                                 title="Klik untuk melihat full size">
                                         @else
                                             <span class="text-gray-400">-</span>

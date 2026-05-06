@@ -152,6 +152,8 @@ Route::middleware(['auth', 'intern'])->prefix('intern')->name('intern.')->group(
     Route::get('/attendance/create', [AttendanceController::class, 'create'])->name('attendance.create');
     Route::post('/attendance', [AttendanceController::class, 'store'])->name('attendance.store');
     Route::post('/attendance/checkout', [AttendanceController::class, 'checkOut'])->name('attendance.checkout');
+    Route::get('/attendance/photo/{filename}', [AttendanceController::class, 'servePhoto'])->name('attendance.photo');
+    Route::get('/attendance/document/{filename}', [AttendanceController::class, 'serveDocument'])->name('attendance.document');
     
     // Logbook Routes
     Route::get('/logbook', [LogbookController::class, 'index'])->name('logbook.index');
@@ -160,6 +162,7 @@ Route::middleware(['auth', 'intern'])->prefix('intern')->name('intern.')->group(
     Route::get('/logbook/{logbook}/edit', [LogbookController::class, 'edit'])->name('logbook.edit');
     Route::put('/logbook/{logbook}', [LogbookController::class, 'update'])->name('logbook.update');
     Route::delete('/logbook/{logbook}', [LogbookController::class, 'destroy'])->name('logbook.destroy');
+    Route::get('/logbook/photo/{filename}', [LogbookController::class, 'servePhoto'])->name('logbook.photo');
 
     // Micro Skill Routes
     Route::get('/microskill', [InternMicroSkillController::class, 'index'])->name('microskill.index');
@@ -169,6 +172,7 @@ Route::middleware(['auth', 'intern'])->prefix('intern')->name('intern.')->group(
     Route::put('/microskill/{submission}', [InternMicroSkillController::class, 'update'])->name('microskill.update');
     Route::delete('/microskill/{submission}', [InternMicroSkillController::class, 'destroy'])->name('microskill.destroy');
     Route::get('/microskill/leaderboard', [InternMicroSkillLeaderboardController::class, 'index'])->name('microskill.leaderboard');
+    Route::get('/microskill/photo/{filename}', [InternMicroSkillController::class, 'servePhoto'])->name('microskill.photo');
     
     // Final Report Routes
     Route::get('/report', [ReportController::class, 'index'])->name('report.index');

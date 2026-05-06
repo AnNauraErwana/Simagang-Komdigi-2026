@@ -64,10 +64,13 @@
                                 <i class="fas fa-image text-blue-500 mr-2"></i>Foto Saat Ini
                             </p>
                             <div class="bg-gray-50 rounded-xl p-4 border-2 border-dashed border-gray-300">
-                                <img src="{{ url('storage/' . $logbook->photo_path) }}" 
+                                @php
+                                    $filename = basename($logbook->photo_path);
+                                @endphp
+                                <img src="{{ route('intern.logbook.photo', $filename) }}" 
                                     alt="Current photo" 
                                     class="w-full max-w-md mx-auto rounded-lg shadow-md border-2 border-blue-200 cursor-pointer hover:border-blue-400 transition-all"
-                                    onclick="window.open('{{ url('storage/' . $logbook->photo_path) }}', '_blank')"
+                                    onclick="window.open('{{ route('intern.logbook.photo', $filename) }}', '_blank')"
                                     title="Klik untuk melihat full size">
                             </div>
                         </div>

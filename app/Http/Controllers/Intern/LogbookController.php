@@ -56,7 +56,7 @@ class LogbookController extends Controller
                 try {
                     $extension = $photo->getClientOriginalExtension() ?: ($photo->guessExtension() ?: 'jpg');
                     $filename = 'logbook_' . time() . '_' . uniqid() . '.' . $extension;
-                    $destinationPath = storage_path('app/public/logbook-photos');
+                    $destinationPath = storage_path('app/private/logbook-photos');
                     
                     if (!file_exists($destinationPath)) {
                         mkdir($destinationPath, 0755, true);
@@ -64,7 +64,7 @@ class LogbookController extends Controller
                     
                     $fullPath = $destinationPath . DIRECTORY_SEPARATOR . $filename;
                     if ($photo->move($destinationPath, $filename) && file_exists($fullPath)) {
-                        $data['photo_path'] = 'logbook-photos/' . $filename;
+                        $data['photo_path'] = 'private/logbook-photos/' . $filename;
                     }
                 } catch (\Exception $e) {
                     // Skip photo upload if fails, continue without it
@@ -112,7 +112,7 @@ class LogbookController extends Controller
                 try {
                     // Delete old photo
                     if ($logbook->photo_path) {
-                        $oldPath = storage_path('app/public/' . $logbook->photo_path);
+                        $oldPath = storage_path('app/private/' . $logbook->photo_path);
                         if (file_exists($oldPath)) {
                             @unlink($oldPath);
                         }
@@ -120,7 +120,7 @@ class LogbookController extends Controller
                     
                     $extension = $photo->getClientOriginalExtension() ?: ($photo->guessExtension() ?: 'jpg');
                     $filename = 'logbook_' . time() . '_' . uniqid() . '.' . $extension;
-                    $destinationPath = storage_path('app/public/logbook-photos');
+                    $destinationPath = storage_path('app/private/logbook-photos');
                     
                     if (!file_exists($destinationPath)) {
                         mkdir($destinationPath, 0755, true);
@@ -128,7 +128,7 @@ class LogbookController extends Controller
                     
                     $fullPath = $destinationPath . DIRECTORY_SEPARATOR . $filename;
                     if ($photo->move($destinationPath, $filename) && file_exists($fullPath)) {
-                        $data['photo_path'] = 'logbook-photos/' . $filename;
+                        $data['photo_path'] = 'private/logbook-photos/' . $filename;
                     }
                 } catch (\Exception $e) {
                     // Skip photo upload if fails, continue without it
@@ -150,12 +150,45 @@ class LogbookController extends Controller
         }
 
         if ($logbook->photo_path) {
-            Storage::disk('public')->delete($logbook->photo_path);
+            $photoPath = storage_path('app/private/' . $logbook->photo_path);
+            if (file_exists($photoPath)) {
+                @unlink($photoPath);
+            }
         }
 
         $logbook->delete();
 
         return redirect()->route('intern.logbook.index')
             ->with('success', 'Logbook berhasil dihapus.');
+    }
+
+    /**
+     * Serve private logbook photo with permission check
+     */
+    public function servePhoto($filename)
+    {
+        $intern = Auth::user()->intern;
+        $filePath = storage_path('app/private/logbook-photos/' . $filename);
+
+        // Validate the file path to prevent directory traversal
+        if (!str_starts_with(realpath($filePath) ?: '', realpath(storage_path('app/private/logbook-photos')) ?: '')) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Check if file exists
+        if (!file_exists($filePath)) {
+            abort(404, 'File not found');
+        }
+
+        // Check if logbook belongs to authenticated user
+        $logbook = Logbook::where('intern_id', $intern->id)
+            ->where('photo_path', 'private/logbook-photos/' . $filename)
+            ->first();
+
+        if (!$logbook) {
+            abort(403, 'Unauthorized');
+        }
+
+        return response()->file($filePath);
     }
 }
