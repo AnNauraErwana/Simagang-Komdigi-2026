@@ -54,6 +54,10 @@ class MicroSkillController extends Controller
 
     public function servePhoto(string $filename)
     {
+        if ($filename !== basename($filename)) {
+            abort(404, 'File not found');
+        }
+
         $internIds = $this->getInstitusiInternIds();
         $photoPath = 'private/micro-skills/' . $filename;
 
@@ -67,6 +71,12 @@ class MicroSkillController extends Controller
             abort(404, 'File not found');
         }
 
-        return response()->file($fullPath);
+        $headers = [
+            'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0, private',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+        ];
+
+        return response()->file($fullPath, $headers);
     }
 }

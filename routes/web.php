@@ -122,19 +122,25 @@ Route::middleware(['auth', 'institusi'])->prefix('institusi')->name('institusi.'
     Route::put('/profile', [InstitusiProfileController::class, 'update'])->name('profile.update');
     // Attendance monitoring for institusi
     Route::get('/attendance', [InstitusiAttendanceController::class, 'index'])->name('attendance.index');
-    Route::get('/attendance/photo/{filename}', [InstitusiAttendanceController::class, 'servePhoto'])->name('attendance.photo');
+    Route::get('/attendance/photo/{filename}', [InstitusiAttendanceController::class, 'servePhoto'])
+        ->where('filename', '[^/\\\\]+')
+        ->name('attendance.photo');
     // Intern management for institusi
     Route::get('/intern', [InstitusiInternController::class, 'index'])->name('intern.index');
     // Logbook monitoring for institusi
     Route::get('/logbook', [InstitusiLogbookController::class, 'index'])->name('logbook.index');
+    Route::get('/logbook/photo/{filename}', [InstitusiLogbookController::class, 'servePhoto'])
+        ->where('filename', '[^/\\\\]+')
+        ->name('logbook.photo');
     Route::get('/logbook/{logbook}', [InstitusiLogbookController::class, 'show'])->name('logbook.show');
-    Route::get('/logbook/photo/{filename}', [InstitusiLogbookController::class, 'servePhoto'])->name('logbook.photo');
     // Certificate management for institusi
     Route::get('/sertifikat', [InstitusiCertificateController::class, 'index'])->name('certificate.index');
     Route::get('/sertifikat/{certificate}', [InstitusiCertificateController::class, 'show'])->name('certificate.show');
     // Mikro skill monitoring for institusi
     Route::get('/microskill', [InstitusiMicroSkillController::class, 'index'])->name('microskill.index');
-    Route::get('/microskill/photo/{filename}', [InstitusiMicroSkillController::class, 'servePhoto'])->name('microskill.photo');
+    Route::get('/microskill/photo/{filename}', [InstitusiMicroSkillController::class, 'servePhoto'])
+        ->where('filename', '[^/\\\\]+')
+        ->name('microskill.photo');
 
 }); 
 Route::resource('institusi', DaftarInstitusiController::class);
