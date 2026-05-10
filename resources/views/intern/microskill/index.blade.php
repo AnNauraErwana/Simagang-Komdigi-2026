@@ -49,14 +49,14 @@
                             @endif
                         </form>
 
-                        <a href="{{ route('intern.microskill.create') }}"
-                            class="inline-flex items-center justify-center px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow transition-all duration-200 w-full sm:w-auto">
-                            <i class="fas fa-upload mr-2"></i>
-                            <span>Upload Bukti</span>
-                        </a>
-                    </div>
+                    <a href="{{ route('intern.microskill.create') }}" 
+                       class="inline-flex items-center justify-center px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow transition-all duration-200 w-full sm:w-auto">
+                        <i class="fas fa-upload mr-2"></i>
+                        <span>Upload Bukti</span>
+                    </a>
                 </div>
             </div>
+        </div>
 
             <!-- Microskill Table -->
             <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
@@ -147,29 +147,29 @@
                                                     <button type="submit"
                                                         class="inline-flex items-center justify-center px-3 py-2 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg transition-all duration-200"
                                                         title="Hapus">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="px-6 py-12 text-center">
-                                            <div class="flex flex-col items-center justify-center text-gray-500">
-                                                <i class="fas fa-inbox text-5xl mb-3 text-gray-300"></i>
-                                                <p class="text-lg font-medium">Belum ada pengumpulan.</p>
-                                                <a href="{{ route('intern.microskill.create') }}"
-                                                    class="mt-4 inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all duration-300">
-                                                    <i class="fas fa-upload mr-2"></i>Upload Bukti
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="px-6 py-12 text-center">
+                                        <div class="flex flex-col items-center justify-center text-gray-500">
+                                            <i class="fas fa-inbox text-5xl mb-3 text-gray-300"></i>
+                                            <p class="text-lg font-medium">Belum ada pengumpulan.</p>
+                                            <a href="{{ route('intern.microskill.create') }}" 
+                                               class="mt-4 inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all duration-300">
+                                                <i class="fas fa-upload mr-2"></i>Upload Bukti
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
 
                     <!-- Pagination -->
                     @if ($submissions->count() > 0)

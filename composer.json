@@ -11,11 +11,13 @@
         "php": "^8.1",
         "doctrine/dbal": "^3.10",
         "guzzlehttp/guzzle": "^7.10",
+        "intervention/image": "^3.11",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "maatwebsite/excel": "^3.1",
         "setasign/fpdi": "^2.6",
+        "spatie/laravel-csp": "^2.10",
         "spatie/laravel-permission": "^6.24",
         "tecnickcom/tcpdf": "^6.11"
     },
