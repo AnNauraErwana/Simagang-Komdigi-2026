@@ -281,6 +281,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         ->name('microskill.photo')
         ->middleware('signed')
         ->where('filename', '[^/]+');
+    Route::get('/microskill/{id}/detail', [AdminMicroSkillController::class, 'show'])->name('microskill.show');
     Route::get('/microskill', [AdminMicroSkillController::class, 'index'])->name('microskill.index');
     Route::delete('/microskill/{submission}', [AdminMicroSkillController::class, 'destroy'])->name('microskill.destroy');
     Route::get('/microskill/leaderboard', [AdminMicroSkillLeaderboardController::class, 'index'])->name('microskill.leaderboard');

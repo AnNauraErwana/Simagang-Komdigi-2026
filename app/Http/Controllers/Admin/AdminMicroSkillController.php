@@ -4,24 +4,46 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\MicroSkillSubmission;
+use App\Models\MicroSkill;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class AdminMicroSkillController extends Controller
 {
     public function index(Request $request)
     {
-        $query = MicroSkillSubmission::with('intern');
-        if ($request->filled('status')) {
-            $query->where('status', $request->input('status'));
-        }
+        $q = $request->input('q');
+
+        $query = MicroSkill::leftJoin('micro_skill_submissions', 'micro_skill_submissions.title', '=', 'micro_skills.judul_micro')
+            ->select('micro_skills.*', DB::raw('COUNT(micro_skill_submissions.id) as total'))
+            ->groupBy(
+                'micro_skills.id',
+                'micro_skills.judul_micro',
+                'micro_skills.link_micro',
+                'micro_skills.created_at',
+                'micro_skills.updated_at'
+            );
+
         if ($request->filled('q')) {
-            $q = '%' . $request->input('q') . '%';
-            $query->whereHas('intern', function ($sub) use ($q) {
-                $sub->where('name', 'like', $q)->orWhere('institution', 'like', $q);
-            });
+            $like = '%' . $q . '%';
+            $query->where('micro_skills.judul_micro', 'like', $like)->orWhere('micro_skills.link_micro', 'like', $like);
         }
-        $submissions = $query->orderByDesc('created_at')->paginate(20)->withQueryString();
-        return view('admin.microskill.index', compact('submissions'));
+
+        $microskills = $query->orderByDesc('micro_skills.created_at')->paginate(20)->withQueryString();
+
+        return view('admin.microskill.index', compact('microskills'));
+    }
+
+    public function show($id, Request $request)
+    {
+        $micro = MicroSkill::findOrFail($id);
+
+        $subQuery = MicroSkillSubmission::with('intern')
+            ->where('title', $micro->judul_micro);
+
+        $submissions = $subQuery->orderByDesc('created_at')->paginate(20)->withQueryString();
+
+        return view('admin.microskill.show', compact('micro', 'submissions'));
     }
 
     public function servePhoto(string $filename)

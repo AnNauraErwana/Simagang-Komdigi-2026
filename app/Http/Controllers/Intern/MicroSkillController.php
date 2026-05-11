@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Intern;
 
 use App\Http\Controllers\Controller;
 use App\Models\MicroSkillSubmission;
+use App\Models\MicroSkill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -38,12 +39,31 @@ class MicroSkillController extends Controller
 
         $cekaktif = $intern && $intern->is_active;
 
-        return view('intern.microskill.index', compact('submissions', 'cekaktif'));
+        // Recommendations: microskills not yet done by this intern
+        // Normalize titles by lowercasing and removing whitespace so capitalization/spaces are ignored
+        $doneTitles = MicroSkillSubmission::where('intern_id', $intern->id)->pluck('title')->toArray();
+
+        $normalize = function ($str) {
+            return strtolower(preg_replace('/\s+/', '', $str ?? ''));
+        };
+
+        $doneNormalized = array_map($normalize, $doneTitles);
+
+        // Load microskills and filter in PHP using normalized comparison (safe and handles spacing/case)
+        $recommendations = MicroSkill::orderBy('created_at', 'desc')->get()
+            ->filter(function ($m) use ($doneNormalized, $normalize) {
+                return !in_array($normalize($m->judul_micro), $doneNormalized);
+            })
+            ->take(5)
+            ->values();
+
+        return view('intern.microskill.index', compact('submissions', 'cekaktif', 'recommendations'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return view('intern.microskill.create');
+        $suggestedTitle = $request->query('title');
+        return view('intern.microskill.create', compact('suggestedTitle'));
     }
 
     public function store(Request $request)

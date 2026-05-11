@@ -23,7 +23,7 @@
             <div class="bg-blue-600 px-6 py-4">
                 <h2 class="text-xl font-bold text-white flex items-center">
                     <i class="fas fa-upload mr-3"></i>
-                    Form Pengumpulan
+                    Data Micro Skill
                 </h2>
             </div>
 
@@ -36,9 +36,9 @@
                         <i class="fas fa-heading mr-2 text-blue-500"></i>
                         Judul <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" 
-                           name="title" 
-                           value="{{ old('title') }}" 
+                          <input type="text" 
+                              name="title" 
+                              value="{{ old('title', $suggestedTitle ?? '') }}" 
                            required 
                            placeholder="Masukkan judul mikro skill"
                            class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">

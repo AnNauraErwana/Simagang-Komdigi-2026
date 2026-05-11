@@ -52,52 +52,32 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
                             <tr class="bg-blue-50">
-                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider rounded-tl-lg">Nama</th>
-                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider">Institusi</th>
-                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider">Judul</th>
-                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider">Dikirim</th>
-                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider rounded-tr-lg">Bukti</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider rounded-tl-lg">Judul</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-blue-900 uppercase tracking-wider">Link</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-blue-900 uppercase tracking-wider">Total Pengerjaan</th>
+                                <th class="px-6 py-4 text-right text-xs font-bold text-blue-900 uppercase tracking-wider rounded-tr-lg">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-100">
-                            @forelse($submissions as $s)
+                            @forelse($microskills as $m)
                                 <tr class="hover:bg-blue-50 transition-colors duration-150">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            @if($s->intern->photo_path)
-                                                <img src="{{ url('storage/' . $s->intern->photo_path) }}"
-                                                        class="w-10 h-10 rounded-full object-cover border-2 border-blue-200 mr-3"
-                                                        alt="{{ $s->intern->name }}">
-                                            @else
-                                                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3 border-2 border-blue-200">
-                                                    <i class="fas fa-user text-blue-600"></i>
-                                                </div>
-                                            @endif
-                                            <span class="text-sm font-medium text-gray-900">
-                                                {{ $s->intern->name }}
-                                            </span>
-
-                                        </div>
+                                    <td class="px-6 py-4 whitespace-normal">
+                                        <span class="text-sm text-gray-900 font-semibold">{{ $m->judul_micro }}</span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $s->intern->institution }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $s->title }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $s->submitted_at ? \Carbon\Carbon::parse($s->submitted_at)->format('d/m/y') : '-' }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        @if($s->photo_path)
-                                            @php $microSkillFilename = basename($s->photo_path); @endphp
-                                            @php $microSkillUrl = URL::temporarySignedRoute('admin.microskill.photo', now()->addSeconds(30), ['filename' => $microSkillFilename]); @endphp
-                                            <img src="{{ $microSkillUrl }}" class="w-12 h-12 object-cover rounded border cursor-pointer" onclick="window.open('{{ $microSkillUrl }}','_blank')">
-                                        @else
-                                            <span class="text-gray-400">-</span>
-                                        @endif
+                                    <td class="px-6 py-4 whitespace-normal">
+                                        <a href="{{ $m->link_micro }}" target="_blank" class="text-sm text-blue-600 hover:underline">{{ $m->link_micro }}</a>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">{{ $m->total ?? 0 }}</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <a href="{{ route('admin.microskill.show', ['id' => $m->id]) }}" class="inline-block bg-blue-600 text-white px-3 py-1 rounded-lg">Detail</a>
                                     </td>
                                 </tr>
-                                @empty
+                            @empty
                                 <tr>
-                                    <td colspan="5" class="px-6 py-8 text-center">
+                                    <td colspan="4" class="px-6 py-8 text-center">
                                         <div class="flex flex-col items-center justify-center text-gray-500">
                                             <i class="fas fa-inbox text-4xl mb-3 text-gray-300"></i>
-                                            <p class="text-sm">Tidak ada data logbook.</p>
+                                            <p class="text-sm">Tidak ada data micro skill.</p>
                                         </div>
                                     </td>
                                 </tr>
@@ -105,7 +85,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="mt-4">{{ $submissions->links() }}</div>
+                <div class="mt-4">{{ $microskills->links() }}</div>
             </div>
         </div>
 

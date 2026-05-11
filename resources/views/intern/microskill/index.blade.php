@@ -48,19 +48,67 @@
                                 </button>
                             @endif
                         </form>
-                    
-                    @if ($cekaktif)
-                        <a href="{{ route('intern.microskill.create') }}" 
-                        class="inline-flex items-center justify-center px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow transition-all duration-200 w-full sm:w-auto">
-                            <i class="fas fa-upload mr-2"></i>
-                            <span>Upload Bukti</span>
-                        </a>
-                    @endif
                 </div>
             </div>
         </div>
 
             <!-- Microskill Table -->
+            <!-- Recommendations -->
+            <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden mb-6">
+                <div class="bg-green-600 px-6 py-4 flex items-center justify-between">
+                    <h2 class="text-xl font-bold text-white flex items-center">
+                        <i class="fas fa-lightbulb mr-3"></i>
+                        Rekomendasi Mikro Skill (Belum dikerjakan)
+                    </h2>
+                    <a href="https://digitalent.komdigi.go.id/micro-skill" target="_blank" rel="noopener" class="inline-flex items-center justify-center px-4 py-2 bg-white text-green-700 font-semibold rounded-lg shadow-sm hover:bg-gray-100 transition-colors">
+                        <i class="fas fa-external-link-alt mr-2"></i>More
+                    </a>
+                </div>
+                <div class="p-6">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr class="bg-green-50">
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-green-900 uppercase">Judul</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-green-900 uppercase">Link</th>
+                                    <th class="px-6 py-3 text-center text-xs font-bold text-green-900 uppercase">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-100">
+                                @forelse($recommendations ?? [] as $r)
+                                    <tr>
+                                        <td class="text-sm font-bold text-gray-700 px-6 py-4">{{ $r->judul_micro }}</td>
+
+                                        <td class="px-6 py-4">
+                                            <a href="{{ $r->link_micro }}" target="_blank"
+                                            class="text-md text-blue-600 hover:underline">
+                                                {{ $r->link_micro }}
+                                            </a>
+                                        </td>
+
+                                        <td class="px-6 py-4 text-center">
+                                            <a href="{{ route('intern.microskill.create', ['title' => $r->judul_micro]) }}"
+                                            class="inline-flex items-center justify-center px-3 py-1.5 bg-blue-600 hover:bg-blue-700 
+                                                    text-white text-sm font-medium rounded-lg shadow-sm transition-all duration-200 
+                                                    whitespace-nowrap w-auto">
+                                                <i class="fas fa-upload mr-1 text-xs"></i>
+                                                <span>Upload Bukti</span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="3" class="px-6 py-6 text-center text-gray-500">
+                                            Semua microskill sudah dikerjakan atau tidak ada rekomendasi.
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
                 <div class="bg-blue-600 px-6 py-4">
                     <h2 class="text-xl font-bold text-white flex items-center">

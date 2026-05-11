@@ -201,6 +201,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             TeamSeeder::class,
             TestimonialSeeder::class,
+            MicroSkillsSeeder::class,
         ]);
     }
 
