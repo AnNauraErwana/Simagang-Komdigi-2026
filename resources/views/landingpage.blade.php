@@ -1234,7 +1234,7 @@
             </div>
 
             <div class="min-w-full h-full relative">
-                <img src="{{ url('storage/photos-landingpage/senampagi.jpeg') }}" class="w-full h-full object-cover" alt="Berita 2">
+                <img src="{{ url('storage/photos-landingpage/senampagi02.png') }}" class="w-full h-full object-cover" alt="Berita 2">
                 <div class="news-main-overlay absolute inset-0 bg-gradient-to-t from-[#020b1a] via-transparent to-transparent flex flex-direction-column justify-end p-10">
                     <span class="bg-[#00f2ff] text-[#020b1a] text-[10px] font-bold px-3 py-1 rounded-full w-fit mb-4 uppercase">Kegiatan</span>
                     <h3 class="text-2xl md:text-3xl font-bold text-white mb-3">Kamis Bersih & Senam</h3>
@@ -1264,7 +1264,7 @@
                 <img src="{{ url('storage/photos-landingpage/sharingsession03.jpeg') }}" class="w-full h-full object-cover" alt="Berita 2">
                 <div class="news-main-overlay absolute inset-0 bg-gradient-to-t from-[#020b1a] via-transparent to-transparent flex flex-direction-column justify-end p-10">
                     <span class="bg-[#00f2ff] text-[#020b1a] text-[10px] font-bold px-3 py-1 rounded-full w-fit mb-4 uppercase">Kegiatan</span>
-                    <h3 class="text-2xl md:text-3xl font-bold text-white mb-3">Sharing Session : </h3>
+                    <h3 class="text-2xl md:text-3xl font-bold text-white mb-3">Sharing Session : Desain Komunikasi Visual</h3>
                     <p class="text-gray-300 text-sm">1 April 2026</p>
                 </div>
             </div>
@@ -1296,6 +1296,7 @@
                     <p class="text-gray-300 text-sm">1 April 2026</p>
                 </div>
             </div>
+
         </div>
 
         <div class="absolute bottom-5 right-10 flex gap-2">
@@ -1316,19 +1317,19 @@
                 </a>
 
                 <a href="{{route('artikel_2')}}" target="_blank" class="news-side-item">
-                    <img src="#" class="news-side-img">
+                    <img src="{{ asset('storage/artikel/artikel_2.png') }}" class="news-side-img">
                     <div class="news-side-content">
                         <span class="text-[11px] text-[#00f2ff] font-semibold mb-1">Artikel 2</span>
-                        <h4 class="news-side-title">Podcast</h4>
+                        <h4 class="news-side-title">Emang Gen Z lebih jago soal keamanan digital? - Podcast Capila 2026 Episode 1</h4>
                         <span class="text-[12px] text-gray-400">06 Mei 2026</span>
                     </div>
                 </a>
 
-                <a href="{{route('artikel_2')}}" target="_blank" class="news-side-item">
-                    <img src="#" class="news-side-img">
+                <a href="{{route('artikel_3')}}" target="_blank" class="news-side-item">
+                    <img src="{{ asset('storage/artikel/artikel_3.png') }}" class="news-side-img">
                     <div class="news-side-content">
                         <span class="text-[11px] text-[#00f2ff] font-semibold mb-1">Artikel 3</span>
-                        <h4 class="news-side-title">Senam Sehat</h4>
+                        <h4 class="news-side-title">Senam Sehat & Bersih</h4>
                         <span class="text-[12px] text-gray-400">05 Mei 2026</span>
                     </div>
                 </a>
