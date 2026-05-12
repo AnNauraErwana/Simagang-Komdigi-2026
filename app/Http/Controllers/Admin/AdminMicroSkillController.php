@@ -26,10 +26,13 @@ class AdminMicroSkillController extends Controller
 
         if ($request->filled('q')) {
             $like = '%' . $q . '%';
-            $query->where('micro_skills.judul_micro', 'like', $like)->orWhere('micro_skills.link_micro', 'like', $like);
+            $query->where('micro_skills.judul_micro', 'like', $like);
         }
 
-        $microskills = $query->orderByDesc('micro_skills.created_at')->paginate(20)->withQueryString();
+        $microskills = $query->orderByDesc('total')
+            ->orderByDesc('micro_skills.created_at')
+            ->paginate(20)
+            ->withQueryString();
 
         return view('admin.microskill.index', compact('microskills'));
     }
