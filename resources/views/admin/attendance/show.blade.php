@@ -107,20 +107,34 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 @if ($attendance->photo_path)
                                     @php $photoUrl = route('admin.attendance.photo', ['filename' => basename($attendance->photo_path)]); @endphp
-                                    <div>
-                                        <p class="text-xs text-gray-500 mb-2">Foto Check In</p>
-                                        <img src="{{ $photoUrl }}" class="rounded-lg border cursor-pointer"
-                                            onclick="window.open('{{ $photoUrl }}','_blank')">
-                                    </div>
+                                    @can('view', $attendance)
+                                        <div>
+                                            <p class="text-xs text-gray-500 mb-2">Foto Check In</p>
+                                            <img src="{{ $photoUrl }}" class="rounded-lg border cursor-pointer"
+                                                onclick="window.open('{{ $photoUrl }}','_blank')">
+                                        </div>
+                                    @else
+                                        <div>
+                                            <p class="text-xs text-gray-500 mb-2">Foto Check In</p>
+                                            <p class="text-gray-400">Tidak ada akses</p>
+                                        </div>
+                                    @endcan
                                 @endif
 
                                 @if ($attendance->photo_checkout)
                                     @php $photoCheckoutUrl = route('admin.attendance.photo', ['filename' => basename($attendance->photo_checkout)]); @endphp
-                                    <div>
-                                        <p class="text-xs text-gray-500 mb-2">Foto Check Out</p>
-                                        <img src="{{ $photoCheckoutUrl }}" class="rounded-lg border cursor-pointer"
-                                            onclick="window.open('{{ $photoCheckoutUrl }}','_blank')">
-                                    </div>
+                                    @can('view', $attendance)
+                                        <div>
+                                            <p class="text-xs text-gray-500 mb-2">Foto Check Out</p>
+                                            <img src="{{ $photoCheckoutUrl }}" class="rounded-lg border cursor-pointer"
+                                                onclick="window.open('{{ $photoCheckoutUrl }}','_blank')">
+                                        </div>
+                                    @else
+                                        <div>
+                                            <p class="text-xs text-gray-500 mb-2">Foto Check Out</p>
+                                            <p class="text-gray-400">Tidak ada akses</p>
+                                        </div>
+                                    @endcan
                                 @endif
                             </div>
                         @else

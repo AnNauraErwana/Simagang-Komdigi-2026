@@ -673,9 +673,13 @@
                                                         ['filename' => basename($l->photo_path)],
                                                     );
                                                 @endphp
-                                                <img src="{{ $photoUrl }}" alt="Logbook Photo" class="photo-thumbnail"
-                                                    onclick="window.open('{{ $photoUrl }}', '_blank')"
-                                                    title="Klik untuk melihat full size">
+                                                @can('view', $l)
+                                                    <img src="{{ $photoUrl }}" alt="Logbook Photo" class="photo-thumbnail"
+                                                        onclick="window.open('{{ $photoUrl }}', '_blank')"
+                                                        title="Klik untuk melihat full size">
+                                                @else
+                                                    <span style="color:#d1d5db; font-size:12px;">Tidak ada akses</span>
+                                                @endcan
                                             @else
                                                 <span style="color:#d1d5db; font-size:12px;">—</span>
                                             @endif
@@ -738,8 +742,12 @@
                                                 ['filename' => basename($l->photo_path)],
                                             );
                                         @endphp
-                                        <img src="{{ $photoUrl }}" alt="Logbook Photo" class="card-photo-thumbnail"
-                                            onclick="window.open('{{ $photoUrl }}', '_blank')">
+                                        @can('view', $l)
+                                            <img src="{{ $photoUrl }}" alt="Logbook Photo" class="card-photo-thumbnail"
+                                                onclick="window.open('{{ $photoUrl }}', '_blank')">
+                                        @else
+                                            <span class="card-photo-empty">Tidak ada akses</span>
+                                        @endcan
                                     @else
                                         <span class="card-photo-empty">—</span>
                                     @endif
