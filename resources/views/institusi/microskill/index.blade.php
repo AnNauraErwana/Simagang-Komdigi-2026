@@ -327,11 +327,18 @@
                                         </td>
                                         <td class="px-3 sm:px-6 py-3 sm:py-5 whitespace-nowrap">
                                             @if ($s->photo_path)
-                                                <img src="{{ route('institusi.microskill.photo', basename($s->photo_path)) }}"
-                                                    alt="Documentation"
-                                                    class="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-lg border-2 border-blue-200 cursor-pointer hover:border-blue-400 transition-all shadow-sm hover:shadow-lg transform hover:scale-110 aspect-square"
-                                                    onclick="window.open('{{ route('institusi.microskill.photo', basename($s->photo_path)) }}', '_blank')"
-                                                    title="Klik untuk melihat full size" />
+                                                @can('view', $s)
+                                                    <img src="{{ route('institusi.microskill.photo', basename($s->photo_path)) }}"
+                                                        alt="Documentation"
+                                                        class="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-lg border-2 border-blue-200 cursor-pointer hover:border-blue-400 transition-all shadow-sm hover:shadow-lg transform hover:scale-110 aspect-square"
+                                                        onclick="window.open('{{ route('institusi.microskill.photo', basename($s->photo_path)) }}', '_blank')"
+                                                        title="Klik untuk melihat full size" />
+                                                @else
+                                                    <div
+                                                        class="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-slate-100 rounded-lg border-2 border-slate-200">
+                                                        <span class="text-xs text-slate-500">Tidak ada akses</span>
+                                                    </div>
+                                                @endcan
                                             @else
                                                 <div
                                                     class="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-slate-100 rounded-lg border-2 border-slate-200">

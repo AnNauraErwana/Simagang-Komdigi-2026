@@ -494,7 +494,8 @@
                             <h1 class="text-xl font-bold text-white">{{ $mentor?->name ?? auth()->user()->name }}</h1>
                         </div>
                         <p class="text-blue-200 text-sm">Ringkasan bimbingan hari ini &mdash; <span
-                                class="text-white font-semibold">{{ now()->translatedFormat('l, d F Y') }}</span></p>
+                                class="text-white font-semibold">{{ \Carbon\Carbon::today()->locale('id')->translatedFormat('l, d F Y') }}</span>
+                        </p>
                     </div>
 
                     {{-- Live attendance meter --}}
@@ -1008,12 +1009,16 @@
                                                     'filename' => basename($attendance->photo_path),
                                                 ]);
                                             @endphp
-                                            <img src="{{ $photoUrl }}" alt="In"
-                                                style="width:40px;height:40px;object-fit:cover;border-radius:10px;border:2px solid #dbeafe;cursor:pointer;transition:all .2s ease;"
-                                                onclick="window.open('{{ $photoUrl }}', '_blank')"
-                                                onmouseover="this.style.borderColor='#3b82f6';this.style.transform='scale(1.1)';"
-                                                onmouseout="this.style.borderColor='#dbeafe';this.style.transform='none';"
-                                                title="Klik untuk lihat penuh">
+                                            @can('view', $attendance)
+                                                <img src="{{ $photoUrl }}" alt="In"
+                                                    style="width:40px;height:40px;object-fit:cover;border-radius:10px;border:2px solid #dbeafe;cursor:pointer;transition:all .2s ease;"
+                                                    onclick="window.open('{{ $photoUrl }}', '_blank')"
+                                                    onmouseover="this.style.borderColor='#3b82f6';this.style.transform='scale(1.1)';"
+                                                    onmouseout="this.style.borderColor='#dbeafe';this.style.transform='none';"
+                                                    title="Klik untuk lihat penuh">
+                                            @else
+                                                <span style="color:#d1d5db;font-size:12px;">Tidak ada akses</span>
+                                            @endcan
                                         @else
                                             <span style="color:#d1d5db;font-size:12px;">—</span>
                                         @endif
@@ -1029,12 +1034,16 @@
                                                     'filename' => basename($attendance->photo_checkout),
                                                 ]);
                                             @endphp
-                                            <img src="{{ $photoOutUrl }}" alt="Out"
-                                                style="width:40px;height:40px;object-fit:cover;border-radius:10px;border:2px solid #dbeafe;cursor:pointer;transition:all .2s ease;"
-                                                onclick="window.open('{{ $photoOutUrl }}', '_blank')"
-                                                onmouseover="this.style.borderColor='#3b82f6';this.style.transform='scale(1.1)';"
-                                                onmouseout="this.style.borderColor='#dbeafe';this.style.transform='none';"
-                                                title="Klik untuk lihat penuh">
+                                            @can('view', $attendance)
+                                                <img src="{{ $photoOutUrl }}" alt="Out"
+                                                    style="width:40px;height:40px;object-fit:cover;border-radius:10px;border:2px solid #dbeafe;cursor:pointer;transition:all .2s ease;"
+                                                    onclick="window.open('{{ $photoOutUrl }}', '_blank')"
+                                                    onmouseover="this.style.borderColor='#3b82f6';this.style.transform='scale(1.1)';"
+                                                    onmouseout="this.style.borderColor='#dbeafe';this.style.transform='none';"
+                                                    title="Klik untuk lihat penuh">
+                                            @else
+                                                <span style="color:#d1d5db;font-size:12px;">Tidak ada akses</span>
+                                            @endcan
                                         @else
                                             <span style="color:#d1d5db;font-size:12px;">—</span>
                                         @endif

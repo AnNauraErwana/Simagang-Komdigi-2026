@@ -77,7 +77,7 @@
                         <div class="max-w-2xl text-white">
                             <p class="text-xs sm:text-sm uppercase tracking-[0.3em] text-blue-100/80">Mentor Dashboard</p>
                             <h1 class="mt-2 text-3xl sm:text-4xl font-extrabold leading-tight">Detail Logbook</h1>
-                
+
                         </div>
 
                         <div
@@ -182,25 +182,32 @@
                                     'filename' => basename($logbook->photo_path),
                                 ]);
                             @endphp
-                            <div
-                                class="relative group overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
-                                <img src="{{ $photoUrl }}"
-                                    class="h-72 w-full object-cover transition duration-300 group-hover:scale-[1.02]"
-                                    alt="Foto Logbook" onclick="window.open('{{ $photoUrl }}', '_blank')" />
+                            @can('view', $logbook)
                                 <div
-                                    class="absolute inset-0 bg-gradient-to-t from-slate-950/35 via-transparent to-transparent opacity-0 transition group-hover:opacity-100">
+                                    class="relative group overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
+                                    <img src="{{ $photoUrl }}"
+                                        class="h-72 w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+                                        alt="Foto Logbook" onclick="window.open('{{ $photoUrl }}', '_blank')" />
+                                    <div
+                                        class="absolute inset-0 bg-gradient-to-t from-slate-950/35 via-transparent to-transparent opacity-0 transition group-hover:opacity-100">
+                                    </div>
+                                    <button type="button"
+                                        class="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 text-sm font-semibold text-blue-700 shadow-lg transition hover:bg-white"
+                                        onclick="window.open('{{ $photoUrl }}', '_blank')">
+                                        <i class="fas fa-up-right-from-square"></i>
+                                        Lihat penuh
+                                    </button>
                                 </div>
-                                <button type="button"
-                                    class="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 text-sm font-semibold text-blue-700 shadow-lg transition hover:bg-white"
-                                    onclick="window.open('{{ $photoUrl }}', '_blank')">
-                                    <i class="fas fa-up-right-from-square"></i>
-                                    Lihat penuh
-                                </button>
-                            </div>
-                            <p class="mt-3 text-xs text-slate-500">
-                                <i class="fas fa-circle-info mr-1 text-blue-500"></i>
-                                Klik gambar atau tombol untuk membuka ukuran penuh.
-                            </p>
+                                <p class="mt-3 text-xs text-slate-500">
+                                    <i class="fas fa-circle-info mr-1 text-blue-500"></i>
+                                    Klik gambar atau tombol untuk membuka ukuran penuh.
+                                </p>
+                            @else
+                                <div
+                                    class="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-12 text-center">
+                                    <p class="mt-3 text-sm font-medium text-slate-500">Tidak ada akses.</p>
+                                </div>
+                            @endcan
                         @else
                             <div
                                 class="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-12 text-center">

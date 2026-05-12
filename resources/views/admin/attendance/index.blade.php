@@ -219,10 +219,14 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-center">
                                             @if ($attendance->photo_path)
                                                 @php $photoUrl = route('admin.attendance.photo', ['filename' => basename($attendance->photo_path)]); @endphp
-                                                <img src="{{ $photoUrl }}" alt="Check In"
-                                                    class="w-12 h-12 object-cover rounded-lg border-2 border-blue-200 cursor-pointer hover:border-blue-400 transition-all"
-                                                    onclick="window.open('{{ $photoUrl }}','_blank')"
-                                                    title="Klik untuk melihat full size">
+                                                @can('view', $attendance)
+                                                    <img src="{{ $photoUrl }}" alt="Check In"
+                                                        class="w-12 h-12 object-cover rounded-lg border-2 border-blue-200 cursor-pointer hover:border-blue-400 transition-all"
+                                                        onclick="window.open('{{ $photoUrl }}','_blank')"
+                                                        title="Klik untuk melihat full size">
+                                                @else
+                                                    <span class="text-gray-400">Tidak ada akses</span>
+                                                @endcan
                                             @else
                                                 <span class="text-gray-400">-</span>
                                             @endif
@@ -235,10 +239,14 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-center">
                                             @if ($attendance->photo_checkout)
                                                 @php $photoUrl = route('admin.attendance.photo', ['filename' => basename($attendance->photo_checkout)]); @endphp
-                                                <img src="{{ $photoUrl }}" alt="Check Out"
-                                                    class="w-12 h-12 object-cover rounded-lg border-2 border-blue-200 cursor-pointer hover:border-blue-400 transition-all"
-                                                    onclick="window.open('{{ $photoUrl }}','_blank')"
-                                                    title="Klik untuk melihat full size">
+                                                @can('view', $attendance)
+                                                    <img src="{{ $photoUrl }}" alt="Check Out"
+                                                        class="w-12 h-12 object-cover rounded-lg border-2 border-blue-200 cursor-pointer hover:border-blue-400 transition-all"
+                                                        onclick="window.open('{{ $photoUrl }}','_blank')"
+                                                        title="Klik untuk melihat full size">
+                                                @else
+                                                    <span class="text-gray-400">Tidak ada akses</span>
+                                                @endcan
                                             @else
                                                 <span class="text-gray-400">-</span>
                                             @endif

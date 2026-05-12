@@ -91,7 +91,8 @@
                     <div class="max-w-3xl text-white">
                         <p class="text-xs sm:text-sm uppercase tracking-[0.3em] text-blue-100/80">Institusi Dashboard</p>
                         <h1 class="mt-2 text-3xl sm:text-4xl font-extrabold leading-tight">Detail Logbook</h1>
-                        <p class="mt-3 text-sm sm:text-base text-blue-100/90">Informasi lengkap catatan harian anak magang.</p>
+                        <p class="mt-3 text-sm sm:text-base text-blue-100/90">Informasi lengkap catatan harian anak magang.
+                        </p>
                     </div>
 
                     <div
@@ -162,21 +163,28 @@
                     </div>
                     <div class="panel-body">
                         @if ($logbook->photo_path)
-                            <div class="relative group">
-                                <img src="{{ route('institusi.logbook.photo', basename($logbook->photo_path)) }}"
-                                    class="w-full rounded-xl border-2 border-blue-100 shadow-md cursor-pointer hover:shadow-xl transition-all duration-300 max-h-[420px] object-cover"
-                                    alt="Foto Logbook"
-                                    onclick="window.open('{{ route('institusi.logbook.photo', basename($logbook->photo_path)) }}', '_blank')" />
-                                <div
-                                    class="absolute inset-0 bg-black/0 group-hover:bg-black/10 rounded-xl transition-all duration-300 flex items-center justify-center">
-                                    <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        <div class="bg-white rounded-full p-3 shadow-lg">
-                                            <i class="fas fa-search-plus text-blue-600 text-lg"></i>
+                            @can('view', $logbook)
+                                <div class="relative group">
+                                    <img src="{{ route('institusi.logbook.photo', basename($logbook->photo_path)) }}"
+                                        class="w-full rounded-xl border-2 border-blue-100 shadow-md cursor-pointer hover:shadow-xl transition-all duration-300 max-h-[420px] object-cover"
+                                        alt="Foto Logbook"
+                                        onclick="window.open('{{ route('institusi.logbook.photo', basename($logbook->photo_path)) }}', '_blank')" />
+                                    <div
+                                        class="absolute inset-0 bg-black/0 group-hover:bg-black/10 rounded-xl transition-all duration-300 flex items-center justify-center">
+                                        <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                            <div class="bg-white rounded-full p-3 shadow-lg">
+                                                <i class="fas fa-search-plus text-blue-600 text-lg"></i>
+                                            </div>
                                         </div>
                                     </div>
+                                    <p class="text-xs text-slate-500 text-center mt-3">Klik untuk melihat ukuran penuh</p>
                                 </div>
-                                <p class="text-xs text-slate-500 text-center mt-3">Klik untuk melihat ukuran penuh</p>
-                            </div>
+                            @else
+                                <div
+                                    class="flex flex-col items-center justify-center py-10 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200">
+                                    <p class="text-sm font-medium text-slate-500">Tidak ada akses.</p>
+                                </div>
+                            @endcan
                         @else
                             <div
                                 class="flex flex-col items-center justify-center py-10 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200">

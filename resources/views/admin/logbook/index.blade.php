@@ -175,7 +175,8 @@
                                                 @else
                                                     <div
                                                         class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3 border-2 border-blue-200">
-                                                        <i class="fas fa-user text-blue-600"></i></div>
+                                                        <i class="fas fa-user text-blue-600"></i>
+                                                    </div>
                                                 @endif
                                                 <span
                                                     class="text-sm font-medium text-gray-900">{{ $l->intern->name }}</span>
@@ -195,10 +196,14 @@
                                             @if ($l->photo_path)
                                                 @php $logbookFilename = basename($l->photo_path); @endphp
                                                 @php $logbookUrl = URL::temporarySignedRoute('admin.logbook.photo', now()->addSeconds(30), ['filename' => $logbookFilename]); @endphp
-                                                <img src="{{ $logbookUrl }}" alt="Logbook"
-                                                    class="w-12 h-12 object-cover rounded-lg border-2 border-blue-200 cursor-pointer hover:border-blue-400 transition-all"
-                                                    onclick="window.open('{{ $logbookUrl }}', '_blank')"
-                                                    title="Klik untuk melihat full size">
+                                                @can('view', $l)
+                                                    <img src="{{ $logbookUrl }}" alt="Logbook"
+                                                        class="w-12 h-12 object-cover rounded-lg border-2 border-blue-200 cursor-pointer hover:border-blue-400 transition-all"
+                                                        onclick="window.open('{{ $logbookUrl }}', '_blank')"
+                                                        title="Klik untuk melihat full size">
+                                                @else
+                                                    <span class="text-gray-400">Tidak ada akses</span>
+                                                @endcan
                                             @else
                                                 <span class="text-gray-400">-</span>
                                             @endif

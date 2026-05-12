@@ -307,11 +307,15 @@
                                         </td>
                                         <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
                                             @if ($l->photo_path)
-                                                <img src="{{ route('institusi.logbook.photo', basename($l->photo_path)) }}"
-                                                    alt="Logbook Photo"
-                                                    class="w-12 h-12 object-cover rounded-lg border-2 border-blue-200 cursor-pointer hover:border-blue-400 transition-all shadow-sm hover:shadow-lg"
-                                                    onclick="window.open('{{ route('institusi.logbook.photo', basename($l->photo_path)) }}', '_blank')"
-                                                    title="Klik untuk melihat full size" />
+                                                @can('view', $l)
+                                                    <img src="{{ route('institusi.logbook.photo', basename($l->photo_path)) }}"
+                                                        alt="Logbook Photo"
+                                                        class="w-12 h-12 object-cover rounded-lg border-2 border-blue-200 cursor-pointer hover:border-blue-400 transition-all shadow-sm hover:shadow-lg"
+                                                        onclick="window.open('{{ route('institusi.logbook.photo', basename($l->photo_path)) }}', '_blank')"
+                                                        title="Klik untuk melihat full size" />
+                                                @else
+                                                    <span class="text-slate-400 text-sm">Tidak ada akses</span>
+                                                @endcan
                                             @else
                                                 <span class="text-slate-400 text-sm">-</span>
                                             @endif
