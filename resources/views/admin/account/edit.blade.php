@@ -4,58 +4,48 @@
 
 @push('styles')
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
-        * { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .mono { font-family: 'DM Mono', monospace; }
-        body { background: #f0f4ff; }
+        * {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
 
         .dash-bg {
-            background: linear-gradient(135deg, #e8eeff 0%, #f0f4ff 40%, #e4ecff 100%);
             min-height: 100vh;
+            background: linear-gradient(135deg, #e8eeff 0%, #f0f4ff 40%, #e4ecff 100%);
         }
 
-        /* ── Profile Strip ── */
-        .profile-strip {
+        .hero-strip {
             background: linear-gradient(100deg, #1e3a8a 0%, #3b4fd8 50%, #4f46e5 100%);
+            border-radius: 20px;
             position: relative;
             overflow: hidden;
-            border-radius: 1rem;
             box-shadow: 0 10px 30px rgba(20, 40, 120, 0.16);
+            color: #fff;
         }
-        .profile-strip::before {
+
+        .hero-strip::before {
             content: '';
             position: absolute;
-            top: -60px; right: -60px;
-            width: 220px; height: 220px;
+            top: -60px;
+            right: -60px;
+            width: 220px;
+            height: 220px;
             background: rgba(255, 255, 255, 0.06);
             border-radius: 50%;
         }
-        .profile-strip::after {
+
+        .hero-strip::after {
             content: '';
             position: absolute;
-            bottom: -80px; left: 30%;
-            width: 300px; height: 300px;
+            bottom: -80px;
+            left: 30%;
+            width: 300px;
+            height: 300px;
             background: rgba(255, 255, 255, 0.04);
             border-radius: 50%;
         }
 
-        /* ── Avatar ring ── */
-        .avatar-ring {
-            background: linear-gradient(135deg, #60a5fa, #818cf8);
-            padding: 3px;
-            border-radius: 9999px;
-            display: inline-flex;
-            flex-shrink: 0;
-        }
-        .avatar-inner {
-            background: linear-gradient(135deg, #3b82f6, #6366f1);
-            border-radius: 9999px;
-            width: 80px; height: 80px;
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        /* ── Panel ── */
         .panel {
             background: #fff;
             border-radius: 20px;
@@ -63,47 +53,34 @@
             overflow: hidden;
         }
 
-        /* ── Section label ── */
-        .section-label {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: #94a3b8;
-            margin-bottom: 14px;
-        }
-
-        /* ── Form inputs ── */
         .input-main {
             width: 100%;
-            padding: 0.7rem 1rem;
-            border: 1.5px solid #e0e7ff;
-            border-radius: 0.75rem;
-            background: #f8faff;
-            font-size: 14px;
-            color: #1e3a8a;
+            padding: 0.6rem 0.9rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.6rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
             transition: all .15s ease;
+            font-size: 14px;
+            color: #111827;
+            background: #fff;
         }
-        .input-main::placeholder { color: #94a3b8; }
+
+        .input-main::placeholder { color: #9ca3af; }
+
         .input-main:focus {
             outline: none;
             border-color: #3b82f6;
-            background: #fff;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
         }
+
         .input-main:disabled {
             background: #f1f5f9;
             color: #94a3b8;
             cursor: not-allowed;
         }
+
         select.input-main { cursor: pointer; }
 
-        /* ── Field group ── */
-        .field-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
         .field-label {
             font-size: 13px;
             font-weight: 600;
@@ -111,13 +88,32 @@
             display: flex;
             align-items: center;
             gap: 6px;
-        }
-        .field-label i {
-            color: #93c5fd;
-            font-size: 12px;
+            margin-bottom: 4px;
         }
 
-        /* ── Role badge (super admin) ── */
+        .field-label i { color: #93c5fd; font-size: 12px; }
+
+        .field-hint {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #94a3b8;
+            margin-bottom: 12px;
+        }
+
+        .form-divider {
+            height: 1px;
+            background: linear-gradient(to right, #e0e7ff, transparent);
+            margin: 8px 0;
+        }
+
         .super-badge {
             display: inline-flex;
             align-items: center;
@@ -130,28 +126,13 @@
             color: #b91c1c;
         }
 
-        /* ── Password strength hint ── */
-        .field-hint {
-            font-size: 11px;
-            color: #94a3b8;
-            margin-top: 2px;
-        }
-
-        /* ── Divider ── */
-        .form-divider {
-            height: 1px;
-            background: linear-gradient(to right, #e0e7ff, transparent);
-            margin: 4px 0;
-        }
-
-        /* ── Buttons ── */
         .btn-cancel {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 7px;
-            padding: 11px 22px;
-            border-radius: 12px;
+            padding: 10px 20px;
+            border-radius: 10px;
             border: 1.5px solid #e0e7ff;
             background: #f8faff;
             color: #6b7280;
@@ -160,6 +141,7 @@
             text-decoration: none;
             transition: all 0.2s ease;
         }
+
         .btn-cancel:hover {
             border-color: #c7d2fe;
             background: #eff2ff;
@@ -172,85 +154,60 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 11px 26px;
-            background: linear-gradient(110deg, #1e3a8a, #3b4fd8);
+            padding: 10px 24px;
+            background: linear-gradient(to right, #2563eb, #4f46e5);
             color: #fff;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
         }
+
         .btn-save:hover {
             box-shadow: 0 6px 16px rgba(59, 79, 216, 0.3);
             transform: translateY(-1px);
         }
 
-        /* ── Animations ── */
-        @keyframes fadeSlideUp {
-            from { opacity: 0; transform: translateY(16px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        .anim-1 { animation: fadeSlideUp 0.5s ease both; }
-        .anim-2 { animation: fadeSlideUp 0.5s ease 0.1s both; }
-
-        @media (max-width: 640px) {
-            .avatar-inner { width: 60px; height: 60px; }
+        @media (max-width: 768px) {
+            .hero-title { font-size: 1.6rem; }
         }
     </style>
 @endpush
 
 @section('content')
     <div class="dash-bg py-8 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-2xl mx-auto space-y-6">
+        <div class="max-w-2xl mx-auto">
 
-            {{-- ── PROFILE HEADER ── --}}
-            <div class="profile-strip anim-1">
-                <div class="px-6 py-7 flex flex-col sm:flex-row items-center sm:items-start gap-5 relative z-10">
-
-                    {{-- Avatar --}}
-                    <div class="avatar-ring flex-shrink-0">
-                        <div class="avatar-inner">
-                            <i class="fas fa-user-edit text-2xl text-white"></i>
-                        </div>
-                    </div>
-
-                    {{-- Identity --}}
-                    <div class="flex-1 text-center sm:text-left">
-                        <h1 class="text-xl font-bold text-white mb-1">Edit Akun Admin</h1>
-                        <p class="text-blue-200 font-semibold text-base mono">{{ $user->email }}</p>
-                        <p class="text-blue-300 text-sm mt-2 flex items-center justify-center sm:justify-start gap-2">
+            {{-- ── HERO STRIP ── --}}
+            <div class="hero-strip mb-6">
+                <div class="relative z-10 px-6 py-7 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h1 class="hero-title text-4xl font-bold mb-1">Edit Akun Admin</h1>
+                        <p class="text-blue-100 text-sm">{{ $user->email }}</p>
+                        <div class="mt-2">
                             @if ($user->isSuperAdmin())
                                 <span class="super-badge">
                                     <i class="fas fa-shield-alt text-xs"></i> Super Admin
                                 </span>
                             @else
-                                <i class="fas fa-user-cog"></i>
-                                <span>{{ $user->getRoleNames()->first() ? str_replace('_', ' ', ucwords($user->getRoleNames()->first(), '_')) : 'Admin' }}</span>
+                                <span class="text-blue-200 text-sm">
+                                    <i class="fas fa-user-cog mr-1"></i>
+                                    {{ $user->getRoleNames()->first() ? str_replace('_', ' ', ucwords($user->getRoleNames()->first(), '_')) : 'Admin' }}
+                                </span>
                             @endif
-                        </p>
-                    </div>
-
-                    {{-- Right: name initial --}}
-                    <div class="flex-shrink-0 text-center sm:text-right">
-                        <p class="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">Mengedit</p>
-                        <p class="text-3xl font-extrabold text-white">
-                            {{ strtoupper(substr($user->name, 0, 2)) }}
-                        </p>
-                        <p class="text-blue-300 text-xs mt-1 max-w-[120px] truncate">{{ $user->name }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
             {{-- ── FORM PANEL ── --}}
-            <div class="panel anim-2">
+            <div class="panel">
 
-                {{-- Panel header --}}
-                <div class="bg-blue-600 px-6 py-4">
-                    <h2 class="text-white text-base font-bold flex items-center gap-3">
-                        <i class="fas fa-pen"></i>
-                        Informasi Akun
+                <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
+                    <h2 class="text-xl font-bold text-white flex items-center">
+                        <i class="fas fa-pen mr-3"></i>Informasi Akun
                     </h2>
                 </div>
 
@@ -258,10 +215,10 @@
                     @csrf
                     @method('PUT')
 
-                    {{-- Nama & Email --}}
+                    {{-- Data Utama --}}
                     <p class="section-label">Data Utama</p>
 
-                    <div class="field-group">
+                    <div>
                         <label class="field-label">
                             <i class="fas fa-user"></i> Nama Lengkap
                         </label>
@@ -274,7 +231,7 @@
                         @enderror
                     </div>
 
-                    <div class="field-group">
+                    <div>
                         <label class="field-label">
                             <i class="fas fa-envelope"></i> Alamat Email
                         </label>
@@ -287,8 +244,7 @@
                         @enderror
                     </div>
 
-                    {{-- Role --}}
-                    <div class="field-group">
+                    <div>
                         <label class="field-label">
                             <i class="fas fa-id-badge"></i> Role Admin
                         </label>
@@ -320,7 +276,7 @@
                     <p class="section-label">Ubah Password</p>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="field-group">
+                        <div>
                             <label class="field-label">
                                 <i class="fas fa-lock"></i> Password Baru
                             </label>
@@ -333,7 +289,7 @@
                             @enderror
                         </div>
 
-                        <div class="field-group">
+                        <div>
                             <label class="field-label">
                                 <i class="fas fa-lock"></i> Konfirmasi Password
                             </label>
@@ -342,7 +298,7 @@
                         </div>
                     </div>
 
-                    <p class="field-hint" style="margin-top:-8px;">
+                    <p class="field-hint">
                         <i class="fas fa-info-circle mr-1"></i>
                         Biarkan kosong jika tidak ingin mengubah password.
                     </p>
