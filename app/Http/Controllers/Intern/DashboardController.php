@@ -66,7 +66,7 @@ class DashboardController extends Controller
         $hasFinalReport = $intern->finalReport !== null;
         
         // Micro skill summary
-        $microSkillTotal = $intern->microSkills()->count();
+        $microSkillTotal = \App\Models\MicroSkill::count();
         $microSkillApproved = $intern->microSkills()->where('status', 'approved')->count();
 
         // Latest certificate for this intern (if any)

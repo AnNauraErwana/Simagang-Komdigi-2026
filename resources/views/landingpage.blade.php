@@ -848,10 +848,10 @@
 
         <nav class="nav-links">
             <a href="#hero">Beranda</a>
-            <a href="#process">Tahapan</a>
+            <a href="#process">Alur</a>
             <a href="#usage">Fitur</a>
             <a href="#testimonials">Testimoni</a>
-            <a href="#partners">Partner</a>
+            <a href="#partners">Mitra</a>
             <a href="#news" class="text-gray-700 hover:text-blue-600 font-medium transition">Aktivitas</a>
         </nav>
 
@@ -893,11 +893,11 @@
 
         <div class="hero-text-col">
             <h1 class="hero-title">
-                Sitem Magang untuk <span>Kampus dan Sekolah</span> Masa Kini
+                Sistem Magang Terbaik untuk <span>Kampus dan Sekolah</span> 
             </h1>
 
             <p class="hero-desc">
-                Dapatkan pengalaman terbaik hanya melalui mitra terpercaya. Masa depan menawarkan peluang yang lebih besar saatnya tumbuh menjadi talenta profesional dan uji kemampuanmu bersama BBLSDM Komdigi Makassar sekarang.
+                Nikmati pengalaman terbaik dengan mitra terpercaya. Ada Banyak Hal Besar yang Perlu dilakukan di Masa Depan. Saatnya tumbuh sebagai talenta profesional dan buktikan keahlianmu bersama BBLSDM Komdigi Makassar sekarang.
             </p>
 
             <div class="hero-stats">
@@ -1190,9 +1190,9 @@
 <section id="partners" class="section-partners">
     <div class="container">
         <div class="section-header reveal">
-            <span class="section-eyebrow-alt">Partner</span>
-            <h2 class="section-title">Institusi yang Telah Bergabung</h2>
-            <p class="section-desc">Bergabunglah bersama institusi terkemuka yang sudah mempercayakan manajemen magang kepada Simagang.</p>
+            <span class="section-eyebrow-alt">Mitra</span>
+            <h2 class="section-title">Institusi Pendidikan dan Industri yang Telah Bergabung</h2>
+            <p class="section-desc">Sudah banyak Mitra pendidikan dan industri yang telah ambil bagian sebagai mitra terbaik kami. Inilah saatnya bersama menciptakan pengalaman magang yang luar biasa.</p>
         </div>
         <div class="partners-grid">
             @php $partners = $partners ?? []; @endphp
@@ -1310,8 +1310,8 @@
                 <a href="{{route('artikel_1')}}" target="_blank" class="news-side-item">
                     <img src="{{ asset('storage/artikel/artikel_1.jpeg') }} " class="news-side-img">
                     <div class="news-side-content">
-                        <span class="text-[11px] text-[#00f2ff] font-semibold mb-1">Artikel 1</span>
                         <h4 class="news-side-title">Sharing Session</h4>
+                        <p class="text-gray-300 text-sm">Mari kita bahas tentang pentingnya berbagi pengetahuan dan pengalaman dalam dunia digital.</p>
                         <span class="text-[12px] text-gray-400">07 Mei 2026</span>
                     </div>
                 </a>
@@ -1319,8 +1319,8 @@
                 <a href="{{route('artikel_2')}}" target="_blank" class="news-side-item">
                     <img src="{{ asset('storage/artikel/artikel_2.png') }}" class="news-side-img">
                     <div class="news-side-content">
-                        <span class="text-[11px] text-[#00f2ff] font-semibold mb-1">Artikel 2</span>
                         <h4 class="news-side-title">Emang Gen Z lebih jago soal keamanan digital? - Podcast Capila 2026 Episode 1</h4>
+                        <p class="text-gray-300 text-sm">Apakah Gen Z benar-benar lebih mahir dalam menghadapi ancaman keamanan digital dibandingkan generasi sebelumnya? Mari kita bahas dalam podcast Capila 2026 Episode 1.</p>
                         <span class="text-[12px] text-gray-400">06 Mei 2026</span>
                     </div>
                 </a>
@@ -1328,8 +1328,8 @@
                 <a href="{{route('artikel_3')}}" target="_blank" class="news-side-item">
                     <img src="{{ asset('storage/artikel/artikel_3.png') }}" class="news-side-img">
                     <div class="news-side-content">
-                        <span class="text-[11px] text-[#00f2ff] font-semibold mb-1">Artikel 3</span>
                         <h4 class="news-side-title">Senam Sehat & Bersih</h4>
+                        <p class="text-gray-300 text-sm">Mari kita bahas tentang pentingnya berbagi pengetahuan dan pengalaman dalam dunia digital.</p>
                         <span class="text-[12px] text-gray-400">05 Mei 2026</span>
                     </div>
                 </a>
@@ -1343,7 +1343,7 @@
     <div id="daftar" class="container">
         <div class="cta-inner">
             <div class="reveal">
-                <div class="cta-tag">Pendaftaran Institusi</div>
+                <div class="cta-tag">Pendaftaran Mitra</div>
                 <h2 class="cta-title">Khusus untuk Sekolah & Kampus</h2>
                 <p class="cta-desc">Bergabunglah sekarang dan mulai kelola program magang institusi Anda dengan lebih efisien dan profesional bersama Simagang.</p>
                 <div style="margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap">
@@ -1368,8 +1368,8 @@
                             <i class="fas fa-school"></i>
                         </div>
                         <div>
-                            <div class="cta-card-name">Sekolah / SMK</div>
-                            <div class="cta-card-sub">Daftar melalui Tata Usaha (TU)</div>
+                            <div class="cta-card-name">Sekolah</div>
+                            <div class="cta-card-sub">Daftar melalui Tata Usaha (TU) Sekolah</div>
                         </div>
                     </div>
                     <i class="fas fa-arrow-right cta-arrow"></i>
@@ -1381,7 +1381,7 @@
                         </div>
                         <div>
                             <div class="cta-card-name">Universitas / Kampus</div>
-                            <div class="cta-card-sub">Wajib melalui Departemen terkait</div>
+                            <div class="cta-card-sub">Wajib melalui Departemen Kampus terkait</div>
                         </div>
                     </div>
                     <i class="fas fa-arrow-right cta-arrow"></i>
