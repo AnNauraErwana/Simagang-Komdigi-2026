@@ -169,7 +169,7 @@ class MonitoringExport implements
             $intern->institution ?? '-',
             $intern->major ?? '-',
             $intern->mentor?->name ?? '-',
-            $intern->team ?? '-',
+            $intern->team?->name ?? '-',
             $intern->start_date?->format('d/m/Y') ?? '-',
             $intern->end_date?->format('d/m/Y') ?? '-',
             $status,
@@ -181,7 +181,6 @@ class MonitoringExport implements
         ];
     }
 
- 
     public function title(): string
     {
         return 'Monitoring Magang';

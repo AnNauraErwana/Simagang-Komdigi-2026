@@ -393,7 +393,7 @@
                     {{-- Identity --}}
                     <div class="flex-1 text-center sm:text-left">
                         <h1 class="text-xl font-bold text-white mb-1">Dashboard Admin</h1>
-                        <p class="text-blue-200 font-semibold text-base">BBPSDMP Komdigi Makassar</p>
+                        <p class="text-blue-200 font-semibold text-base">BBLSDM Komdigi Makassar</p>
                         <p class="text-blue-300 text-sm mt-1">
                             <i class="fas fa-calendar-day mr-1"></i>
                             {{ \Carbon\Carbon::parse($today)->translatedFormat('l, d F Y') }}
