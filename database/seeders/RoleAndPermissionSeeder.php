@@ -86,10 +86,6 @@ class RoleAndPermissionSeeder extends Seeder
             'create_users',
             'edit_users',
             'delete_users',
-            'view_admins',
-            'create_admin',
-            'edit_admin',
-            'delete_admin',
             'view_mentors',
             'manage_mentors',
             'view_interns',
@@ -109,7 +105,6 @@ class RoleAndPermissionSeeder extends Seeder
         // ADMIN USER MANAGER - Khusus kelola user
         $adminUserManagerRole = Role::firstOrCreate(['name' => 'admin_user_manager', 'guard_name' => 'web']);
         $adminUserManagerRole->syncPermissions([
-            'view_admins',
             'view_users',
             'view_interns',
             'manage_interns',

@@ -225,21 +225,12 @@ Route::middleware(['auth', 'intern'])->prefix('intern')->name('intern.')->group(
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    Route::middleware('permission:view_admins')->group(function () {
+    Route::middleware('role:super_admin')->group(function () {
         Route::get('/accounts', [AdminAccountController::class, 'index'])->name('accounts.index');
-    });
-
-    Route::middleware('permission:create_admin')->group(function () {
         Route::get('/accounts/create', [AdminAccountController::class, 'create'])->name('accounts.create');
         Route::post('/accounts', [AdminAccountController::class, 'store'])->name('accounts.store');
-    });
-
-    Route::middleware('permission:edit_admin')->group(function () {
         Route::get('/accounts/{user}/edit', [AdminAccountController::class, 'edit'])->name('accounts.edit');
         Route::put('/accounts/{user}', [AdminAccountController::class, 'update'])->name('accounts.update');
-    });
-
-    Route::middleware('permission:delete_admin')->group(function () {
         Route::delete('/accounts/{user}', [AdminAccountController::class, 'destroy'])->name('accounts.destroy');
     });
 

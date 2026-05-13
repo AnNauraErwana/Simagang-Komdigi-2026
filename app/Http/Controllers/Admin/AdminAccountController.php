@@ -12,10 +12,7 @@ class AdminAccountController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:view_admins')->only(['index']);
-        $this->middleware('permission:create_admin')->only(['create', 'store']);
-        $this->middleware('permission:edit_admin')->only(['edit', 'update']);
-        $this->middleware('permission:delete_admin')->only(['destroy']);
+        $this->middleware('role:super_admin');
     }
 
     public function index(Request $request)

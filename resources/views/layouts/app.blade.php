@@ -215,12 +215,12 @@
                             </button>
 
                             <div x-show="open" x-transition class="bg-gray-50 border-l-4 border-blue-200 ml-4">
-                                @can('view_admins')
+                                @if(auth()->user()->isSuperAdmin())
                                 <a href="{{ route('admin.accounts.index') }}" class="{{ request()->routeIs('admin.accounts.*') ? 'text-blue-700 bg-blue-50' : 'text-gray-500 hover:bg-gray-100' }} flex items-center px-4 py-2.5 text-sm font-medium">
                                     <i class="fas fa-user-shield w-4 mr-3 text-xs"></i>
                                     Admin
                                 </a>
-                                @endcan
+                                @endif
 
                                 @can('manage_mentors')
                                 <a href="{{ route('admin.mentor.index') }}" class="{{ request()->routeIs('admin.mentor.*') ? 'text-blue-700 bg-blue-50' : 'text-gray-500 hover:bg-gray-100' }} flex items-center px-4 py-2.5 text-sm font-medium">
@@ -532,12 +532,12 @@
                                     </button>
 
                                     <div x-show="open" x-transition class="bg-gray-50 border-l-4 border-blue-200 ml-4">
-                                        @can('view_admins')
+                                        @if(auth()->user()->isSuperAdmin())
                                         <a href="{{ route('admin.accounts.index') }}" class="{{ request()->routeIs('admin.accounts.*') ? 'text-blue-700 bg-blue-50' : 'text-gray-500 hover:bg-gray-100' }} flex items-center px-4 py-2.5 text-sm font-medium">
                                             <i class="fas fa-user-shield w-4 mr-3 text-xs"></i>
                                             Admin
                                         </a>
-                                        @endcan
+                                        @endif
                                         @can('manage_mentors')
                                         <a href="{{ route('admin.mentor.index') }}" class="{{ request()->routeIs('admin.mentor.*') ? 'text-blue-700 bg-blue-50' : 'text-gray-500 hover:bg-gray-100' }} flex items-center px-4 py-2.5 text-sm font-medium">
                                             <i class="fas fa-chalkboard-teacher w-4 mr-3 text-xs"></i>
