@@ -114,7 +114,7 @@
                                         min="0" max="100" required
                                         class="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                                         placeholder="0 - 100"
-                                        value="{{ old('discipline_attendance', $certificate->score->discipline_attendance ?? '') }}">
+                                        value="{{ old('discipline_attendance', $certificate?->score?->discipline_attendance ?? ($selectedIntern->attendance_percentage ?? '')) }}">
                                 </div>
 
                                 <div>
@@ -187,13 +187,13 @@
                                     <i class="fas fa-graduation-cap text-indigo-600 mr-1.5"></i>
                                     Pengerjaan Micro Skill (Jumlah Course)
                                 </label>
-                                <input type="number" name="micro_skill" id="micro_skill" min="0" required
-                                    class="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                <input type="number" name="micro_skill" id="micro_skill" min="0" readonly
+                                    class="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 border-gray-200 bg-gray-100 rounded-xl shadow-sm text-sm"
                                     placeholder="Contoh: 12"
-                                    value="{{ old('micro_skill', $certificate->score->micro_skill ?? '') }}">
+                                    value="{{ old('micro_skill', $certificate?->score?->micro_skill ?? $microSkillDefault ?? ($selectedIntern->micro_skill_completed ?? '')) }}">
                                 <p class="mt-2 text-xs text-gray-500">
                                     <i class="fas fa-info-circle mr-1"></i>
-                                    Masukkan jumlah micro skill course yang telah diselesaikan
+                                    Nilai ini otomatis diisi berdasarkan jumlah Micro Skill yang dikerjakan (tidak dapat diedit)
                                 </p>
                             </div>
                         </div>

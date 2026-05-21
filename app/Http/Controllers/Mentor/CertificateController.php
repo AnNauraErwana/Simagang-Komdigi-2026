@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Certificate;
 use App\Models\CertificateScore;
 use App\Models\Intern;
+use App\Models\Attendance;
+use App\Models\MicroSkillSubmission;
+use App\Models\MicroSkill;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Illuminate\Http\Request;
 
@@ -38,13 +41,46 @@ class CertificateController extends Controller
                 $certificate = $selectedIntern->certificate;
                 $mode = 'edit';
             }
+
+            // hitung persentase kehadiran seperti pada Attendance controller
+            if ($selectedIntern) {
+                $totalAttendance = Attendance::where('intern_id', $selectedIntern->id)->count();
+                $totalPresent = Attendance::where('intern_id', $selectedIntern->id)
+                    ->where('status', 'hadir')
+                    ->count();
+
+                $attendancePercentage = $totalAttendance > 0
+                    ? round(($totalPresent / $totalAttendance) * 100)
+                    : 0;
+
+                $selectedIntern->attendance_percentage = $attendancePercentage;
+
+                // hitung jumlah microskill yang sudah disetujui (completed)
+                $completedMicroSkills = MicroSkillSubmission::where('intern_id', $selectedIntern->id)
+                    ->where('status', 'approved')
+                    ->count();
+
+                // total microskill available
+                $totalMicroSkills = MicroSkill::count();
+
+                // assign computed values to pass to view
+                $selectedIntern->micro_skill_completed = $completedMicroSkills;
+                $selectedIntern->micro_skill_total = $totalMicroSkills;
+            }
+        }
+
+        // compute default micro_skill value to show in form (count of completed)
+        $microSkillDefault = null;
+        if ($selectedIntern) {
+            $microSkillDefault = $selectedIntern->micro_skill_completed ?? 0;
         }
 
         return view('mentor.certificate.create', compact(
             'interns',
             'selectedIntern',
             'certificate',
-            'mode'
+            'mode',
+            'microSkillDefault'
         ));
     }
 
@@ -64,7 +100,6 @@ class CertificateController extends Controller
             'technical_skill' => 'required|integer|min:0|max:100',
             'work_ethic' => 'required|integer|min:0|max:100',
             'initiative_creativity' => 'required|integer|min:0|max:100',
-            'micro_skill' => 'required|integer|min:0|max:255',
         ]);
 
         /** Simpan sertifikat */
@@ -83,7 +118,10 @@ class CertificateController extends Controller
             'technical_skill' => $request->technical_skill,
             'work_ethic' => $request->work_ethic,
             'initiative_creativity' => $request->initiative_creativity,
-            'micro_skill' => $request->micro_skill,
+            // microskill value is computed from intern submissions (count of approved)
+            'micro_skill' => MicroSkillSubmission::where('intern_id', $request->intern_id)
+                ->where('status', 'approved')
+                ->count(),
         ]);
 
         return redirect()
@@ -101,7 +139,7 @@ class CertificateController extends Controller
             return redirect()
                 ->back()
                 ->with('error', 'Sertifikat tidak dapat diubah karena sudah diterbitkan.');
-        }    
+        }
 
         $request->validate([
             'issue_date' => 'required|date',
@@ -111,7 +149,7 @@ class CertificateController extends Controller
             'technical_skill' => 'required|integer|min:0|max:100',
             'work_ethic' => 'required|integer|min:0|max:100',
             'initiative_creativity' => 'required|integer|min:0|max:100',
-            'micro_skill' => 'required|integer|min:0|max:255',
+            // micro_skill not accepted from user input anymore
         ]);
 
         $certificate->update([
@@ -125,7 +163,9 @@ class CertificateController extends Controller
             'technical_skill' => $request->technical_skill,
             'work_ethic' => $request->work_ethic,
             'initiative_creativity' => $request->initiative_creativity,
-            'micro_skill' => $request->micro_skill,
+            'micro_skill' => MicroSkillSubmission::where('intern_id', $certificate->intern_id)
+                ->where('status', 'approved')
+                ->count(),
         ]);
 
         return redirect()
@@ -183,7 +223,7 @@ class CertificateController extends Controller
         $pdf->Cell(297, 10, $certificate->intern->name, 0, 0, 'C');
 
         // durasi magang
-        $pdf->SetTextColor(64, 64, 64); 
+        $pdf->SetTextColor(64, 64, 64);
         $pdf->SetFont('poppins', '', 12);
         $start = $certificate->intern->start_date;
         $end   = $certificate->intern->end_date;
@@ -210,7 +250,7 @@ class CertificateController extends Controller
             20,
             20
         );
-    
+
 
         /** HALAMAN 2 **/
         if ($pageCount >= 2) {
@@ -243,7 +283,6 @@ class CertificateController extends Controller
             $pdf->Write(0, $duration);
 
 
-            
 
             // ===== NILAI =====
             $startY = 103;

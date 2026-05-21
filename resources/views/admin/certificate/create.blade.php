@@ -106,11 +106,11 @@
                                     <i class="fas fa-user-clock text-green-600 mr-2"></i>
                                     Disiplin dan Kehadiran
                                 </label>
-                                <input type="number" name="discipline_attendance" id="discipline_attendance"
-                                       min="0" max="100" required
-                                       class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                       placeholder="0 - 100"
-                                       value="{{ old('discipline_attendance', $certificate->score->discipline_attendance ?? '') }}">
+                                    <input type="number" name="discipline_attendance" id="discipline_attendance"
+                                        min="0" max="100" required
+                                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        placeholder="0 - 100"
+                                        value="{{ old('discipline_attendance', $certificate?->score?->discipline_attendance ?? ($selectedIntern->attendance_percentage ?? '')) }}">
                             </div>
 
                             <!-- Tanggung Jawab -->
@@ -185,15 +185,18 @@
                                 <i class="fas fa-graduation-cap text-indigo-600 mr-2"></i>
                                 Pengerjaan Micro Skill (Jumlah Course)
                             </label>
-                            <input type="number" name="micro_skill" id="micro_skill"
-                                   min="0" required
-                                   class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                   placeholder="Contoh: 12"
-                                   value="{{ old('micro_skill', $certificate->score->micro_skill ?? '') }}">
-                            <p class="mt-2 text-sm text-gray-500">
-                                <i class="fas fa-info-circle mr-1"></i>
-                                Masukkan jumlah micro skill course yang telah diselesaikan
-                            </p>
+                            
+                            <div class="mt-4">
+                                <label for="micro_skill" class="block text-sm font-bold text-gray-700 mb-2">Jumlah Micro Skill</label>
+                                    <input type="number" name="micro_skill" id="micro_skill" min="0" readonly
+                                       class="w-full px-4 py-3 border-2 border-gray-200 bg-gray-100 rounded-xl shadow-sm text-sm"
+                                       placeholder="Contoh: 12"
+                                       value="{{ old('micro_skill', $certificate?->score?->micro_skill ?? $microSkillDefault ?? ($selectedIntern->micro_skill_completed ?? '')) }}">
+                                <p class="mt-2 text-sm text-gray-500">
+                                    <i class="fas fa-info-circle mr-1"></i>
+                                    Nilai ini otomatis diisi berdasarkan jumlah Micro Skill yang disetujui (tidak dapat diedit)
+                                </p>
+                            </div>
                         </div>
                     </div>
 
