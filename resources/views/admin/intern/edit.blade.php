@@ -15,7 +15,6 @@
         min-height: 100vh;
     }
 
-    /* ── Profile Strip ── */
     .profile-strip {
         background: linear-gradient(100deg, #1e3a8a 0%, #3b4fd8 50%, #4f46e5 100%);
         position: relative;
@@ -40,7 +39,6 @@
         border-radius: 50%;
     }
 
-    /* ── Avatar ring ── */
     .avatar-ring {
         background: linear-gradient(135deg, #60a5fa, #818cf8);
         padding: 3px;
@@ -54,7 +52,6 @@
         width: 80px; height: 80px;
         display: flex; align-items: center; justify-content: center;
     }
-    /* Avatar foto peserta di header */
     .avatar-photo {
         width: 80px; height: 80px;
         border-radius: 9999px;
@@ -62,7 +59,6 @@
         border: 3px solid rgba(255,255,255,0.4);
     }
 
-    /* ── Panel ── */
     .panel {
         background: #fff;
         border-radius: 20px;
@@ -70,7 +66,6 @@
         box-shadow: 0 1px 3px rgba(30,58,138,0.06), 0 4px 20px rgba(30,58,138,0.06);
     }
 
-    /* ── Section label ── */
     .section-label {
         font-size: 11px;
         font-weight: 700;
@@ -80,7 +75,6 @@
         margin-bottom: 18px;
     }
 
-    /* ── Section header ── */
     .section-header {
         display: flex;
         align-items: center;
@@ -114,7 +108,6 @@
         margin: 0;
     }
 
-    /* ── Form inputs ── */
     .form-label {
         display: block;
         font-size: 12px;
@@ -165,7 +158,6 @@
         padding-right: 40px;
     }
 
-    /* ── Error ── */
     .form-error {
         font-size: 12px;
         color: #ef4444;
@@ -175,7 +167,6 @@
         gap: 4px;
     }
 
-    /* ── Foto section ── */
     .photo-current {
         display: flex;
         align-items: center;
@@ -204,7 +195,6 @@
         color: #94a3b8;
     }
 
-    /* ── Photo dropzone ── */
     .photo-dropzone {
         border: 2px dashed #c7d2fe;
         border-radius: 14px;
@@ -230,7 +220,6 @@
     }
     .photo-dropzone.changed i { color: #22c55e !important; }
 
-    /* ── Password hint ── */
     .hint-text {
         font-size: 11px;
         color: #94a3b8;
@@ -240,7 +229,6 @@
         gap: 4px;
     }
 
-    /* ── Toggle wrap ── */
     .toggle-wrap {
         display: flex;
         align-items: center;
@@ -266,7 +254,6 @@
         color: #3730a3;
     }
 
-    /* ── Info pill ── */
     .info-pill {
         display: inline-flex;
         align-items: center;
@@ -280,7 +267,6 @@
         margin-top: 8px;
     }
 
-    /* ── Buttons ── */
     .btn-back {
         display: inline-flex;
         align-items: center;
@@ -324,7 +310,32 @@
     }
     .btn-submit:active { transform: translateY(0); }
 
-    /* ── Animations ── */
+    /* Modal */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        background: rgba(0,0,0,0.5);
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(2px);
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-box {
+        background: #fff;
+        border-radius: 20px;
+        padding: 28px;
+        max-width: 420px;
+        width: 90%;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        animation: modalIn 0.25s ease both;
+    }
+    @keyframes modalIn {
+        from { opacity: 0; transform: scale(0.93) translateY(10px); }
+        to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
     @keyframes fadeSlideUp {
         from { opacity: 0; transform: translateY(16px); }
         to   { opacity: 1; transform: translateY(0); }
@@ -335,7 +346,6 @@
     .anim-4 { animation: fadeSlideUp 0.5s ease 0.3s both; }
     .anim-5 { animation: fadeSlideUp 0.5s ease 0.4s both; }
 
-    /* ── Responsive ── */
     @media (max-width: 768px) {
         .md-grid-2 { grid-template-columns: 1fr !important; }
         .md-col-span-2 { grid-column: span 1 !important; }
@@ -356,7 +366,6 @@
     <div class="profile-strip anim-1">
         <div class="px-6 py-7 flex flex-col sm:flex-row items-center sm:items-start gap-5 relative z-10">
 
-            {{-- Avatar: foto peserta jika ada, fallback ikon ── --}}
             @if($intern->photo_path)
                 <div class="avatar-ring flex-shrink-0">
                     <img src="{{ url('storage/' . $intern->photo_path) }}"
@@ -371,7 +380,6 @@
                 </div>
             @endif
 
-            {{-- Identity ── --}}
             <div class="flex-1 text-center sm:text-left">
                 <h1 class="text-xl font-bold text-white mb-1">Edit Data Peserta</h1>
                 <p class="text-blue-200 font-semibold text-base">{{ $intern->name }}</p>
@@ -385,7 +393,6 @@
                 </p>
             </div>
 
-            {{-- Status badge + back ── --}}
             <div class="flex-shrink-0 flex flex-col items-center sm:items-end gap-3">
                 @if($intern->is_active)
                     <span style="background:rgba(34,197,94,0.2);color:#86efac;border:1px solid rgba(134,239,172,0.3);padding:5px 14px;border-radius:999px;font-size:12px;font-weight:700;">
@@ -407,7 +414,7 @@
     </div>
 
     {{-- ── FORM ── --}}
-    <form method="POST" action="{{ route('admin.intern.update', $intern) }}" enctype="multipart/form-data">
+    <form id="edit-intern-form" method="POST" action="{{ route('admin.intern.update', $intern) }}" enctype="multipart/form-data">
     @csrf
     @method('PUT')
 
@@ -561,7 +568,6 @@
                 </div>
             </div>
 
-            {{-- Foto saat ini ── --}}
             @if($intern->photo_path)
                 <div class="photo-current">
                     <img src="{{ url('storage/' . $intern->photo_path) }}" alt="Foto {{ $intern->name }}">
@@ -574,7 +580,6 @@
 
             <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:18px;" class="md-grid-2">
 
-                {{-- Dropzone foto ── --}}
                 <div style="grid-column:span 2;" class="md-col-span-2">
                     <label class="form-label">
                         {{ $intern->photo_path ? 'Ganti Pass Foto' : 'Pass Foto' }}
@@ -658,7 +663,7 @@
                     <i class="fas fa-arrow-left text-xs"></i>
                     Batal & Kembali
                 </a>
-                <button type="submit" class="btn-submit">
+                <button type="button" id="btn-submit" class="btn-submit">
                     <i class="fas fa-save"></i>
                     Simpan Perubahan
                 </button>
@@ -670,11 +675,56 @@
 </div>
 </div>
 
+{{-- ── CONFIRMATION MODAL ── --}}
+<div id="confirm-modal" class="modal-overlay">
+    <div class="modal-box">
+        <div style="display:flex;align-items:center;justify-content:center;width:52px;height:52px;margin:0 auto 16px;background:#eff6ff;border-radius:50%;">
+            <i class="fas fa-save" style="color:#3b4fd8;font-size:20px;"></i>
+        </div>
+        <h3 style="text-align:center;font-size:18px;font-weight:700;color:#1e3a8a;margin:0 0 8px;">Konfirmasi Simpan</h3>
+        <p style="text-align:center;color:#64748b;font-size:14px;margin:0 0 24px;">Apakah Anda yakin ingin menyimpan perubahan ini? Perubahan akan langsung diterapkan.</p>
+        <div style="display:flex;gap:12px;">
+            <button id="btn-cancel" type="button"
+                style="flex:1;padding:12px;border-radius:12px;background:#f1f5f9;border:1.5px solid #e2e8f0;font-size:13px;font-weight:600;color:#475569;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;">
+                <i class="fas fa-times mr-1"></i> Batal
+            </button>
+            <button id="btn-confirm" type="button"
+                style="flex:1;padding:12px;border-radius:12px;background:linear-gradient(110deg,#1e3a8a,#3b4fd8);border:none;font-size:13px;font-weight:700;color:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;">
+                <i class="fas fa-save mr-1"></i> Ya, Simpan
+            </button>
+        </div>
+    </div>
+</div>
+
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function () {
 
-    /* ── Mentor → Tim display ── */
+    const modal = document.getElementById('confirm-modal');
+    const form  = document.getElementById('edit-intern-form');
+
+    // Buka modal saat tombol submit diklik
+    document.getElementById('btn-submit').addEventListener('click', function () {
+        modal.classList.add('active');
+    });
+
+    // Tutup modal - tombol batal
+    document.getElementById('btn-cancel').addEventListener('click', function () {
+        modal.classList.remove('active');
+    });
+
+    // Konfirmasi - submit form
+    document.getElementById('btn-confirm').addEventListener('click', function () {
+        modal.classList.remove('active');
+        form.submit();
+    });
+
+    // Tutup modal - klik backdrop
+    modal.addEventListener('click', function (e) {
+        if (e.target === modal) modal.classList.remove('active');
+    });
+
+    // Mentor → Tim display
     const mentorSelect = document.getElementById('mentorSelect');
     const teamDisplay  = document.getElementById('teamDisplay');
     const teamPill     = document.getElementById('teamPill');
@@ -688,19 +738,18 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         const teamName = opt.getAttribute('data-team') || 'Belum masuk dalam tim';
-        teamDisplay.value    = teamName;
+        teamDisplay.value        = teamName;
         teamPillText.textContent = teamName;
-        teamPill.style.display = 'inline-flex';
+        teamPill.style.display   = 'inline-flex';
     }
 
     mentorSelect.addEventListener('change', updateTeam);
     updateTeam();
 
-    /* ── Photo dropzone ── */
-    const photoInput   = document.getElementById('photoInput');
-    const photoLabel   = document.getElementById('photoLabel');
-    const photoIcon    = document.getElementById('photoIcon');
-    const photoDropzone= document.getElementById('photoDropzone');
+    // Photo dropzone
+    const photoInput    = document.getElementById('photoInput');
+    const photoLabel    = document.getElementById('photoLabel');
+    const photoDropzone = document.getElementById('photoDropzone');
 
     photoInput.addEventListener('change', function () {
         if (this.files && this.files[0]) {
@@ -709,14 +758,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    /* ── Password toggle ── */
+    // Password toggle
     const togglePwd = document.getElementById('togglePwd');
     const pwdInput  = document.getElementById('password');
     const eyeIcon   = document.getElementById('eyeIcon');
 
-    togglePwd.addEventListener('click', () => {
+    togglePwd.addEventListener('click', function () {
         const isText = pwdInput.type === 'text';
-        pwdInput.type = isText ? 'password' : 'text';
+        pwdInput.type     = isText ? 'password' : 'text';
         eyeIcon.className = isText ? 'fas fa-eye' : 'fas fa-eye-slash';
     });
 

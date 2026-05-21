@@ -95,6 +95,43 @@
                 font-size: 0.75rem;
             }
         }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            backdrop-filter: blur(3px);
+        }
+
+        .modal-box {
+            background: #fff;
+            border-radius: 20px;
+            padding: 28px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 60px rgba(30, 58, 138, 0.18);
+            position: relative
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .anim-1 {
+            animation: fadeSlideUp .5s ease both
+        }
     </style>
 @endpush
 
@@ -292,21 +329,15 @@
                                                     title="Lihat">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <form action="{{ route('admin.pengajuan.destroy', $pengajuan->id) }}"
-                                                    method="POST" class="inline"
-                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengajuan ini?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                        class="inline-flex items-center justify-center w-10 h-10 bg-red-100 hover:bg-red-200 rounded-lg transition-all duration-200 group"
-                                                        title="Hapus">
-                                                        <svg class="w-5 h-5 text-red-600 group-hover:scale-110 transition-transform"
-                                                            fill="currentColor" viewBox="0 0 24 24">
-                                                            <path
-                                                                d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
-                                                        </svg>
-                                                    </button>
-                                                </form>
+                                                <button type="button" onclick="window.dispatchEvent(new CustomEvent('open-delete-modal-pengajuan', { detail: { url: '{{ route('admin.pengajuan.destroy', $pengajuan->id) }}' } }))"
+                                                    class="inline-flex items-center justify-center w-10 h-10 bg-red-100 hover:bg-red-200 rounded-lg transition-all duration-200 group"
+                                                    title="Hapus">
+                                                    <svg class="w-5 h-5 text-red-600 group-hover:scale-110 transition-transform"
+                                                        fill="currentColor" viewBox="0 0 24 24">
+                                                        <path
+                                                            d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+                                                    </svg>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -334,4 +365,31 @@
             </div>
         </div>
     </div>
+
+    <!-- Delete Confirmation Modal -->
+                        <div x-data="{ showDeleteModal: false, deleteUrl: '' }" @open-delete-modal-pengajuan.window="showDeleteModal = true; deleteUrl = $event.detail.url">
+                            <!-- Modal Backdrop -->
+                            <div x-show="showDeleteModal" style="display: none;" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900 bg-opacity-50 backdrop-blur-sm" x-transition.opacity>
+                                <!-- Modal Content -->
+                                <div @click.away="showDeleteModal = false" class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 transform transition-all" x-show="showDeleteModal" x-transition.scale.origin.bottom>
+                                    <div class="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
+                                        <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-center text-gray-900 mb-2">Konfirmasi Hapus</h3>
+                                    <p class="text-center text-gray-600 mb-6">Apakah Anda yakin ingin menghapus pengajuan ini? Tindakan ini tidak dapat dibatalkan.</p>
+                                    <div class="flex justify-center gap-3">
+                                        <button type="button" @click="showDeleteModal = false" class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
+                                            Batal
+                                        </button>
+                                        <form :action="deleteUrl" method="POST" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="px-5 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-xl transition-colors flex items-center gap-2">
+                                                <i class="fas fa-trash"></i> Ya, Hapus
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 @endsection

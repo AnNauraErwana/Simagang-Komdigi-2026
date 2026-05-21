@@ -132,6 +132,43 @@
         .table-min-w {
             min-width: 600px;
         }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            backdrop-filter: blur(3px);
+        }
+
+        .modal-box {
+            background: #fff;
+            border-radius: 20px;
+            padding: 28px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 60px rgba(30, 58, 138, 0.18);
+            position: relative
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .anim-1 {
+            animation: fadeSlideUp .5s ease both
+        }
     </style>
 @endpush
 
@@ -149,7 +186,33 @@
                     <div class="flex-shrink-0 flex flex-col items-start sm:items-end gap-3">
                         <div>
                             <p class="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">Total Admin</p>
-                            <p class="font-extrabold text-white text-center text-4xl leading-none">{{ $accounts->total() }}</p>
+
+                        <!-- Delete Confirmation Modal -->
+                        <div x-data="{ showDeleteModal: false, deleteUrl: '' }" @open-delete-modal-account.window="showDeleteModal = true; deleteUrl = $event.detail.url">
+                            <!-- Modal Backdrop -->
+                            <div x-show="showDeleteModal" style="display: none;" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900 bg-opacity-50 backdrop-blur-sm" x-transition.opacity>
+                                <!-- Modal Content -->
+                                <div @click.away="showDeleteModal = false" class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 transform transition-all" x-show="showDeleteModal" x-transition.scale.origin.bottom>
+                                    <div class="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
+                                        <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-center text-gray-900 mb-2">Konfirmasi Hapus</h3>
+                                    <p class="text-center text-gray-600 mb-6">Apakah Anda yakin ingin menghapus akun admin ini? Tindakan ini tidak dapat dibatalkan.</p>
+                                    <div class="flex justify-center gap-3">
+                                        <button type="button" @click="showDeleteModal = false" class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
+                                            Batal
+                                        </button>
+                                        <form :action="deleteUrl" method="POST" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="px-5 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-xl transition-colors flex items-center gap-2">
+                                                <i class="fas fa-trash"></i> Ya, Hapus
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                            <p class="font-extrabold text-white text-center text-4xl leading-none">{{ $accounts->total() }}</p>
                         </div>
                         <a href="{{ route('admin.accounts.create') }}"
                             class="inline-flex items-center gap-2 bg-white text-blue-700 font-bold text-sm px-5 py-2.5 rounded-xl shadow hover:shadow-md hover:bg-blue-50 transition-all duration-200">
@@ -280,15 +343,10 @@
                                                 </a>
 
                                                 @if (!$account->isSuperAdmin())
-                                                    <form action="{{ route('admin.accounts.destroy', $account) }}"
-                                                        method="POST" class="inline"
-                                                        onsubmit="return confirm('Hapus akun admin ini?');">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="icon-btn icon-btn-delete" title="Hapus">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-                                                    </form>
+                                                    <button type="button" onclick="window.dispatchEvent(new CustomEvent('open-delete-modal-account', { detail: { url: '{{ route('admin.accounts.destroy', $account) }}' } }))"
+                                                        class="icon-btn icon-btn-delete" title="Hapus">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
                                                 @else
                                                     <span class="text-xs text-gray-300 font-medium px-2">Terlindungi</span>
                                                 @endif
@@ -314,4 +372,32 @@
 
         </div>
     </div>
+
+    
+                        <!-- Delete Confirmation Modal -->
+                        <div x-data="{ showDeleteModal: false, deleteUrl: '' }" @open-delete-modal-account.window="showDeleteModal = true; deleteUrl = $event.detail.url">
+                            <!-- Modal Backdrop -->
+                            <div x-show="showDeleteModal" style="display: none;" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900 bg-opacity-50 backdrop-blur-sm" x-transition.opacity>
+                                <!-- Modal Content -->
+                                <div @click.away="showDeleteModal = false" class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 transform transition-all" x-show="showDeleteModal" x-transition.scale.origin.bottom>
+                                    <div class="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
+                                        <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-center text-gray-900 mb-2">Konfirmasi Hapus</h3>
+                                    <p class="text-center text-gray-600 mb-6">Apakah Anda yakin ingin menghapus akun admin ini? Tindakan ini tidak dapat dibatalkan.</p>
+                                    <div class="flex justify-center gap-3">
+                                        <button type="button" @click="showDeleteModal = false" class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
+                                            Batal
+                                        </button>
+                                        <form :action="deleteUrl" method="POST" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="px-5 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-xl transition-colors flex items-center gap-2">
+                                                <i class="fas fa-trash"></i> Ya, Hapus
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 @endsection

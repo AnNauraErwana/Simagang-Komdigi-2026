@@ -127,12 +127,16 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-600 mb-2">Dari Tanggal</label>
-                        <input type="date" name="date_from" value="{{ request('date_from') }}" class="input-main">
+                        <input type="date" name="date_from"
+                            value="{{ request('date_from') ?: (request('date_to') ? '' : $todayWita) }}"
+                            class="input-main">
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-600 mb-2">Hingga Tanggal</label>
-                        <input type="date" name="date_to" value="{{ request('date_to') }}" class="input-main">
+                        <input type="date" name="date_to"
+                            value="{{ request('date_to') ?: (request('date_from') ? '' : $todayWita) }}"
+                            class="input-main">
                     </div>
 
                     <div class="flex items-end gap-2">
