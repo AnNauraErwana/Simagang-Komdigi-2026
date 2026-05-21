@@ -402,7 +402,8 @@
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                                 @if ($intern->is_active)
-                                                    <button onclick="confirmRelease({{ $intern->id }}, '{{ $intern->name }}')"
+                                                    <button type="button"
+                                                        onclick="window.dispatchEvent(new CustomEvent('open-release-modal', { detail: { id: {{ $intern->id }}, name: '{{ addslashes($intern->name) }}' } }))"
                                                         class="text-orange-600 hover:text-orange-900 inline-block transition-colors"
                                                         title="Tandai sebagai pelepasan">
                                                         <i class="fas fa-graduation-cap"></i>
@@ -413,7 +414,8 @@
                                                         @csrf
                                                     </form>
                                                 @else
-                                                    <button onclick="confirmActive({{ $intern->id }}, '{{ $intern->name }}')"
+                                                    <button type="button"
+                                                        onclick="window.dispatchEvent(new CustomEvent('open-active-modal', { detail: { id: {{ $intern->id }}, name: '{{ addslashes($intern->name) }}' } }))"
                                                         class="text-green-600 hover:text-green-900 inline-block transition-colors"
                                                         title="Kembalikan menjadi aktif">
                                                         <i class="fas fa-undo"></i>
@@ -506,7 +508,8 @@
                                                     title="Lihat detail">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <button onclick="confirmActive({{ $intern->id }}, '{{ $intern->name }}')"
+                                                <button type="button"
+                                                    onclick="window.dispatchEvent(new CustomEvent('open-active-modal', { detail: { id: {{ $intern->id }}, name: '{{ addslashes($intern->name) }}' } }))"
                                                     class="text-green-600 hover:text-green-900 inline-block transition-colors"
                                                     title="Kembalikan menjadi aktif">
                                                     <i class="fas fa-undo"></i>
@@ -695,17 +698,6 @@
                 }
             });
 
-            function confirmRelease(internId, internName) {
-                if (confirm(`Yakin ingin menandai "${internName}" sebagai pelepasan?`)) {
-                    document.getElementById(`form-release-${internId}`).submit();
-                }
-            }
-
-            function confirmActive(internId, internName) {
-                if (confirm(`Yakin ingin mengembalikan "${internName}" menjadi aktif?`)) {
-                    document.getElementById(`form-active-${internId}`).submit();
-                }
-            }
 
             document.querySelectorAll('.alert').forEach(alert => {
                 setTimeout(() => {
@@ -716,4 +708,67 @@
             });
         </script>
     @endpush
+
+    {{-- ── RELEASE MODAL ── --}}
+    <div x-data="{ showReleaseModal: false, releaseId: '', releaseName: '' }"
+        @open-release-modal.window="showReleaseModal = true; releaseId = $event.detail.id; releaseName = $event.detail.name">
+        <div x-show="showReleaseModal" style="display:none;"
+            class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900 bg-opacity-50 backdrop-blur-sm"
+            x-transition.opacity>
+            <div @click.away="showReleaseModal = false"
+                class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6"
+                x-show="showReleaseModal" x-transition.scale.origin.bottom>
+                <div class="flex items-center justify-center w-12 h-12 mx-auto bg-orange-100 rounded-full mb-4">
+                    <i class="fas fa-graduation-cap text-orange-500 text-xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-center text-gray-900 mb-2">Konfirmasi Pelepasan</h3>
+                <p class="text-center text-gray-600 mb-6">
+                    Yakin ingin menandai <strong x-text="releaseName"></strong> sebagai pelepasan?
+                </p>
+                <div class="flex justify-center gap-3">
+                    <button type="button" @click="showReleaseModal = false"
+                            class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
+                        Batal
+                    </button>
+                    <button type="button"
+                            @click="document.getElementById('form-release-' + releaseId).submit()"
+                            class="px-5 py-2.5 text-sm font-medium text-white bg-orange-500 hover:bg-orange-600 rounded-xl transition-colors flex items-center gap-2">
+                        <i class="fas fa-graduation-cap"></i> Iya
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- ── ACTIVE MODAL ── --}}
+    <div x-data="{ showActiveModal: false, activeId: '', activeName: '' }"
+        @open-active-modal.window="showActiveModal = true; activeId = $event.detail.id; activeName = $event.detail.name">
+        <div x-show="showActiveModal" style="display:none;"
+            class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900 bg-opacity-50 backdrop-blur-sm"
+            x-transition.opacity>
+            <div @click.away="showActiveModal = false"
+                class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6"
+                x-show="showActiveModal" x-transition.scale.origin.bottom>
+                <div class="flex items-center justify-center w-12 h-12 mx-auto bg-green-100 rounded-full mb-4">
+                    <i class="fas fa-undo text-green-600 text-xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-center text-gray-900 mb-2">Kembalikan ke Aktif</h3>
+                <p class="text-center text-gray-600 mb-6">
+                    Yakin ingin mengembalikan <strong x-text="activeName"></strong> menjadi aktif?
+                </p>
+                <div class="flex justify-center gap-3">
+                    <button type="button" @click="showActiveModal = false"
+                            class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
+                        Batal
+                    </button>
+                    <button type="button"
+                            @click="document.getElementById('form-active-' + activeId).submit()"
+                            class="px-5 py-2.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-xl transition-colors flex items-center gap-2">
+                        <i class="fas fa-undo"></i> Ya, Aktifkan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection

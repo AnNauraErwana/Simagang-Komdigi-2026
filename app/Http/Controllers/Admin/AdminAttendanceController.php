@@ -32,6 +32,12 @@ class AdminAttendanceController extends Controller
             $query->where('status', $request->status);
         }
 
+        $noDateFilter = !$request->filled('date_from') && !$request->filled('date_to');
+
+        if ($noDateFilter) {
+            $query->whereDate('date', $todayWita);
+        }
+
         if ($request->filled('date_from')) {
             $query->whereDate('date', '>=', $request->date_from);
         }

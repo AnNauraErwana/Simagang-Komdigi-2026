@@ -73,6 +73,7 @@
             font-size: 14px;
             color: #1f2937;
             background: #fff;
+            box-sizing: border-box;
         }
 
         .input-main:focus {
@@ -231,6 +232,119 @@
             border-top: 1px solid #f1f5f9;
         }
 
+        /* ── Modal ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(2px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #fff;
+            border-radius: 20px;
+            padding: 28px;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            animation: modalIn 0.25s ease both;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.93) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-icon-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            margin: 0 auto 16px;
+            background: #eff6ff;
+            border-radius: 50%;
+        }
+
+        .modal-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin: 0 0 8px;
+        }
+
+        .modal-desc {
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+            margin: 0 0 24px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .modal-btn-cancel {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            background: #f1f5f9;
+            border: 1.5px solid #e2e8f0;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all .15s ease;
+        }
+
+        .modal-btn-cancel:hover {
+            background: #e2e8f0;
+        }
+
+        .modal-btn-confirm {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            background: linear-gradient(110deg, #1e3a8a, #3b4fd8);
+            border: none;
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all .15s ease;
+        }
+
+        .modal-btn-confirm:hover {
+            box-shadow: 0 4px 14px rgba(59, 79, 216, 0.35);
+            transform: translateY(-1px);
+        }
+
         @media (max-width: 768px) {
             .hero-title { font-size: 1.5rem; }
             .form-section-inner { padding: 1.25rem 1rem; }
@@ -268,7 +382,7 @@
                     <h2 class="text-xl font-bold text-white">Formulir Edit Mentor</h2>
                 </div>
 
-                <form method="POST" action="{{ route('admin.mentor.update', $mentor) }}">
+                <form id="edit-mentor-form" method="POST" action="{{ route('admin.mentor.update', $mentor) }}">
                     @csrf
                     @method('PUT')
 
@@ -414,7 +528,8 @@
                             <i class="fas fa-times"></i>
                             Batal
                         </a>
-                        <button type="submit" class="btn-submit">
+                        {{-- Tombol ini membuka modal, bukan langsung submit --}}
+                        <button type="button" id="btn-open-modal" class="btn-submit">
                             <i class="fas fa-save"></i>
                             Update Data
                         </button>
@@ -425,4 +540,63 @@
 
         </div>
     </div>
+
+    {{-- ── CONFIRMATION MODAL ── --}}
+    <div id="confirm-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-icon-wrap">
+                <i class="fas fa-save" style="color:#3b4fd8;font-size:20px;"></i>
+            </div>
+            <h3 class="modal-title">Konfirmasi Simpan</h3>
+            <p class="modal-desc">Apakah Anda yakin ingin menyimpan perubahan ini? Perubahan akan langsung diterapkan.</p>
+            <div class="modal-actions">
+                <button id="btn-modal-cancel" type="button" class="modal-btn-cancel">
+                    <i class="fas fa-times"></i> Batal
+                </button>
+                <button id="btn-modal-confirm" type="button" class="modal-btn-confirm">
+                    <i class="fas fa-save"></i> Ya, Simpan
+                </button>
+            </div>
+        </div>
+    </div>
+
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const modal   = document.getElementById('confirm-modal');
+    const form    = document.getElementById('edit-mentor-form');
+
+    // Buka modal saat tombol "Update Data" diklik
+    document.getElementById('btn-open-modal').addEventListener('click', function () {
+        modal.classList.add('active');
+    });
+
+    // Tutup modal – tombol batal dalam modal
+    document.getElementById('btn-modal-cancel').addEventListener('click', function () {
+        modal.classList.remove('active');
+    });
+
+    // Konfirmasi – submit form
+    document.getElementById('btn-modal-confirm').addEventListener('click', function () {
+        modal.classList.remove('active');
+        form.submit();
+    });
+
+    // Tutup modal – klik backdrop
+    modal.addEventListener('click', function (e) {
+        if (e.target === modal) modal.classList.remove('active');
+    });
+
+    // Tutup modal – tekan Escape
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            modal.classList.remove('active');
+        }
+    });
+
+});
+</script>
+@endpush

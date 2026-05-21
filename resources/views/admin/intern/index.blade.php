@@ -298,6 +298,27 @@
             .action-mobile { width: 100%; justify-content: center; }
             .table-responsive { overflow: auto; }
         }
+        }
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            backdrop-filter: blur(3px);
+        }
+
+        .modal-box {
+            background: #fff;
+            border-radius: 20px;
+            padding: 28px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 60px rgba(30, 58, 138, 0.18);
+            position: relative;
+        }
     </style>
 @endpush
 
@@ -333,7 +354,7 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-600 mb-2">Cari Nama</label>
                         <input type="text" name="search" value="{{ request('search') }}"
-                               class="input-main" placeholder="Ketik nama peserta..." />
+                            class="input-main" placeholder="Ketik nama peserta..." />
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-600 mb-2">Tim</label>
@@ -401,7 +422,7 @@
                                             <div class="avatar-cell">
                                                 @if($intern->photo_path)
                                                     <img src="{{ url('storage/'.$intern->photo_path) }}"
-                                                         alt="{{ $intern->name }}" class="avatar-sm">
+                                                        alt="{{ $intern->name }}" class="avatar-sm">
                                                 @else
                                                     <div class="avatar-sm-placeholder">
                                                         {{ strtoupper(substr($intern->name, 0, 1)) }}
@@ -436,22 +457,16 @@
                                         <td>
                                             <div class="action-group">
                                                 <a href="{{ route('admin.intern.show', $intern) }}"
-                                                   class="action-btn-sm action-view" title="Lihat detail">
+                                                    class="action-btn-sm action-view" title="Lihat detail">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                                 <a href="{{ route('admin.intern.edit', $intern) }}"
                                                    class="action-btn-sm action-edit" title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <form action="{{ route('admin.intern.destroy', $intern) }}" method="POST"
-                                                      class="inline"
-                                                      onsubmit="return confirm('Hapus data {{ addslashes($intern->name) }}?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="action-btn-sm action-delete" title="Hapus">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </form>
+                                                <button type="button" onclick="window.dispatchEvent(new CustomEvent('open-delete-modal-intern', { detail: { url: '{{ route('admin.intern.destroy', $intern) }}', name: '{{ addslashes($intern->name) }}' } }))" class="action-btn-sm action-delete" title="Hapus">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -502,8 +517,8 @@
                                             <div class="avatar-cell">
                                                 @if($intern->photo_path)
                                                     <img src="{{ url('storage/'.$intern->photo_path) }}"
-                                                         alt="{{ $intern->name }}"
-                                                         class="avatar-sm" style="border-color:#e2e8f0;">
+                                                        alt="{{ $intern->name }}"
+                                                        class="avatar-sm" style="border-color:#e2e8f0;">
                                                 @else
                                                     <div class="avatar-sm-placeholder gray">
                                                         {{ strtoupper(substr($intern->name, 0, 1)) }}
@@ -527,22 +542,16 @@
                                         <td>
                                             <div class="action-group">
                                                 <a href="{{ route('admin.intern.show', $intern) }}"
-                                                   class="action-btn-sm action-view" title="Lihat detail">
+                                                    class="action-btn-sm action-view" title="Lihat detail">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                                 <a href="{{ route('admin.intern.edit', $intern) }}"
-                                                   class="action-btn-sm action-edit" title="Edit">
+                                                    class="action-btn-sm action-edit" title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <form action="{{ route('admin.intern.destroy', $intern) }}" method="POST"
-                                                      class="inline"
-                                                      onsubmit="return confirm('Hapus data {{ addslashes($intern->name) }}?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="action-btn-sm action-delete" title="Hapus">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </form>
+                                                <button type="button" onclick="window.dispatchEvent(new CustomEvent('open-delete-modal-intern', { detail: { url: '{{ route('admin.intern.destroy', $intern) }}', name: '{{ addslashes($intern->name) }}' } }))" class="action-btn-sm action-delete" title="Hapus">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -565,6 +574,33 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div x-data="{ showDeleteModal: false, deleteUrl: '', internName: '' }" @open-delete-modal-intern.window="showDeleteModal = true; deleteUrl = $event.detail.url; internName = $event.detail.name">
+        <!-- Modal Backdrop -->
+        <div x-show="showDeleteModal" style="display: none;" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900 bg-opacity-50 backdrop-blur-sm" x-transition.opacity>
+            <!-- Modal Content -->
+            <div @click.away="showDeleteModal = false" class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 transform transition-all" x-show="showDeleteModal" x-transition.scale.origin.bottom>
+                <div class="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
+                    <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-center text-gray-900 mb-2">Konfirmasi Hapus</h3>
+                <p class="text-center text-gray-600 mb-6">Apakah Anda yakin ingin menghapus <strong x-text="internName"></strong>? Tindakan ini tidak dapat dibatalkan.</p>
+                <div class="flex justify-center gap-3">
+                    <button type="button" @click="showDeleteModal = false" class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
+                            Batal
+                    </button>                    
+                        <form :action="deleteUrl" method="POST" class="inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="px-5 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-xl transition-colors flex items-center gap-2">
+                                <i class="fas fa-trash"></i> Ya, Hapus
+                            </button>
+                        </form>                                                            
+                </div>
+            </div>
         </div>
     </div>
 @endsection

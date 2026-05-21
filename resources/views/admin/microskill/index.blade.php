@@ -373,18 +373,15 @@
                                         <td>
                                             <div class="action-group">
                                                 <a href="{{ route('admin.microskill.show', ['id' => $m->id]) }}"
-                                                   class="action-btn action-view">
-                                                    <i class="fas fa-eye" style="font-size:11px;"></i>Detail
+                                                    class="action-btn action-view">
+                                                    <i class="fas fa-eye" style="font-size:11px;"></i>
                                                 </a>
-                                                <form action="{{ route('admin.microskill.destroy', ['id' => $m->id]) }}"
-                                                      method="POST" class="inline"
-                                                      onsubmit="return confirm('Apakah Anda yakin ingin menghapus mikro skill ini?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="action-btn action-delete">
-                                                        <i class="fas fa-trash" style="font-size:11px;"></i>Hapus
-                                                    </button>
-                                                </form>
+                                                {{-- Tombol hapus — membuka modal Alpine.js --}}
+                                                <button type="button"
+                                                    class="action-btn action-delete"
+                                                    onclick="window.dispatchEvent(new CustomEvent('open-delete-modal-microskill', { detail: { url: '{{ route('admin.microskill.destroy', ['id' => $m->id]) }}' } }))">
+                                                    <i class="fas fa-trash" style="font-size:11px;"></i>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -405,6 +402,49 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+
+    {{-- ── DELETE CONFIRMATION MODAL (Alpine.js — sama persis dengan index mentor) ── --}}
+    <div x-data="{ showDeleteModal: false, deleteUrl: '' }"
+         @open-delete-modal-microskill.window="showDeleteModal = true; deleteUrl = $event.detail.url">
+
+        <div x-show="showDeleteModal"
+             style="display: none;"
+             class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900 bg-opacity-50 backdrop-blur-sm"
+             x-transition.opacity>
+
+            <div @click.away="showDeleteModal = false"
+                 class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 transform transition-all"
+                 x-show="showDeleteModal"
+                 x-transition.scale.origin.bottom>
+
+                <div class="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
+                    <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                </div>
+
+                <h3 class="text-xl font-bold text-center text-gray-900 mb-2">Konfirmasi Hapus</h3>
+                <p class="text-center text-gray-600 mb-6">
+                    Apakah Anda yakin ingin menghapus mikro skill ini? Tindakan ini tidak dapat dibatalkan.
+                </p>
+
+                <div class="flex justify-center gap-3">
+                    <button type="button"
+                            @click="showDeleteModal = false"
+                            class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
+                        Batal
+                    </button>
+                    <form :action="deleteUrl" method="POST" class="inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit"
+                                class="px-5 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-xl transition-colors flex items-center gap-2">
+                            <i class="fas fa-trash"></i> Ya, Hapus
+                        </button>
+                    </form>
+                </div>
+
+            </div>
         </div>
     </div>
 @endsection
