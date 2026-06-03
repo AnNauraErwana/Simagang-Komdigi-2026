@@ -1943,11 +1943,35 @@ document.querySelectorAll('.team-tab-btn').forEach(btn => {
 /* ── Mobile Carousel ── */
 const carouselInstances = {};
 
+function destroyAllCarousels() {
+    Object.values(carouselInstances).forEach(instance => {
+        if (instance && typeof instance.destroy === 'function') {
+            instance.destroy();
+        }
+    });
+
+    Object.keys(carouselInstances).forEach(key => {
+        delete carouselInstances[key];
+    });
+}
+
 function initMobileCarousel(gridId, dotsId, barId) {
     const grid  = document.getElementById(gridId);
     const dots  = document.getElementById(dotsId);
     const bar   = document.getElementById(barId);
     if (!grid || !dots || !bar) return;
+
+    const panelEl = grid.closest('.team-tab-panel');
+    const panelId = panelEl ? panelEl.id : null;
+    const existing = panelId ? carouselInstances[panelId] : null;
+
+    if (existing && existing.active) {
+        return;
+    }
+
+    if (existing && typeof existing.destroy === 'function') {
+        existing.destroy();
+    }
 
     const cards = Array.from(grid.querySelectorAll('.tmember-card'));
     const total = cards.length;
@@ -1956,6 +1980,7 @@ function initMobileCarousel(gridId, dotsId, barId) {
     let progTimer = null;
     let progStart = null;
     const DURATION = 5000;
+    let destroyed = false;
 
     // build dots
     dots.innerHTML = '';
@@ -1972,6 +1997,7 @@ function initMobileCarousel(gridId, dotsId, barId) {
     }
 
     function goTo(n) {
+        if (destroyed) return;
         current = ((n % total) + total) % total;
         grid.style.transform = `translateX(-${current * 100}%)`;
         updateDots();
@@ -1995,11 +2021,14 @@ function initMobileCarousel(gridId, dotsId, barId) {
 
     // touch swipe
     let touchStartX = 0;
-    grid.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
-    grid.addEventListener('touchend', e => {
+    const handleTouchStart = e => { touchStartX = e.changedTouches[0].screenX; };
+    const handleTouchEnd = e => {
+        if (destroyed) return;
         const dx = touchStartX - e.changedTouches[0].screenX;
         if (Math.abs(dx) > 40) { goTo(current + (dx > 0 ? 1 : -1)); resetTimer(); }
-    });
+    };
+    grid.addEventListener('touchstart', handleTouchStart, { passive: true });
+    grid.addEventListener('touchend', handleTouchEnd);
 
     function start() {
         goTo(0);
@@ -2007,15 +2036,26 @@ function initMobileCarousel(gridId, dotsId, barId) {
     }
 
     function reset() {
+        if (destroyed) return;
         clearInterval(timer);
         start();
+    }
+
+    function destroy() {
+        destroyed = true;
+        clearInterval(timer);
+        clearInterval(progTimer);
+        grid.removeEventListener('touchstart', handleTouchStart);
+        grid.removeEventListener('touchend', handleTouchEnd);
+        grid.style.transform = '';
+        bar.style.transition = '';
+        bar.style.width = '';
     }
 
     start();
 
     // expose reset for tab switching
-    const panelEl = grid.closest('.team-tab-panel');
-    if (panelEl) carouselInstances[panelEl.id] = { reset };
+    if (panelId) carouselInstances[panelId] = { reset, destroy, active: true };
 }
 
 function setupCarousels() {
@@ -2023,6 +2063,7 @@ function setupCarousels() {
         initMobileCarousel('carousel-grid-1', 'carousel-dots-1', 'carousel-bar-1');
         initMobileCarousel('carousel-grid-2', 'carousel-dots-2', 'carousel-bar-2');
     } else {
+        destroyAllCarousels();
         // desktop: reset transform if any
         ['carousel-grid-1','carousel-grid-2'].forEach(id => {
             const g = document.getElementById(id);
@@ -2031,6 +2072,13 @@ function setupCarousels() {
         ['carousel-dots-1','carousel-dots-2'].forEach(id => {
             const d = document.getElementById(id);
             if (d) d.innerHTML = '';
+        });
+        ['carousel-bar-1','carousel-bar-2'].forEach(id => {
+            const b = document.getElementById(id);
+            if (b) {
+                b.style.transition = '';
+                b.style.width = '';
+            }
         });
     }
 }
