@@ -689,12 +689,15 @@ document.addEventListener('DOMContentLoaded', () => {
         teamPill.style.display = 'inline-flex';
     }
 
-    function filterMentorsByTeam(teamName) {
+    function filterMentorsByTeam(teamId, teamName) {
         let firstMatch = '';
 
         mentorOptions.forEach(option => {
+            const optionTeamId = (option.getAttribute('data-team-id') || '').trim();
             const optionTeam = (option.getAttribute('data-team') || '').trim();
-            const shouldShow = !teamName || optionTeam === teamName;
+            const shouldShow = teamId
+                ? optionTeamId === String(teamId)
+                : (!teamName || optionTeam === teamName);
 
             option.hidden = !shouldShow;
             option.disabled = !shouldShow;
@@ -746,7 +749,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('educationInput').value = sel.dataset.education || '';
 
-        filterMentorsByTeam((sel.dataset.team || '').trim());
+        filterMentorsByTeam((sel.dataset.teamId || '').trim(), (sel.dataset.team || '').trim());
 
         autofillNotice.style.display = 'block';
     });
@@ -782,7 +785,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const softSkill = selectedOption.getAttribute('data-soft-skill');
         const hardSkill = selectedOption.getAttribute('data-hard-skill');
 
-        filterMentorsByTeam((selectedOption.getAttribute('data-team') || '').trim());
+        filterMentorsByTeam((selectedOption.getAttribute('data-team-id') || '').trim(), (selectedOption.getAttribute('data-team') || '').trim());
 
         // Update the display fields
         softSkillDisplay.value = softSkill || '';

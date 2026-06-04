@@ -8,6 +8,7 @@ class Lowongan extends Model
 {
     protected $fillable = [
         'industri_id',
+        'team_id',
         'judul_lowongan',
         'posisi_magang',
         'divisi',
@@ -23,6 +24,11 @@ class Lowongan extends Model
     public function industri()
     {
         return $this->belongsTo(Industri::class);
+    }
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
     }
 
     public function pengajuans()

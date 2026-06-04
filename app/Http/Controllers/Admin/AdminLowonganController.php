@@ -110,7 +110,7 @@ class AdminLowonganController extends Controller
         $request->validate([
             'judul_lowongan'      => 'required|string|max:255',
             'posisi_magang'       => 'required|string|max:255',
-            'divisi'              => 'required|string|max:255|exists:teams,name',
+            'team_id'             => 'required|exists:teams,id',
             'deskripsi_pekerjaan' => 'required|string',
             'requirements'        => 'required|string',
             'fasilitas'           => 'required|string',
@@ -121,10 +121,13 @@ class AdminLowonganController extends Controller
         ]);
 
         // Simpan lowongan
+        $team = Team::find($request->team_id);
+
         Lowongan::create([
             'judul_lowongan'      => $request->judul_lowongan,
             'posisi_magang'       => $request->posisi_magang,
-            'divisi'              => $request->divisi,
+            'team_id'             => $request->team_id,
+            'divisi'              => $team?->name,
             'deskripsi_pekerjaan' => $request->deskripsi_pekerjaan,
             'requirements'        => $request->requirements,
             'fasilitas'           => $request->fasilitas,

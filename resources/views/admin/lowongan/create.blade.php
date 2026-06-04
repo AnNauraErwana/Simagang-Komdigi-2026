@@ -510,11 +510,11 @@
 
                                     <div>
                                         <label class="form-label">Tim / Bagian</label>
-                                        <select name="divisi" id="divisi" class="form-input">
-                                            <option value="" {{ old('divisi') == '' ? 'selected' : '' }}>Pilih Tim / Bagian</option>
+                                        <select name="team_id" id="team_id" class="form-input">
+                                            <option value="" {{ old('team_id') == '' ? 'selected' : '' }}>Pilih Tim / Bagian</option>
                                             @if(isset($teams) && $teams->count())
                                                 @foreach($teams as $team)
-                                                    <option value="{{ $team->name }}" {{ old('divisi') == $team->name ? 'selected' : '' }}>{{ $team->name }}</option>
+                                                    <option value="{{ $team->id }}" {{ old('team_id') == $team->id ? 'selected' : '' }}>{{ $team->name }}</option>
                                                 @endforeach
                                             @else
                                                 <option disabled>Tidak ada tim terdaftar</option>

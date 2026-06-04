@@ -19,6 +19,12 @@ return new class extends Migration
                 ->constrained()
                 ->onDelete('cascade');
 
+            // Relasi ke tim penempatan
+            $table->foreignId('team_id')
+                ->nullable()
+                ->constrained()
+                ->nullOnDelete();
+
             // Informasi lowongan
             $table->string('judul_lowongan');
             $table->string('posisi_magang');

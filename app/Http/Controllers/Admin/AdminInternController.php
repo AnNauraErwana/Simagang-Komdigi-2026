@@ -62,7 +62,7 @@ class AdminInternController extends Controller
     {
         $calonMagang = PengajuanDetail::with([
                 'pengajuan.institusi',
-                'pengajuan.lowongan'
+                'pengajuan.lowongan.team'
             ])
             ->whereHas('pengajuan', function ($q) {
                 $q->where('status', 'approved');
@@ -162,14 +162,14 @@ class AdminInternController extends Controller
         }
 
         if (!empty($validated['pengajuan_detail_id'])) {
-            $calon = PengajuanDetail::with(['pengajuan.lowongan'])->find($validated['pengajuan_detail_id']);
-            $targetTeam = $calon?->pengajuan?->lowongan?->divisi;
+            $calon = PengajuanDetail::with(['pengajuan.lowongan.team'])->find($validated['pengajuan_detail_id']);
+            $targetTeamId = $calon?->pengajuan?->lowongan?->team_id;
 
-            if ($targetTeam && !$mentor->team) {
+            if ($targetTeamId && !$mentor->team) {
                 return back()->withErrors(['mentor_id' => 'Mentor ini belum memiliki tim.'])->withInput();
             }
 
-            if ($targetTeam && $mentor->team?->name !== $targetTeam) {
+            if ($targetTeamId && (int) $mentor->team_id !== (int) $targetTeamId) {
                 return back()->withErrors([
                     'mentor_id' => 'Mentor harus sesuai dengan tim penempatan calon peserta magang.'
                 ])->withInput();
@@ -290,14 +290,14 @@ class AdminInternController extends Controller
         }
 
         if ($intern->pengajuan_detail_id) {
-            $calon = PengajuanDetail::with(['pengajuan.lowongan'])->find($intern->pengajuan_detail_id);
-            $targetTeam = $calon?->pengajuan?->lowongan?->divisi;
+            $calon = PengajuanDetail::with(['pengajuan.lowongan.team'])->find($intern->pengajuan_detail_id);
+            $targetTeamId = $calon?->pengajuan?->lowongan?->team_id;
 
-            if ($targetTeam && !$mentor->team) {
+            if ($targetTeamId && !$mentor->team) {
                 return back()->withErrors(['mentor_id' => 'Mentor ini belum memiliki tim.'])->withInput();
             }
 
-            if ($targetTeam && $mentor->team?->name !== $targetTeam) {
+            if ($targetTeamId && (int) $mentor->team_id !== (int) $targetTeamId) {
                 return back()->withErrors([
                     'mentor_id' => 'Mentor harus sesuai dengan tim penempatan calon peserta magang.'
                 ])->withInput();
