@@ -103,6 +103,106 @@
             font-weight: 700;
             letter-spacing: 0.02em;
         }
+
+        .section-card {
+            background: #f8faff;
+            border: 1px solid #e8eeff;
+            border-radius: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .section-card:hover {
+            border-color: #d4dff5;
+            box-shadow: 0 8px 24px rgba(79, 70, 229, 0.08);
+        }
+
+        .info-card {
+            background: #fff;
+            border: 1px solid #e8eeff;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(20, 40, 120, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            border-color: #c7d2fc;
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .field-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .field-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .section-text h2 {
+            margin: 0;
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .section-text p {
+            margin: 0.25rem 0 0 0;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .panel-body {
+            padding: 24px;
+        }
+
+        a[target="_blank"]::after {
+            content: '';
+        }
+
+        /* Smooth transitions untuk semua elemen */
+        * {
+            transition: all 0.2s ease;
+        }
+
+        button, a {
+            transition: all 0.3s ease;
+        }
+
+        /* Styling untuk text yang terpotong */
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
     </style>
 @endpush
 
@@ -123,11 +223,6 @@
                             class="inline-flex items-center justify-center rounded-2xl bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur-sm border border-white/10 transition hover:bg-white/15">
                             <i class="fas fa-arrow-left mr-2"></i>Kembali
                         </a>
-
-                        <a href="#"
-                            class="inline-flex items-center justify-center rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-blue-700 shadow-lg transition hover:-translate-y-0.5 hover:bg-blue-50">
-                            <i class="fas fa-edit mr-2"></i>Edit
-                        </a>
                     </div>
                 </div>
             </div>
@@ -138,167 +233,222 @@
                     <h2>Detail Pengajuan</h2>
                 </div>
 
-                <div class="panel-body space-y-6">
-                    <div class="section-card p-5 sm:p-6">
-                        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
-                            <div class="flex items-center gap-3">
-                                <div
-                                    class="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
-                                    <i class="fas fa-briefcase text-lg"></i>
+                <div class="panel-body">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Kolom Kiri -->
+                        <div class="lg:col-span-2 space-y-6">
+                            <div class="section-card p-5 sm:p-6">
+                                <div class="section-title">
+                                    <div class="section-icon bg-blue-50 text-blue-600">
+                                        <i class="fas fa-briefcase"></i>
+                                    </div>
+                                    <div class="section-text">
+                                        <p>Informasi Surat</p>
+                                        <h2>Informasi Surat Pengajuan Magang</h2>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Informasi Surat</p>
-                                    <h2 class="text-base sm:text-lg font-bold text-slate-900">Informasi Surat Pengajuan
-                                        Magang</h2>
+
+                                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                                    <div></div>
+                                    <a href="{{ route('pengajuan.surat', $pengajuan) }}" target="_blank"
+                                        class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-blue-700 hover:shadow-lg">
+                                        <i class="fas fa-download mr-2"></i>
+                                        Download Surat Pengajuan
+                                    </a>
                                 </div>
-                            </div>
 
-                            <a href="{{ route('pengajuan.surat', $pengajuan) }}" target="_blank"
-                                class="inline-flex items-center justify-center rounded-2xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700">
-                                <i class="fas fa-download mr-2"></i>
-                                Download Surat Pengajuan
-                            </a>
-                        </div>
-
-                        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-                            <div class="info-card p-4 sm:p-5">
-                                <p class="text-xs uppercase tracking-wide text-slate-400">Nomor Surat Pengajuan</p>
-                                <p class="mt-1 text-sm sm:text-base font-semibold text-slate-900">{{ $pengajuan->no_surat }}
-                                </p>
-                            </div>
-                            <div class="info-card p-4 sm:p-5">
-                                <p class="text-xs uppercase tracking-wide text-slate-400">Penanggung Jawab</p>
-                                <p class="mt-1 text-sm sm:text-base font-semibold text-slate-900">
-                                    {{ $pengajuan->tujuan_surat }}</p>
-                            </div>
-                            <div class="info-card p-4 sm:p-5">
-                                <p class="text-xs uppercase tracking-wide text-slate-400">Tanggal Pengajuan</p>
-                                <p class="mt-1 text-sm sm:text-base font-semibold text-slate-900">
-                                    {{ $pengajuan->created_at->format('d F Y') }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section-card p-5 sm:p-6">
-                        <div class="flex items-center gap-3 mb-6">
-                            <div
-                                class="flex h-11 w-11 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-600">
-                                <i class="fas fa-clipboard-list text-lg"></i>
-                            </div>
-                            <div>
-                                <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Pengajuan</p>
-                                <h2 class="text-base sm:text-lg font-bold text-slate-900">Informasi Pengajuan Magang</h2>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-                            <div class="info-card p-4 sm:p-5">
-                                <p class="text-xs uppercase tracking-wide text-slate-400">Keperluan</p>
-                                <p class="mt-1 text-sm sm:text-base font-semibold text-slate-900">
-                                    {{ $pengajuan->keperluan }}</p>
-                            </div>
-                            <div class="info-card p-4 sm:p-5">
-                                <p class="text-xs uppercase tracking-wide text-slate-400">Tanggal Masuk</p>
-                                <p class="mt-1 text-sm sm:text-base font-semibold text-slate-900">
-                                    {{ $pengajuan->start_date }}</p>
-                            </div>
-                            <div class="info-card p-4 sm:p-5">
-                                <p class="text-xs uppercase tracking-wide text-slate-400">Tanggal Keluar</p>
-                                <p class="mt-1 text-sm sm:text-base font-semibold text-slate-900">{{ $pengajuan->end_date }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section-card p-5 sm:p-6">
-                        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
-                            <div class="flex items-center gap-3">
-                                <div
-                                    class="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-100 text-blue-600">
-                                    <i class="fas fa-circle-info text-lg"></i>
-                                </div>
-                                <div>
-                                    <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Status</p>
-                                    <h2 class="text-base sm:text-lg font-bold text-slate-900">Status Pengajuan Magang</h2>
+                                <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
+                                    <div class="info-card p-4">
+                                        <span class="field-label">Nomor Surat Pengajuan</span>
+                                        <p class="field-value">{{ $pengajuan->no_surat }}</p>
+                                    </div>
+                                    <div class="info-card p-4">
+                                        <span class="field-label">Penanggung Jawab</span>
+                                        <p class="field-value">{{ $pengajuan->tujuan_surat }}</p>
+                                    </div>
+                                    <div class="info-card p-4">
+                                        <span class="field-label">Tanggal Pengajuan</span>
+                                        <p class="field-value">{{ $pengajuan->created_at->format('d F Y') }}</p>
+                                    </div>
                                 </div>
                             </div>
 
-                            @if ($pengajuan->status == 'approved')
-                                <a href="{{ route('institusi.pengajuan.surat-balasan', $pengajuan) }}" target="_blank"
-                                    class="inline-flex items-center justify-center rounded-2xl bg-green-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700">
-                                    <i class="fas fa-download mr-2"></i>
-                                    Download Surat Balasan
-                                </a>
+                            <div class="section-card p-5 sm:p-6">
+                                <div class="section-title">
+                                    <div class="section-icon bg-indigo-50 text-indigo-600">
+                                        <i class="fas fa-clipboard-list"></i>
+                                    </div>
+                                    <div class="section-text">
+                                        <p>Pengajuan</p>
+                                        <h2>Informasi Pengajuan Magang</h2>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
+                                    <div class="info-card p-4">
+                                        <span class="field-label">Keperluan</span>
+                                        <p class="field-value">{{ $pengajuan->keperluan }}</p>
+                                    </div>
+                                    <div class="info-card p-4">
+                                        <span class="field-label">Tanggal Masuk</span>
+                                        <p class="field-value">{{ $pengajuan->start_date }}</p>
+                                    </div>
+                                    <div class="info-card p-4">
+                                        <span class="field-label">Tanggal Keluar</span>
+                                        <p class="field-value">{{ $pengajuan->end_date }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="section-card p-5 sm:p-6">
+                                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
+                                    <div class="section-title mb-0">
+                                        <div class="section-icon bg-blue-50 text-blue-600">
+                                            <i class="fas fa-circle-info"></i>
+                                        </div>
+                                        <div class="section-text">
+                                            <p>Status</p>
+                                            <h2>Status Pengajuan Magang</h2>
+                                        </div>
+                                    </div>
+
+                                    @if ($pengajuan->status == 'approved')
+                                        <a href="{{ route('institusi.pengajuan.surat-balasan', $pengajuan) }}" target="_blank"
+                                            class="inline-flex items-center justify-center rounded-xl bg-green-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-green-700 hover:shadow-lg whitespace-nowrap">
+                                            <i class="fas fa-download mr-2"></i>
+                                            Download Surat Balasan
+                                        </a>
+                                    @endif
+                                </div>
+
+                                <div class="info-card p-4">
+                                    <span class="field-label mb-3">Status Pengajuan</span>
+                                    @php
+                                        $statusClass = match ($pengajuan->status) {
+                                            'approved' => 'bg-green-100 text-green-800',
+                                            'rejected' => 'bg-red-100 text-red-800',
+                                            'revised' => 'bg-orange-100 text-orange-800',
+                                            default => 'bg-yellow-100 text-yellow-800',
+                                        };
+                                    @endphp
+                                    <span class="status-pill {{ $statusClass }}">{{ ucfirst($pengajuan->status) }}</span>
+
+                                    @if ($pengajuan->status == 'revised' && $pengajuan->admin_note)
+                                        <div class="mt-4 rounded-xl border border-orange-200 bg-orange-50 p-4">
+                                            <h4 class="text-sm font-semibold text-orange-800 mb-2">📝 Catatan Revisi</h4>
+                                            <p class="text-sm text-orange-700 whitespace-pre-wrap">{{ $pengajuan->admin_note }}</p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kolom Kanan -->
+                        <div class="lg:col-span-1">
+                            @if ($pengajuan->lowongan)
+                            <div class="section-card p-5 sm:p-6 sticky top-6 border-l-4 border-l-purple-500">
+                                <div class="section-title">
+                                    <div class="section-icon bg-purple-50 text-purple-600">
+                                        <i class="fas fa-briefcase"></i>
+                                    </div>
+                                    <div class="section-text">
+                                        <p>Lowongan Terkait</p>
+                                        <h2>Informasi Lowongan</h2>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2.5">
+                                    <div class="info-card p-3.5">
+                                        <span class="field-label">Judul Lowongan</span>
+                                        <p class="field-value line-clamp-2">{{ $pengajuan->lowongan->judul_lowongan }}</p>
+                                    </div>
+                                    <div class="info-card p-3.5">
+                                        <span class="field-label">Posisi Magang</span>
+                                        <p class="field-value">{{ $pengajuan->lowongan->posisi_magang }}</p>
+                                    </div>
+                                    <div class="info-card p-3.5">
+                                        <span class="field-label">Divisi</span>
+                                        <p class="field-value">{{ $pengajuan->lowongan->divisi }}</p>
+                                    </div>
+                                    <div class="info-card p-3.5">
+                                        <span class="field-label">Kuota Peserta</span>
+                                        <p class="field-value">{{ $pengajuan->lowongan->kuota_peserta }} Peserta</p>
+                                    </div>
+                                    <div class="info-card p-3.5">
+                                        <span class="field-label">Perusahaan</span>
+                                        <p class="field-value">{{ optional($pengajuan->lowongan->industri)->nama_industri ?? '-' }}</p>
+                                    </div>
+                                    <div class="info-card p-3.5">
+                                        <span class="field-label">Status Lowongan</span>
+                                        @php
+                                            $lowonganStatusClass = match($pengajuan->lowongan->status) {
+                                                'dibuka' => 'bg-green-100 text-green-800',
+                                                'ditutup' => 'bg-red-100 text-red-800',
+                                                default => 'bg-yellow-100 text-yellow-800'
+                                            };
+                                        @endphp
+                                        <span class="inline-block mt-1 px-3 py-1 rounded-full text-xs font-semibold {{ $lowonganStatusClass }}">{{ ucfirst($pengajuan->lowongan->status) }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="mt-5">
+                                    <a href="{{ route('institusi.lowongan.show', $pengajuan->lowongan->id) }}"
+                                        class="w-full inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-purple-600 to-purple-700 px-4 py-3 text-sm font-semibold text-white shadow-md transition hover:shadow-lg hover:from-purple-700 hover:to-purple-800">
+                                        <i class="fas fa-eye mr-2"></i>Lihat Detail Lengkap
+                                    </a>
+                                </div>
+                            </div>
                             @endif
                         </div>
-
-                        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                            <div class="info-card p-4 sm:p-5">
-                                <p class="text-xs uppercase tracking-wide text-slate-400 mb-2">Status</p>
-                                @php
-                                    $statusClass = match ($pengajuan->status) {
-                                        'approved' => 'bg-green-100 text-green-800',
-                                        'rejected' => 'bg-red-100 text-red-800',
-                                        'revised' => 'bg-orange-100 text-orange-800',
-                                        default => 'bg-yellow-100 text-yellow-800',
-                                    };
-                                @endphp
-                                <span class="status-pill {{ $statusClass }}">{{ ucfirst($pengajuan->status) }}</span>
-
-                                @if ($pengajuan->status == 'revised' && $pengajuan->admin_note)
-                                    <div class="mt-4 rounded-2xl border border-orange-100 bg-orange-50 p-4">
-                                        <h4 class="text-sm font-semibold text-orange-800 mb-2">Catatan Revisi</h4>
-                                        <p class="text-sm text-slate-700 whitespace-pre-wrap">{{ $pengajuan->admin_note }}
-                                        </p>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
                     </div>
 
-                    <div class="section-card p-5 sm:p-6">
-                        <div class="flex items-center gap-3 mb-6">
-                            <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-100 text-blue-600">
-                                <i class="fas fa-user text-lg"></i>
+                    <div class="section-card p-5 sm:p-6 mt-6">
+                        <div class="section-title">
+                            <div class="section-icon bg-blue-50 text-blue-600">
+                                <i class="fas fa-users"></i>
                             </div>
-                            <div>
-                                <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Peserta</p>
-                                <h2 class="text-base sm:text-lg font-bold text-slate-900">Daftar Calon Peserta Magang</h2>
+                            <div class="section-text">
+                                <p>Peserta</p>
+                                <h2>Daftar Calon Peserta Magang</h2>
                             </div>
                         </div>
 
                         <div class="space-y-4">
                             @foreach ($pengajuan->details as $detail)
-                                <div class="info-card p-6 sm:p-8 rounded-lg shadow-md border border-gray-200">
-                                    <h3 class="text-lg font-bold text-blue-600 mb-4">Calon Peserta Magang {{ $loop->iteration }}</h3>
+                                <div class="info-card p-5 sm:p-6 border-l-4 border-l-blue-400">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h3 class="text-base font-bold text-blue-600">
+                                            <i class="fas fa-user-circle mr-2"></i>Peserta #{{ $loop->iteration }}
+                                        </h3>
+                                    </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div>
-                                            <p class="field-label">Nama</p>
-                                            <p>{{ $detail->nama }}</p>
+                                            <span class="field-label">Nama</span>
+                                            <p class="field-value">{{ $detail->nama }}</p>
                                         </div>
                                         <div>
-                                            <p class="field-label">Jurusan</p>
-                                            <p>{{ $detail->jurusan }}</p>
+                                            <span class="field-label">Jurusan</span>
+                                            <p class="field-value">{{ $detail->jurusan }}</p>
                                         </div>
                                         <div>
-                                            <p class="field-label">Email</p>
-                                            <p>{{ $detail->email }}</p>
+                                            <span class="field-label">Email</span>
+                                            <p class="field-value break-all text-blue-600">{{ $detail->email }}</p>
                                         </div>
                                         <div>
-                                            <p class="field-label">No Telepon</p>
-                                            <p>{{ $detail->no_telp }}</p>
+                                            <span class="field-label">No Telepon</span>
+                                            <p class="field-value">{{ $detail->no_telp }}</p>
                                         </div>
                                         <div>
-                                            <p class="field-label">Jenis Kelamin</p>
-                                            <p>{{ $detail->jenis_kelamin === 'P' ? 'Perempuan' : 'Lelaki' }}</p>
+                                            <span class="field-label">Jenis Kelamin</span>
+                                            <p class="field-value">{{ $detail->jenis_kelamin === 'P' ? 'Perempuan' : 'Lelaki' }}</p>
                                         </div>
                                         <div>
-                                            <p class="field-label">Soft Skill</p>
-                                            <p>{{ $detail->soft_skill ?? '-' }}</p>
+                                            <span class="field-label">Soft Skill</span>
+                                            <p class="field-value">{{ $detail->soft_skill ?? '—' }}</p>
                                         </div>
-                                        <div>
-                                            <p class="field-label">Hard Skill</p>
-                                            <p>{{ $detail->hard_skill ?? '-' }}</p>
+                                        <div class="sm:col-span-2">
+                                            <span class="field-label">Hard Skill</span>
+                                            <p class="field-value">{{ $detail->hard_skill ?? '—' }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -306,9 +456,9 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-start border-t border-slate-100 pt-4">
+                    <div class="flex justify-start gap-3 pt-6 border-t border-slate-100">
                         <a href="{{ route('institusi.pengajuan.index') }}"
-                            class="inline-flex items-center font-semibold text-blue-600 transition hover:text-blue-700">
+                            class="inline-flex items-center px-4 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition">
                             <i class="fas fa-arrow-left mr-2"></i>Kembali
                         </a>
                     </div>

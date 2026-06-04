@@ -338,63 +338,80 @@
                             </div>
                         </div>
                         <div class="description-box">
-                            <p class="text-slate-600 text-sm leading-relaxed whitespace-pre-line">
-                                {{ $lowongan->requirements ?? '-' }}</p>
+                            <p class="text-slate-600 text-sm leading-relaxed whitespace-pre-line">{{ $lowongan->requirements ?? '-' }}</p>
                         </div>
                     </div>
 
                     <hr class="border-slate-100">
 
                     {{-- Informasi Industri --}}
-                    {{-- <div>
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="section-icon bg-emerald-50 text-emerald-600"><i class="fas fa-building"></i></div>
                     <div>
-                        <p class="font-bold text-slate-800 text-sm">Informasi Industri</p>
-                        <p class="text-xs text-slate-400">Informasi perusahaan pengaju lowongan.</p>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="section-icon bg-emerald-50 text-emerald-600"><i class="fas fa-building"></i></div>
+                            <div>
+                                <p class="font-bold text-slate-800 text-sm">Informasi Industri</p>
+                                <p class="text-xs text-slate-400">Informasi perusahaan pengaju lowongan.</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-3">
+                            <div class="detail-box">
+                                <p class="detail-label">Nama Industri</p>
+                                <p class="detail-value">{{ optional($lowongan->industri)->nama_industri ?? '-' }}</p>
+                            </div>
+                            <div class="detail-box">
+                                <p class="detail-label">Bidang Industri</p>
+                                <p class="detail-value">{{ optional($lowongan->industri)->bidang_industri ?? '-' }}</p>
+                            </div>
+                            <div class="detail-box">
+                                <p class="detail-label">Kota / Kabupaten</p>
+                                <p class="detail-value">{{ optional($lowongan->industri)->kota_kabupaten ?? '-' }}</p>
+                            </div>
+                            <div class="detail-box">
+                                <p class="detail-label">Email Industri</p>
+                                <p class="detail-value break-all">{{ optional($lowongan->industri)->email_industri ?? '-' }}</p>
+                            </div>
+                            <div class="detail-box">
+                                <p class="detail-label">Nomor Telepon</p>
+                                <p class="detail-value">{{ optional($lowongan->industri)->nomor_telepon_industri ?? '-' }}</p>
+                            </div>
+                            <div class="detail-box">
+                                <p class="detail-label">NIB</p>
+                                <p class="detail-value">{{ optional($lowongan->industri)->nib ?? '-' }}</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-3">
-                    <div class="detail-box"><p class="detail-label">Nama Industri</p><p class="detail-value">{{ optional($lowongan->industri)->nama_industri ?? '-' }}</p></div>
-                    <div class="detail-box"><p class="detail-label">Bidang Industri</p><p class="detail-value">{{ optional($lowongan->industri)->bidang_industri ?? '-' }}</p></div>
-                    <div class="detail-box"><p class="detail-label">Kota / Kabupaten</p><p class="detail-value">{{ optional($lowongan->industri)->kota_kabupaten ?? '-' }}</p></div>
-                    <div class="detail-box"><p class="detail-label">Email Industri</p><p class="detail-value break-all">{{ optional($lowongan->industri)->email_industri ?? '-' }}</p></div>
-                    <div class="detail-box"><p class="detail-label">Nomor Telepon</p><p class="detail-value">{{ optional($lowongan->industri)->nomor_telepon_industri ?? '-' }}</p></div>
-                    <div class="detail-box"><p class="detail-label">NIB</p><p class="detail-value">{{ optional($lowongan->industri)->nib ?? '-' }}</p></div>
-                </div>
-            </div>
 
-            <hr class="border-slate-100"> --}}
+                    <hr class="border-slate-100">
 
                     {{-- Alamat Industri --}}
-                    {{-- <div>
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="section-icon bg-rose-50 text-rose-600"><i class="fas fa-map-marker-alt"></i></div>
                     <div>
-                        <p class="font-bold text-slate-800 text-sm">Alamat Industri</p>
-                        <p class="text-xs text-slate-400">Lokasi lengkap perusahaan.</p>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="section-icon bg-rose-50 text-rose-600"><i class="fas fa-map-marker-alt"></i></div>
+                            <div>
+                                <p class="font-bold text-slate-800 text-sm">Alamat Industri</p>
+                                <p class="text-xs text-slate-400">Lokasi lengkap perusahaan.</p>
+                            </div>
+                        </div>
+                        <div class="description-box">
+                            <p class="text-slate-600 text-sm leading-relaxed whitespace-pre-line">{{ optional($lowongan->industri)->alamat_industri ?? '-' }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="description-box">
-                    <p class="text-slate-600 text-sm leading-relaxed whitespace-pre-line">{{ optional($lowongan->industri)->alamat_industri ?? '-' }}</p>
-                </div>
-            </div>
 
-            <hr class="border-slate-100"> --}}
+                    <hr class="border-slate-100">
 
                     {{-- Deskripsi Industri --}}
-                    {{-- <div>
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="section-icon bg-violet-50 text-violet-600"><i class="fas fa-circle-info"></i></div>
                     <div>
-                        <p class="font-bold text-slate-800 text-sm">Deskripsi Industri</p>
-                        <p class="text-xs text-slate-400">Gambaran umum perusahaan.</p>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="section-icon bg-violet-50 text-violet-600"><i class="fas fa-circle-info"></i></div>
+                            <div>
+                                <p class="font-bold text-slate-800 text-sm">Deskripsi Industri</p>
+                                <p class="text-xs text-slate-400">Gambaran umum perusahaan.</p>
+                            </div>
+                        </div>
+                        <div class="description-box">
+                            <p class="text-slate-600 text-sm leading-relaxed whitespace-pre-line">{{ optional($lowongan->industri)->deskripsi_industri ?? '-' }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="description-box">
-                    <p class="text-slate-600 text-sm leading-relaxed whitespace-pre-line">{{ optional($lowongan->industri)->deskripsi_industri ?? '-' }}</p>
-                </div>
-            </div> --}}
 
                 </div>
             </div>

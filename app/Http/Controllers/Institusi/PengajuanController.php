@@ -310,7 +310,7 @@ class PengajuanController extends Controller
 
     public function show(int $id, PengajuanWhatsappService $whatsappService)
     {
-        $pengajuan = Pengajuan::with(['details', 'institusi'])
+        $pengajuan = Pengajuan::with(['details', 'institusi', 'lowongan', 'lowongan.industri'])
             ->where('institusi_id', Auth::user()->institusi->id)
             ->findOrFail($id);
 

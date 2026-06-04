@@ -34,7 +34,7 @@ class Pengajuan extends Model
         return $this->belongsTo(Institusi::class);
     }
 
-    public function lowongans()
+    public function lowongan()
     {
         return $this->belongsTo(Lowongan::class);
     }
