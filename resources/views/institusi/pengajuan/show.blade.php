@@ -289,18 +289,52 @@
                                     </div>
                                 </div>
 
-                                <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
-                                    <div class="info-card p-4">
-                                        <span class="field-label">Keperluan</span>
-                                        <p class="field-value">{{ $pengajuan->keperluan }}</p>
+                                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                    {{-- Keperluan --}}
+                                    <div class="pengajuan-info-card bg-blue-50 border border-blue-100 rounded-2xl p-4 flex items-center gap-4">
+                                        <div class="pengajuan-info-icon bg-blue-100 text-blue-600 rounded-2xl w-12 h-12 flex items-center justify-center text-xl flex-shrink-0">
+                                            <i class="fas fa-briefcase"></i>
+                                        </div>
+                                        <div>
+                                            <span class="block text-xs font-bold uppercase tracking-wider text-blue-500 mb-1">Keperluan</span>
+                                            <p class="text-base font-bold text-blue-700 leading-snug">{{ $pengajuan->keperluan }}</p>
+                                        </div>
                                     </div>
-                                    <div class="info-card p-4">
-                                        <span class="field-label">Tanggal Masuk</span>
-                                        <p class="field-value">{{ $pengajuan->start_date }}</p>
+
+                                    {{-- Jumlah Peserta --}}
+                                    <div class="pengajuan-info-card bg-yellow-50 border border-yellow-100 rounded-2xl p-4 flex items-center gap-4">
+                                        <div class="pengajuan-info-icon bg-yellow-100 text-yellow-600 rounded-2xl w-12 h-12 flex items-center justify-center text-xl flex-shrink-0">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                        <div>
+                                            <span class="block text-xs font-bold uppercase tracking-wider text-yellow-600 mb-1">Jumlah Peserta</span>
+                                            <p class="text-base font-bold text-yellow-700 leading-snug">
+                                                <span class="text-2xl font-extrabold">{{ $pengajuan->details->count() }}</span>
+                                                <span class="text-sm font-semibold ml-1">Orang</span>
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div class="info-card p-4">
-                                        <span class="field-label">Tanggal Keluar</span>
-                                        <p class="field-value">{{ $pengajuan->end_date }}</p>
+
+                                    {{-- Tanggal Masuk --}}
+                                    <div class="pengajuan-info-card bg-green-50 border border-green-100 rounded-2xl p-4 flex items-center gap-4">
+                                        <div class="pengajuan-info-icon bg-green-100 text-green-600 rounded-2xl w-12 h-12 flex items-center justify-center text-xl flex-shrink-0">
+                                            <i class="fas fa-calendar-check"></i>
+                                        </div>
+                                        <div>
+                                            <span class="block text-xs font-bold uppercase tracking-wider text-green-600 mb-1">Tanggal Masuk</span>
+                                            <p class="text-base font-bold text-green-700">{{ $pengajuan->start_date }}</p>
+                                        </div>
+                                    </div>
+
+                                    {{-- Tanggal Keluar --}}
+                                    <div class="pengajuan-info-card bg-orange-50 border border-orange-100 rounded-2xl p-4 flex items-center gap-4">
+                                        <div class="pengajuan-info-icon bg-orange-100 text-orange-600 rounded-2xl w-12 h-12 flex items-center justify-center text-xl flex-shrink-0">
+                                            <i class="fas fa-calendar-xmark"></i>
+                                        </div>
+                                        <div>
+                                            <span class="block text-xs font-bold uppercase tracking-wider text-orange-500 mb-1">Tanggal Keluar</span>
+                                            <p class="text-base font-bold text-orange-700">{{ $pengajuan->end_date }}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
