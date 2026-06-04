@@ -1070,7 +1070,7 @@
             </p>
         </div>
 
-        {{-- ── Toolbar: Search + Filter ── --}}
+        {{-- ── Toolbar: Search + Filter + Stats + Nav ── --}}
         <div class="flex flex-wrap items-center gap-3 mb-5 reveal">
 
             {{-- Search --}}
@@ -1103,16 +1103,32 @@
                 </button>
             </div>
 
-            {{-- Stats (right side) --}}
-            <div class="ml-auto hidden sm:flex items-center gap-2 text-xs text-slate-500">
-                <span id="statTotal" class="font-semibold text-slate-700"></span> lowongan •
-                <span id="statDibuka" class="text-green-600 font-semibold"></span> dibuka
+            {{-- Stats + Nav Buttons (right side) --}}
+            <div class="ml-auto flex items-center gap-3">
+                <div class="hidden sm:flex items-center gap-1.5 text-xs text-slate-500">
+                    <span id="statTotal" class="font-semibold text-slate-700"></span> lowongan •
+                    <span id="statDibuka" class="text-green-600 font-semibold"></span> dibuka
+                </div>
+                {{-- Scroll Nav Buttons --}}
+                <button id="btnPrev" onclick="scrollCards(-1)"
+                    class="w-8 h-8 rounded-xl border border-slate-200 bg-white hover:bg-slate-50
+                           flex items-center justify-center text-slate-500 shadow-sm transition
+                           disabled:opacity-40 disabled:cursor-not-allowed">
+                    <i class="fas fa-arrow-left text-xs"></i>
+                </button>
+                <button id="btnNext" onclick="scrollCards(1)"
+                    class="w-8 h-8 rounded-xl border border-slate-200 bg-white hover:bg-slate-50
+                           flex items-center justify-center text-slate-500 shadow-sm transition
+                           disabled:opacity-40 disabled:cursor-not-allowed">
+                    <i class="fas fa-arrow-right text-xs"></i>
+                </button>
             </div>
         </div>
 
-        {{-- ── Cards Grid ── --}}
+        {{-- ── Cards Horizontal Scroll ── --}}
         <div id="lowonganGrid"
-             class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+             class="flex gap-5 overflow-x-auto scroll-smooth pb-3"
+             style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
 
             @foreach($lowongans as $lowongan)
                 @php
@@ -1129,9 +1145,11 @@
                     };
                 @endphp
 
-                <div class="lowongan-card group bg-white rounded-2xl border border-slate-100
+                <div class="lowongan-card group flex-shrink-0 w-72
+                            bg-white rounded-2xl border border-slate-100
                             shadow-sm hover:shadow-md hover:-translate-y-0.5
                             transition-all duration-200 flex flex-col overflow-hidden"
+                     style="scroll-snap-align: start;"
                      data-status="{{ $status }}"
                      data-search="{{ strtolower($lowongan->judul_lowongan . ' ' . $lowongan->posisi_magang . ' ' . $lowongan->divisi) }}">
 
@@ -1250,6 +1268,121 @@
 
     </div>
 </section>
+
+{{-- ===== Styles ===== --}}
+<style>
+    /* Scrollbar tipis & rapi */
+    #lowonganGrid::-webkit-scrollbar {
+        height: 4px;
+    }
+    #lowonganGrid::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 4px;
+    }
+    #lowonganGrid::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+    }
+    #lowonganGrid::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+
+    /* Filter pill styles */
+    .filter-pill {
+        background: white;
+        color: #64748b;
+        border-color: #e2e8f0;
+    }
+    .filter-pill:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+    }
+    .filter-pill.active {
+        background: #eff6ff;
+        color: #1d4ed8;
+        border-color: #bfdbfe;
+    }
+
+    /* Hidden card when filtered */
+    .lowongan-card.hidden-card {
+        display: none;
+    }
+</style>
+
+{{-- ===== Scripts ===== --}}
+<script>
+    /* ── Scroll navigation ── */
+    function scrollCards(dir) {
+        const track = document.getElementById('lowonganGrid');
+        track.scrollBy({ left: dir * 300, behavior: 'smooth' });
+        updateNavButtons();
+    }
+
+    function updateNavButtons() {
+        const track  = document.getElementById('lowonganGrid');
+        const btnPrev = document.getElementById('btnPrev');
+        const btnNext = document.getElementById('btnNext');
+        if (!track || !btnPrev || !btnNext) return;
+
+        setTimeout(() => {
+            btnPrev.disabled = track.scrollLeft <= 0;
+            btnNext.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 1;
+        }, 350);
+    }
+
+    /* ── Filter & Search ── */
+    let activeStatus = 'semua';
+
+    function setStatusFilter(btn, status) {
+        activeStatus = status;
+        document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        filterLowongan();
+    }
+
+    function filterLowongan() {
+        const keyword = (document.getElementById('lowonganSearch')?.value || '').toLowerCase().trim();
+        const cards   = document.querySelectorAll('.lowongan-card');
+        let visible   = 0;
+
+        cards.forEach(card => {
+            const matchStatus  = activeStatus === 'semua' || card.dataset.status === activeStatus;
+            const matchKeyword = !keyword || (card.dataset.search || '').includes(keyword);
+            const show         = matchStatus && matchKeyword;
+
+            card.classList.toggle('hidden-card', !show);
+            if (show) visible++;
+        });
+
+        const emptyState = document.getElementById('emptyState');
+        if (emptyState) emptyState.classList.toggle('hidden', visible > 0);
+
+        updateNavButtons();
+    }
+
+    /* ── Stats ── */
+    function updateStats() {
+        const cards  = document.querySelectorAll('.lowongan-card');
+        const total  = cards.length;
+        const dibuka = [...cards].filter(c => c.dataset.status === 'dibuka').length;
+
+        const elTotal  = document.getElementById('statTotal');
+        const elDibuka = document.getElementById('statDibuka');
+        if (elTotal)  elTotal.textContent  = total;
+        if (elDibuka) elDibuka.textContent = dibuka;
+    }
+
+    /* ── Init ── */
+    document.addEventListener('DOMContentLoaded', () => {
+        updateStats();
+        updateNavButtons();
+
+        const track = document.getElementById('lowonganGrid');
+        if (track) {
+            track.addEventListener('scroll', updateNavButtons, { passive: true });
+        }
+    });
+</script>
 
 {{-- ── Styles ── --}}
 <style>
