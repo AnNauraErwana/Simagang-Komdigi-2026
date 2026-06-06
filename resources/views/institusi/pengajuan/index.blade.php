@@ -1,4 +1,3 @@
-```blade
 @extends('layouts.app')
 
 @section('title', 'Pengajuan Magang - Sistem Magang')
@@ -226,11 +225,6 @@
                         <h1 class="mt-2 text-3xl sm:text-4xl font-extrabold leading-tight">Pengajuan Magang</h1>
                         <p class="mt-3 text-sm sm:text-base text-blue-100/90">Semua pengajuan magang bisa dipantau dan dikelola dengan lebih mudah.</p>
                     </div>
-
-                    <a href="#"
-                        class="inline-flex items-center justify-center rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-blue-700 shadow-lg transition hover:-translate-y-0.5 hover:bg-blue-50">
-                        <i class="fas fa-plus mr-2"></i>Tambah Pengajuan
-                    </a>
                 </div>
             </div>
 
@@ -464,4 +458,3 @@
     </div>
 
 @endsection
-```

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Industri;
 
 use App\Http\Controllers\Controller;
 use App\Models\Industri;
+use App\Models\PengajuanDetail;
 
 class IndustriDashboardController extends Controller
 {
@@ -14,6 +15,8 @@ class IndustriDashboardController extends Controller
         $totalLowongan = 0;
         $totalLowonganAktif = 0;
         $progress = 0;
+        $totalPelamar = 0;
+        $totalPengajuan = 0;
 
         if ($industri) {
 
@@ -22,6 +25,17 @@ class IndustriDashboardController extends Controller
 
             $totalLowonganAktif = $industri->lowongans()
                 ->where('status', 'dibuka')
+                ->count();
+
+            $totalPelamar = PengajuanDetail::whereHas('pengajuan.lowongan', function ($query) use ($industri) {
+                $query->where('industri_id', $industri->id);
+            })->count();
+
+            $totalPengajuan = $industri->lowongans()
+                ->with('pengajuans')
+                ->get()
+                ->pluck('pengajuans')
+                ->flatten()
                 ->count();
 
             // Progress kelengkapan profil
@@ -56,7 +70,9 @@ class IndustriDashboardController extends Controller
             'industri',
             'totalLowongan',
             'totalLowonganAktif',
-            'progress'
+            'progress',
+            'totalPelamar',
+            'totalPengajuan'
         ));
     }
 }

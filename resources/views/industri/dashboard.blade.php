@@ -291,18 +291,6 @@
                         <h1 class="text-2xl lg:text-3xl font-extrabold text-white">
                             {{ $industri->nama_industri ?? 'Industri Belum Diatur' }}
                         </h1>
-
-                        @if ($industri && $industri->status === 'disetujui')
-                            <span class="status-badge badge-approved">
-                                <i class="fas fa-check-circle"></i>
-                                Terverifikasi
-                            </span>
-                        @else
-                            <span class="status-badge badge-pending">
-                                <i class="fas fa-clock"></i>
-                                Menunggu Verifikasi
-                            </span>
-                        @endif
                     </div>
 
                     <p class="text-indigo-100 mt-2 font-medium">
@@ -396,7 +384,7 @@
         @endif
 
         {{-- STATS --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 anim-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 anim-2">
 
             <div class="stats-card stats-blue">
                 <div class="flex items-center justify-between">
@@ -451,15 +439,15 @@
 
                     <div>
                         <p class="text-sm font-semibold text-orange-700">
-                            Pelamar Masuk
+                            Pengajuan Masuk
                         </p>
 
                         <h2 class="text-3xl font-extrabold text-slate-800 mt-2 mono">
-                            {{ $pelamarMasuk ?? '0' }}
+                            {{ $totalPengajuan ?? '0' }}
                         </h2>
 
                         <p class="text-xs text-slate-500 mt-1">
-                            Total pendaftar
+                            Total pengajuan
                         </p>
                     </div>
 
@@ -470,7 +458,7 @@
                 </div>
             </div>
 
-            <div class="stats-card stats-red">
+            {{-- <div class="stats-card stats-red">
                 <div class="flex items-center justify-between">
 
                     <div>
@@ -492,7 +480,7 @@
                     </div>
 
                 </div>
-            </div>
+            </div> --}}
 
         </div>
 
@@ -579,73 +567,7 @@
 
                 </div>
 
-                {{-- AKTIVITAS --}}
-                <div class="panel anim-4">
-
-                    <p class="section-label">
-                        Aktivitas Terbaru
-                    </p>
-
-                    <div>
-
-                        <div class="activity-item">
-
-                            <div class="activity-icon bg-blue-100 text-blue-600">
-                                <i class="fas fa-plus"></i>
-                            </div>
-
-                            <div class="flex-1">
-                                <p class="font-semibold text-slate-800 text-sm">
-                                    Lowongan UI/UX Designer berhasil dipublikasikan
-                                </p>
-
-                                <p class="text-xs text-slate-400 mt-1">
-                                    2 jam yang lalu
-                                </p>
-                            </div>
-
-                        </div>
-
-                        <div class="activity-item">
-
-                            <div class="activity-icon bg-green-100 text-green-600">
-                                <i class="fas fa-user-check"></i>
-                            </div>
-
-                            <div class="flex-1">
-                                <p class="font-semibold text-slate-800 text-sm">
-                                    5 pelamar baru mengajukan magang
-                                </p>
-
-                                <p class="text-xs text-slate-400 mt-1">
-                                    Hari ini
-                                </p>
-                            </div>
-
-                        </div>
-
-                        <div class="activity-item">
-
-                            <div class="activity-icon bg-orange-100 text-orange-600">
-                                <i class="fas fa-pen"></i>
-                            </div>
-
-                            <div class="flex-1">
-                                <p class="font-semibold text-slate-800 text-sm">
-                                    Informasi profil industri diperbarui
-                                </p>
-
-                                <p class="text-xs text-slate-400 mt-1">
-                                    Kemarin
-                                </p>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
+                
             </div>
 
             {{-- RIGHT --}}

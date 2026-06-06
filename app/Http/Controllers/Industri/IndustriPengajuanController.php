@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Industri;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -11,13 +11,11 @@ use App\Services\PengajuanWhatsappService;
 use Illuminate\Support\Facades\DB;
 use App\Models\Lowongan;
 
-class AdminPengajuanMagang extends Controller
+class IndustriPengajuanController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('permission:manage_pengajuan');
-    }
-
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {   
         // KALAU MAU DITAMBAHKAN JUGA UNTUK FULL AKSES:
@@ -27,13 +25,10 @@ class AdminPengajuanMagang extends Controller
         $baseQuery = Pengajuan::with([
             'institusi',
             'lowongan'
-        ]);
-
-        if ($industri) {
-            $baseQuery->whereHas('lowongan.industri', function ($query) {
-                $query->where('nama_industri', 'BBLSDM Komdigi Makassar');
-            });
-        }
+        ])
+        ->whereHas('lowongan', function ($query) use ($industri) {
+            $query->where('industri_id', $industri->id);
+        });
 
         // Filter pencarian
         if (request('search')) {
@@ -72,7 +67,7 @@ class AdminPengajuanMagang extends Controller
         $totalMenunggu = $pengajuanTabel->where('status', 'pending')->count();
         $totalRevisi = $pengajuanTabel->where('status', 'revised')->count();
 
-        return view('admin.pengajuan.index', compact(
+        return view('industri.pengajuan.index', compact(
             'pengajuanTabel',
             'jumlahPeserta',
             'totalPengajuan',
@@ -83,6 +78,25 @@ class AdminPengajuanMagang extends Controller
         ));
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     */
     public function show(int $id, PengajuanWhatsappService $whatsappService)
     {
         $pengajuan = Pengajuan::with(['details', 'institusi', 'lowongan', 'lowongan.industri'])
@@ -90,31 +104,32 @@ class AdminPengajuanMagang extends Controller
 
         $whatsapp = $whatsappService->payloadFor($pengajuan);
 
-        return view('admin.pengajuan.show', compact('pengajuan', 'whatsapp'));
+        return view('industri.pengajuan.show', compact('pengajuan', 'whatsapp'));
     }
 
-    public function destroy(int $id)
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
     {
-        $pengajuan = Pengajuan::findOrFail($id);
-
-        // 🔥 Cek status dulu
-        if ($pengajuan->status !== 'rejected') {
-            return redirect()
-                ->back()
-                ->with('error', 'Pengajuan hanya bisa dihapus jika statusnya rejected.');
-        }
-
-        // Hapus relasi detail dulu
-        $pengajuan->details()->delete();
-
-        // Hapus pengajuan
-        $pengajuan->delete();
-
-        return redirect()
-            ->route('admin.pengajuan.index')
-            ->with('success', 'Pengajuan berhasil dihapus.');
+        //
     }
 
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
 
     public function updateStatus(
         Request $request,
@@ -246,7 +261,7 @@ class AdminPengajuanMagang extends Controller
         }
 
         return redirect()
-            ->route('admin.pengajuan.show', $pengajuan->id)
+            ->route('industri.pengajuan.show', $pengajuan->id)
             ->with('success', $message);
     }
 

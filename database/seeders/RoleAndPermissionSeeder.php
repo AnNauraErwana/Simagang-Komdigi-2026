@@ -53,6 +53,9 @@ class RoleAndPermissionSeeder extends Seeder
             'view_lowongan' => 'Melihat daftar Lowongan Magang',
             'manage_lowongan' => 'Kelola data Lowongan Magang (CRUD)',
 
+            // Verifikasi Lowongan
+            'view_verifikasi_lowongan' => 'Melihat daftar Lowongan Magang untuk diverifikasi',
+
             // Pengajuan Management
             'manage_pengajuan' => 'Kelola Pengajuan Calon Anak Magang (Approve/Reject/Revision)',
 
@@ -148,6 +151,7 @@ class RoleAndPermissionSeeder extends Seeder
         $institusiRole = Role::firstOrCreate(['name' => 'institusi', 'guard_name' => 'web']);
         // Role institusi belum diberi permission khusus
 
+        // INDUSTRI ROLE
         $this->command->info('✅ Roles dan Permissions berhasil dibuat!');
     }
 }

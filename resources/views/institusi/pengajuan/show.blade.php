@@ -351,7 +351,11 @@
                                         </div>
                                     </div>
 
-                                    @if ($pengajuan->status == 'approved')
+                                    @php
+                                        $isKomdigi = $pengajuan->lowongan?->industri?->nama_industri === 'BBLSDM Komdigi Makassar';
+                                    @endphp
+
+                                    @if($isKomdigi && $pengajuan->status === 'approved')
                                         <a href="{{ route('institusi.pengajuan.surat-balasan', $pengajuan) }}" target="_blank"
                                             class="inline-flex items-center justify-center rounded-xl bg-green-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-green-700 hover:shadow-lg whitespace-nowrap">
                                             <i class="fas fa-download mr-2"></i>

@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\AdminMonitoringController;
 use App\Http\Controllers\Admin\AdminReportController;
 use App\Http\Controllers\Admin\AdminLogbookController;
 use App\Http\Controllers\Admin\AdminLowonganController;
+use App\Http\Controllers\Admin\AdminVerifikasiLowonganController;
 use App\Http\Controllers\Api\HolidayController;
 use App\Http\Controllers\Api\InstitutionController;
 use App\Http\Controllers\Intern\MicroSkillController as InternMicroSkillController;
@@ -47,6 +48,12 @@ use App\Http\Controllers\Industri\DaftarAkunController;
 use App\Http\Controllers\Industri\IndustriDashboardController as IndustriDashboardController;
 use App\Http\Controllers\Industri\IndustriProfileController as IndustriProfileController;
 use App\Http\Controllers\Industri\IndustriLowonganController;
+use App\Http\Controllers\Industri\IndustriPengajuanController;
+use App\Http\Controllers\Industri\IndustriInternController;
+use App\Http\Controllers\Industri\IndustriAttendanceController;
+use App\Http\Controllers\Industri\IndustriLogbookController;
+use App\Http\Controllers\Industri\IndustriMicroSkillController;
+use App\Http\Controllers\Industri\IndustriReportController;
 use App\Http\Controllers\PengajuanFileController;
 use App\Http\Controllers\SecureDownloadController;
 use App\Models\Testimonial;
@@ -79,6 +86,8 @@ Route::get('/', function () {
     } 
 
     $lowongans = \App\Models\Lowongan::with('industri')
+        ->where('status_verifikasi', 'disetujui')
+        ->where('status', 'dibuka')
         ->latest()
         ->limit(6)
         ->get();
@@ -89,6 +98,8 @@ Route::get('/', function () {
 Route::get('/daftar-lowongan', function () {
 
     $lowongans = \App\Models\Lowongan::with('industri')
+        ->where('status_verifikasi', 'disetujui')
+        ->where('status', 'dibuka')
         ->latest()
         ->paginate(10);
 
@@ -222,6 +233,52 @@ Route::middleware(['auth', 'industri'])->prefix('industri')->name('industri.')->
     Route::get('/lowongan', [IndustriLowonganController::class, 'index'])->name('lowongan.index');
     Route::get('/lowongan/create', [IndustriLowonganController::class, 'create'])->name('lowongan.create');
     Route::post('/lowongan', [IndustriLowonganController::class, 'store'])->name('lowongan.store');
+
+    // Pengajuan Routes
+    Route::get('/pengajuan', [IndustriPengajuanController::class, 'index'])->name('pengajuan.index');
+    // Route::get('/pengajuan/create', [IndustriPengajuanController::class, 'create'])->name('pengajuan.create');
+    // Route::post('/pengajuan', [IndustriPengajuanController::class, 'store'])->name('pengajuan.store');
+    Route::get('/pengajuan/{id}', [IndustriPengajuanController::class, 'show'])->name('pengajuan.show');
+    Route::put('/pengajuan/{pengajuan}/update-status', [IndustriPengajuanController::class, 'updateStatus'])
+    ->name('pengajuan.update-status');
+    Route::get('/pengajuan/surat-balasan/{pengajuan}', [IndustriPengajuanController::class, 'generateSuratBalasan'])->name('pengajuan.surat-balasan');
+
+    // Kelola Intern Routes
+    Route::get('/intern', [IndustriInternController::class, 'index'])->name('intern.index');
+    Route::get('/intern/create', [IndustriInternController::class, 'create'])->name('intern.create');
+    Route::post('/intern', [IndustriInternController::class, 'store'])->name('intern.store');
+    Route::get('/intern/{intern}', [IndustriInternController::class, 'show'])->name('intern.show'); 
+    Route::get('/intern/{intern}/edit', [IndustriInternController::class, 'edit'])->name('intern.edit');
+    Route::put('/intern/{intern}', [IndustriInternController::class, 'update'])->name('intern.update');
+    Route::delete('/intern/{intern}', [IndustriInternController::class, 'destroy'])->name('intern.destroy');
+
+    // Attendance monitoring for institusi
+    Route::get('/attendance', [IndustriAttendanceController::class, 'index'])->name('attendance.index');
+    Route::get('/attendance/detail/{intern}', [IndustriAttendanceController::class, 'show'])
+        ->name('attendance.show');
+    Route::get('/attendance/photo/{filename}', [IndustriAttendanceController::class, 'servePhoto'])
+        ->where('filename', '[^/\\\\]+')
+        ->name('attendance.photo');
+
+    // Logbook monitoring for institusi
+    Route::get('/logbook', [IndustriLogbookController::class, 'index'])->name('logbook.index');
+    Route::get('/logbook/photo/{filename}', [IndustriLogbookController::class, 'servePhoto'])
+        ->where('filename', '[^/\\\\]+')
+        ->name('logbook.photo');
+    Route::get('/logbook/{logbook}', [IndustriLogbookController::class, 'show'])->name('logbook.show');
+
+    // Mikro skill monitoring for institusi
+    Route::get('/microskill', [IndustriMicroSkillController::class, 'index'])->name('microskill.index');
+    Route::get('/microskill/photo/{filename}', [IndustriMicroSkillController::class, 'servePhoto'])
+        ->where('filename', '[^/\\\\]+')
+        ->name('microskill.photo');
+
+    // Report Monitoring Routes
+    Route::get('/report', [IndustriReportController::class, 'index'])->name('report.index');
+    Route::get('/report/{report}', [IndustriReportController::class, 'show'])->name('report.show');
+    Route::put('/report/{report}/status', [IndustriReportController::class, 'updateStatus'])->name('report.update-status');
+
+    
 });
 
 // File Download Route with access validation per user
@@ -384,6 +441,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('/lowongan/{id}/approve', [AdminLowonganController::class, 'approve'])->name('lowongan.approve');
     Route::patch('/lowongan/{id}/reject', [AdminLowonganController::class, 'reject'])->name('lowongan.reject');
     Route::delete('/lowongan/{id}', [AdminLowonganController::class, 'destroy'])->name('lowongan.destroy');
+
+    //Verifikasi Lowongan Routes
+    Route::get('/verifikasi-lowongan', [AdminVerifikasiLowonganController::class, 'index'])->name('verifikasi.index');
+    Route::get('/verifikasi-lowongan/{id}', [AdminVerifikasiLowonganController::class, 'show'])->name('verifikasi.show');
+    Route::patch('/verifikasi-lowongan/{id}/approve', [AdminVerifikasiLowonganController::class, 'approve'])->name('verifikasi.approve');
+    Route::patch('/verifikasi-lowongan/{id}/reject', [AdminVerifikasiLowonganController::class, 'reject'])->name('verifikasi.reject'); 
 
 });
 

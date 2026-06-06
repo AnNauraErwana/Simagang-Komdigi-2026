@@ -243,7 +243,7 @@
                             </div>
                         </div>
 
-                        <div x-data="{ open: {{ request()->routeIs('admin.lowongan.*','admin.pengajuan.*', 'admin.attendance.*', 'admin.logbook.*', 'admin.microskill.*') ? 'true' : 'false' }} }" class="mt-1">
+                        <div x-data="{ open: {{ request()->routeIs('admin.lowongan.*','admin.verifikasi.*','admin.pengajuan.*', 'admin.attendance.*', 'admin.logbook.*', 'admin.microskill.*') ? 'true' : 'false' }} }" class="mt-1">
                             <button type="button" @click="open = !open" class="{{ request()->routeIs('admin.lowongan.*','admin.pengajuan.*', 'admin.attendance.*', 'admin.logbook.*', 'admin.microskill.*') ? 'bg-blue-50 border-r-4 border-blue-500 text-blue-700' : 'text-gray-600 hover:bg-gray-50' }} w-full flex items-center justify-between px-4 py-3 text-sm font-medium">
                                 <span class="flex items-center">
                                     <i class="fas fa-briefcase w-5 mr-3"></i>
@@ -258,6 +258,13 @@
                                 <a href="{{ route('admin.lowongan.index') }}" class="{{ request()->routeIs('admin.lowongan.*') ? 'text-blue-700 bg-blue-50' : 'text-gray-500 hover:bg-gray-100' }} flex items-center px-4 py-2.5 text-sm font-medium">
                                     <i class="fas fa-briefcase w-4 mr-3 text-xs"></i>
                                     Lowongan
+                                </a>
+                                @endcan
+
+                                @can('manage_verifikasi_lowongan')
+                                <a href="{{ route('admin.verifikasi.index') }}" class="{{ request()->routeIs('admin.verifikasi.*') ? 'text-blue-700 bg-blue-50' : 'text-gray-500 hover:bg-gray-100' }} flex items-center px-4 py-2.5 text-sm font-medium">
+                                    <i class="fas fa-briefcase w-4 mr-3 text-xs"></i>
+                                    Verifikasi Lowongan
                                 </a>
                                 @endcan
 
@@ -399,6 +406,50 @@
                             <i class="fas fa-briefcase w-5 mr-3"></i>
                             Lowongan Magang
                         </a>
+                        <a href="{{ route('industri.pengajuan.index') }}" class="{{ request()->routeIs('industri.pengajuan.index') ? 'bg-blue-50 border-r-4 border-blue-500 text-blue-700' : 'text-gray-600 hover:bg-gray-50' }} flex items-center px-4 py-3 text-sm font-medium">
+                            <i class="fas fa-file-alt w-5 mr-3"></i>
+                            Pengajuan Magang
+                        </a>
+                        <div x-data="{ open: {{ request()->routeIs('industri.intern.*', 'industri.attendance.*', 'industri.logbook.*', 'industri.microskill.*', 'industri.report*') ? 'true' : 'false' }} }">
+                                    
+                                    {{-- Header Dropdown --}}
+                                    <button @click="open = !open"
+                                        class="{{ request()->routeIs('industri.intern.*', 'industri.attendance.*', 'industri.logbook.*', 'industri.microskill.*', 'industri.report*') ? 'bg-blue-50 border-r-4 border-blue-500 text-blue-700' : 'text-gray-600 hover:bg-gray-50' }} w-full flex items-center justify-between px-4 py-3 text-sm font-medium">
+                                        <span class="flex items-center">
+                                            <i class="fas fa-chart-line w-5 mr-3"></i>
+                                            Monitoring
+                                        </span>
+                                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                                    </button>
+
+                                    {{-- Sub Menu --}}
+                                    <div x-show="open" x-transition class="bg-gray-50 border-l-4 border-blue-200 ml-4">
+                                        <a href="{{ route('industri.intern.index') }}" class="{{ request()->routeIs('industri.intern.index') ? 'bg-blue-50 border-r-4 border-blue-500 text-blue-700' : 'text-gray-600 hover:bg-gray-50' }} flex items-center px-4 py-3 text-sm font-medium">
+                                            <i class="fas fa-users w-5 mr-3"></i>
+                                            Peserta Magang
+                                        </a>
+                                        <a href="{{ route('industri.attendance.index') }}"
+                                            class="{{ request()->routeIs('industri.attendance.*') ? 'text-blue-700 bg-blue-50' : 'text-gray-500 hover:bg-gray-100' }} flex items-center px-4 py-2.5 text-sm font-medium">
+                                            <i class="fas fa-clipboard-check w-4 mr-3 text-xs"></i>
+                                            Absensi
+                                        </a>
+                                        <a href="{{ route('industri.logbook.index') }}"
+                                            class="{{ request()->routeIs('industri.logbook.*') ? 'text-blue-700 bg-blue-50' : 'text-gray-500 hover:bg-gray-100' }} flex items-center px-4 py-2.5 text-sm font-medium">
+                                            <i class="fas fa-book w-4 mr-3 text-xs"></i>
+                                            Logbook
+                                        </a>
+                                        <a href="{{ route('industri.microskill.index') }}"
+                                            class="{{ request()->routeIs('industri.microskill.*') ? 'text-blue-700 bg-blue-50' : 'text-gray-500 hover:bg-gray-100' }} flex items-center px-4 py-2.5 text-sm font-medium">
+                                            <i class="fas fa-graduation-cap w-4 mr-3 text-xs"></i>
+                                            Mikro Skill
+                                        </a>
+                                        <a href="{{ route('industri.report.index') }}"
+                                            class="{{ request()->routeIs('industri.certificate.*') ? 'text-blue-700 bg-blue-50' : 'text-gray-500 hover:bg-gray-100' }} flex items-center px-4 py-2.5 text-sm font-medium">
+                                            <i class="fas fa-certificate w-4 mr-3 text-xs"></i>
+                                            Laporan Akhir
+                                        </a>
+                                    </div>
+                                </div>
                     @else
                         <a href="{{ route('intern.dashboard') }}" class="{{ request()->routeIs('intern.dashboard') ? 'bg-blue-50 border-r-4 border-blue-500 text-blue-700' : 'text-gray-600 hover:bg-gray-50' }} flex items-center px-4 py-3 text-sm font-medium">
                             <i class="fas fa-home w-5 mr-3"></i>
@@ -604,6 +655,12 @@
                                             Lowongan
                                         </a>
                                         @endcan
+                                        @can('manage_verifikasi_lowongan')
+                                        <a href="{{ route('admin.verifikasi.index') }}" class="{{ request()->routeIs('admin.verifikasi.*') ? 'text-blue-700 bg-blue-50' : 'text-gray-500 hover:bg-gray-100' }} flex items-center px-4 py-2.5 text-sm font-medium">
+                                            <i class="fas fa-briefcase w-4 mr-3 text-xs"></i>
+                                            Verifikasi Lowongan
+                                        </a>
+                                        @endcan
                                         @can('manage_pengajuan')
                                         <a href="{{ route('admin.pengajuan.index') }}" class="{{ request()->routeIs('admin.pengajuan.*') ? 'text-blue-700 bg-blue-50' : 'text-gray-500 hover:bg-gray-100' }} flex items-center px-4 py-2.5 text-sm font-medium">
                                             <i class="fas fa-file-contract w-4 mr-3 text-xs"></i>
@@ -739,6 +796,51 @@
                                     <i class="fas fa-briefcase w-5 mr-3"></i>
                                     Lowongan Magang
                                 </a>
+                                <a href="{{ route('industri.pengajuan.index') }}" class="{{ request()->routeIs('industri.pengajuan.index') ? 'bg-blue-50 border-r-4 border-blue-500 text-blue-700' : 'text-gray-600' }} flex items-center px-4 py-3 text-sm font-medium">
+                                    <i class="fas fa-file-alt w-5 mr-3"></i>
+                                    Pengajuan Magang
+                                </a>
+                                <div x-data="{ open: {{ request()->routeIs('industri.intern.*', 'industri.attendance.*', 'industri.logbook.*', 'industri.microskill.*', 'industri.report.*') ? 'true' : 'false' }} }">
+                                    
+                                    {{-- Header Dropdown --}}
+                                    <button @click="open = !open"
+                                        class="{{ request()->routeIs('industri.intern.*', 'industri.attendance.*', 'industri.logbook.*', 'industri.microskill.*', 'industri.report.*') ? 'bg-blue-50 border-r-4 border-blue-500 text-blue-700' : 'text-gray-600 hover:bg-gray-50' }} w-full flex items-center justify-between px-4 py-3 text-sm font-medium">
+                                        <span class="flex items-center">
+                                            <i class="fas fa-chart-line w-5 mr-3"></i>
+                                            Monitoring
+                                        </span>
+                                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                                    </button>
+
+                                    {{-- Sub Menu --}}
+                                    <div x-show="open" x-transition class="bg-gray-50 border-l-4 border-blue-200 ml-4">
+                                        <a href="{{ route('industri.intern.index') }}"
+                                            class="{{ request()->routeIs('industri.intern.index') ? 'text-blue-700 bg-blue-50' : 'text-gray-500 hover:bg-gray-100' }} flex items-center px-4 py-2.5 text-sm font-medium">
+                                            <i class="fas fa-users w-4 mr-3 text-xs"></i>
+                                            Peserta Magang
+                                        </a>
+                                        <a href="{{ route('industri.attendance.index') }}"
+                                            class="{{ request()->routeIs('industri.attendance.*') ? 'text-blue-700 bg-blue-50' : 'text-gray-500 hover:bg-gray-100' }} flex items-center px-4 py-2.5 text-sm font-medium">
+                                            <i class="fas fa-clipboard-check w-4 mr-3 text-xs"></i>
+                                            Absensi
+                                        </a>
+                                        <a href="{{ route('industri.logbook.index') }}"
+                                            class="{{ request()->routeIs('industri.logbook.*') ? 'text-blue-700 bg-blue-50' : 'text-gray-500 hover:bg-gray-100' }} flex items-center px-4 py-2.5 text-sm font-medium">
+                                            <i class="fas fa-book w-4 mr-3 text-xs"></i>
+                                            Logbook
+                                        </a>
+                                        <a href="{{ route('industri.microskill.index') }}"
+                                            class="{{ request()->routeIs('industri.microskill.*') ? 'text-blue-700 bg-blue-50' : 'text-gray-500 hover:bg-gray-100' }} flex items-center px-4 py-2.5 text-sm font-medium">
+                                            <i class="fas fa-graduation-cap w-4 mr-3 text-xs"></i>
+                                            Mikro Skill
+                                        </a>
+                                        <a href="{{ route('industri.report.index') }}"
+                                            class="{{ request()->routeIs('industri.report.*') ? 'text-blue-700 bg-blue-50' : 'text-gray-500 hover:bg-gray-100' }} flex items-center px-4 py-2.5 text-sm font-medium">
+                                            <i class="fas fa-certificate w-4 mr-3 text-xs"></i>
+                                            Laporan Akhir
+                                        </a>
+                                    </div>
+                                </div>
                             @else
                                 <a href="{{ route('intern.dashboard') }}" class="{{ request()->routeIs('intern.dashboard') ? 'bg-blue-50 border-r-4 border-blue-500 text-blue-700' : 'text-gray-600' }} flex items-center px-4 py-3 text-sm font-medium">
                                     <i class="fas fa-home w-5 mr-3"></i>

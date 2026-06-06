@@ -1,28 +1,34 @@
 <?php
 
-namespace App\Http\Controllers\Institusi;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Industri;
 use App\Models\Lowongan;
+use App\Models\Industri;
+use App\Models\Team;
 
-class LowonganController extends Controller
+class AdminVerifikasiLowonganController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
+        $industri = auth()->user()->industri;
+
         $query = Lowongan::with('industri')
-            ->where('status_verifikasi', 'disetujui')
+            ->whereHas('industri', function ($q) {
+                $q->where('nama_industri', '!=', 'BBLSDM Komdigi Makassar');
+            })
             ->orderByRaw("
                 CASE
-                    WHEN status = 'dibuka' THEN 1
-                    ELSE 2
+                    WHEN status_verifikasi = 'pending' THEN 1
+                    WHEN status_verifikasi = 'ditolak' THEN 2
+                    WHEN status_verifikasi = 'disetujui' THEN 3
+                    ELSE 4
                 END
-            ")
-            ->orderByDesc('updated_at');
+            ");
 
         // search
         if ($request->filled('search')) {
@@ -32,6 +38,7 @@ class LowonganController extends Controller
                 $q->where('judul_lowongan', 'like', '%' . $search . '%')
                     ->orWhere('posisi_magang', 'like', '%' . $search . '%')
                     ->orWhere('divisi', 'like', '%' . $search . '%')
+                    ->orWhere('fasilitas', 'like', '%' . $search . '%')
                     ->orWhereHas('industri', function ($industri) use ($search) {
                         $industri->where('nama_industri', 'like', '%' . $search . '%');
                     });
@@ -56,13 +63,19 @@ class LowonganController extends Controller
         }
 
         // data statistik
-        $totalLowongan = Lowongan::count();
+        $lowonganIndustri = Lowongan::with('industri')
+            ->whereHas('industri', function ($q) {
+                $q->where('nama_industri', '!=', 'BBLSDM Komdigi Makassar');
+            })
+            ->get();
 
-        $totalPending = Lowongan::where('status_verifikasi', 'pending')->count();
+        $totalLowongan = $lowonganIndustri->count();
 
-        $totalApprove = Lowongan::where('status_verifikasi', 'disetujui')->count();
+        $totalPending = $lowonganIndustri->where('status_verifikasi', 'pending')->count();
 
-        $totalTolak = Lowongan::where('status_verifikasi', 'ditolak')->count();
+        $totalApprove = $lowonganIndustri->where('status_verifikasi', 'disetujui')->count();
+
+        $totalTolak = $lowonganIndustri->where('status_verifikasi', 'ditolak')->count();
 
         // data filter dropdown
         $perusahaans = Industri::orderBy('nama_industri')->get();
@@ -78,7 +91,7 @@ class LowonganController extends Controller
             ->paginate(10)
             ->appends(request()->query());
 
-        return view('institusi.lowongan.index', compact(
+        return view('admin.verifikasi.index', compact(
             'lowongans',
             'totalLowongan',
             'totalPending',
@@ -113,7 +126,7 @@ class LowonganController extends Controller
         $lowongan = Lowongan::with('industri')
         ->findOrFail($id);
 
-        return view('institusi.lowongan.show', compact('lowongan'));
+        return view('admin.verifikasi.show', compact('lowongan'));
     }
 
     /**
@@ -138,5 +151,31 @@ class LowonganController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function approve(string $id)
+    {
+        $lowongan = Lowongan::findOrFail($id);
+
+        $lowongan->update([
+            'status_verifikasi' => 'disetujui',
+        ]);
+
+        return redirect()
+            ->route('admin.verifikasi.index')
+            ->with('success', 'Lowongan berhasil disetujui.');
+    }
+
+    public function reject(string $id)
+    {
+        $lowongan = Lowongan::findOrFail($id);
+
+        $lowongan->update([
+            'status_verifikasi' => 'ditolak',
+        ]);
+
+        return redirect()
+            ->route('admin.verifikasi.index')
+            ->with('success', 'Lowongan berhasil ditolak.');
     }
 }

@@ -43,6 +43,21 @@ class LogbookPolicy
                 : false;
         }
 
+        if ($user->isIndustri()) {
+            $industriId = optional($user->industri)->id;
+
+            return $industriId
+                ? DB::table('interns')
+                    ->join('users', 'users.id', '=', 'interns.user_id')
+                    ->join('pengajuan_details', 'pengajuan_details.email', '=', 'users.email')
+                    ->join('pengajuans', 'pengajuans.id', '=', 'pengajuan_details.pengajuan_id')
+                    ->join('lowongans', 'lowongans.id', '=', 'pengajuans.lowongan_id')
+                    ->where('lowongans.industri_id', $industriId)
+                    ->where('interns.id', $logbook->intern_id)
+                    ->exists()
+                : false;
+        }
+
         return false;
     }
 

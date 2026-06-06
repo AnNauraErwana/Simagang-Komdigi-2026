@@ -368,19 +368,13 @@
                                             Divisi
                                         </label>
 
-                                        <select name="divisi" class="form-input">
-                                            <option value="" {{ old('divisi') == '' ? 'selected' : '' }}>Pilih Divisi
-                                            </option>
-                                            @if (isset($teams) && $teams->count())
-                                                @foreach ($teams as $team)
-                                                    <option value="{{ $team->name }}"
-                                                        {{ old('divisi') == $team->name ? 'selected' : '' }}>
-                                                        {{ $team->name }}</option>
-                                                @endforeach
-                                            @else
-                                                <option disabled>Tidak ada tim terdaftar</option>
-                                            @endif
-                                        </select>
+                                        <input
+                                            type="text"
+                                            name="divisi"
+                                            class="form-input"
+                                            placeholder="Masukkan nama divisi"
+                                            value="{{ old('divisi') }}"
+>
                                     </div>
 
                                 </div>
@@ -455,7 +449,7 @@
                                         </h2>
 
                                         <p class="section-subtitle">
-                                            Tentukan kuota, durasi, status, dan fasilitas yang akan didapatkan peserta.
+                                            Tentukan kuota, status, dan fasilitas yang akan didapatkan peserta.
                                         </p>
                                     </div>
 
@@ -472,14 +466,14 @@
                                             placeholder="0" class="form-input">
                                     </div>
 
-                                    <div>
+                                    {{-- <div>
                                         <label class="form-label">
                                             Durasi Magang
                                         </label>
 
                                         <input type="text" name="durasi_magang" value="{{ old('durasi_magang') }}"
                                             placeholder="Contoh: 3 Bulan" class="form-input">
-                                    </div>
+                                    </div> --}}
 
                                     <div>
                                         <label class="form-label">

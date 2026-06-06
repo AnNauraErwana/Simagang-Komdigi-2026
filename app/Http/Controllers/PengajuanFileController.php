@@ -43,6 +43,10 @@ class PengajuanFileController extends Controller
             return optional($user->institusi)->id === $pengajuan->institusi_id;
         }
 
+        if ($user->isIndustri()) {
+            return optional($user->industri)->id === $pengajuan->lowongan->industri_id;
+        }
+
         return false;
     }
 

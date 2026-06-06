@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Lowongan Magang')
+@section('title', 'Verifikasi Lowongan')
 
 @push('styles')
 <style>
@@ -44,6 +44,29 @@
         bottom: -70px; left: -50px;
     }
 
+    .stats-card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 1.25rem;
+        border: 1px solid #eef2ff;
+        box-shadow: 0 8px 24px rgba(15,23,42,.05);
+        transition: .25s ease;
+    }
+
+    .stats-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 14px 30px rgba(15,23,42,.08);
+    }
+
+    .stats-icon {
+        width: 52px; height: 52px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+
     .filter-card {
         background: #fff;
         border-radius: 24px;
@@ -74,6 +97,7 @@
 
     /* ── Lowongan Card ── */
     .lowongan-card {
+        position: relative;
         background: #fff;
         border-radius: 24px;
         padding: 1.4rem;
@@ -83,7 +107,6 @@
         display: flex;
         flex-direction: column;
         min-height: 220px;
-        position: relative;
     }
 
     .lowongan-card:hover {
@@ -92,7 +115,27 @@
         border-color: #c7d7f5;
     }
 
-    /* status badge */
+    /* bookmark icon top-right */
+    .card-bookmark {
+        position: absolute;
+        top: 1.1rem;
+        right: 1.1rem;
+        width: 32px; height: 32px;
+        border-radius: 8px;
+        border: 1.5px solid #e2e8f0;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+        font-size: .8rem;
+        cursor: pointer;
+        transition: .2s;
+    }
+
+    .card-bookmark:hover { border-color: #4f46e5; color: #4f46e5; }
+
+    /* status badge top-left */
     .status-badge {
         display: inline-flex;
         align-items: center;
@@ -109,10 +152,10 @@
     .badge-red   { background: #fee2e2; color: #b91c1c; }
     .badge-amber { background: #fef9c3; color: #a16207; }
 
-    /* title */
+    /* main title area */
     .card-title {
-        margin-top: .75rem;
-        font-size: 1.2rem;
+        margin-top: .9rem;
+        font-size: 1.25rem;
         font-weight: 800;
         color: #0f172a;
         line-height: 1.3;
@@ -138,7 +181,7 @@
 
     .meta-chip i { font-size: .6rem; color: #94a3b8; }
 
-    /* card footer */
+    /* ── Card footer ── */
     .card-footer {
         display: flex;
         align-items: center;
@@ -146,14 +189,12 @@
         margin-top: 1.2rem;
         padding-top: .9rem;
         border-top: 1px solid #f1f5f9;
-        gap: .75rem;
     }
 
     .card-company {
         display: flex;
         align-items: center;
         gap: .6rem;
-        min-width: 0;
     }
 
     .company-logo {
@@ -171,10 +212,10 @@
         font-size: .75rem;
         font-weight: 700;
         color: #334155;
+        max-width: 130px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 130px;
     }
 
     .company-sub {
@@ -183,14 +224,7 @@
         font-weight: 500;
     }
 
-    /* footer action buttons */
-    .card-actions {
-        display: flex;
-        align-items: center;
-        gap: .5rem;
-        flex-shrink: 0;
-    }
-
+    /* View button */
     .btn-view {
         height: 34px;
         padding: 0 1rem;
@@ -210,26 +244,6 @@
     }
 
     .btn-view:hover { background: #4f46e5; color: #fff; text-decoration: none; }
-
-    .btn-ajukan {
-        height: 34px;
-        padding: 0 1rem;
-        border-radius: 10px;
-        background: #dcfce7;
-        color: #15803d;
-        font-size: .75rem;
-        font-weight: 700;
-        display: inline-flex;
-        align-items: center;
-        gap: .35rem;
-        text-decoration: none;
-        border: none;
-        cursor: pointer;
-        transition: .2s;
-        white-space: nowrap;
-    }
-
-    .btn-ajukan:hover { background: #16a34a; color: #fff; text-decoration: none; }
 
     /* filter button */
     .btn-action {
@@ -278,20 +292,56 @@
             <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                 <div class="max-w-2xl">
                     <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-sm font-semibold text-blue-100 backdrop-blur">
-                        <i class="fas fa-briefcase"></i>
-                        Lowongan Magang
+                        <i class="fas fa-shield-check"></i>
+                        Dashboard Verifikasi
                     </div>
                     <h1 class="mt-4 text-3xl lg:text-4xl font-extrabold text-white leading-tight">
-                        Ajukan Peserta Magang ke Lowongan yang Tersedia
+                        Verifikasi Lowongan Industri Mitra
                     </h1>
                     <p class="mt-2 text-blue-100 leading-relaxed text-sm">
-                        Pilih lowongan magang dari perusahaan mitra dan ajukan peserta magang
-                        secara mudah, terstruktur, dan transparan melalui sistem.
+                        Tinjau dan verifikasi lowongan magang yang diajukan oleh perusahaan,
+                        instansi, dan organisasi mitra.
                     </p>
                 </div>
-                <div class="bg-white/10 backdrop-blur rounded-2xl p-5 text-center flex-shrink-0">
-                    <p class="text-sm text-blue-100">Total Lowongan</p>
-                    <h2 class="mt-1 text-4xl font-extrabold text-white">{{ $totalLowongan }}</h2>
+            </div>
+        </div>
+
+        {{-- ── STATS ── --}}
+        <div class="grid grid-cols-2 xl:grid-cols-4 gap-4">
+            <div class="stats-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500">Total Lowongan</p>
+                        <h2 class="mt-1 text-2xl font-extrabold text-slate-800">{{ $totalLowongan }}</h2>
+                    </div>
+                    <div class="stats-icon bg-blue-100 text-blue-700"><i class="fas fa-briefcase"></i></div>
+                </div>
+            </div>
+            <div class="stats-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500">Pending</p>
+                        <h2 class="mt-1 text-2xl font-extrabold text-yellow-500">{{ $totalPending }}</h2>
+                    </div>
+                    <div class="stats-icon bg-yellow-100 text-yellow-700"><i class="fas fa-clock"></i></div>
+                </div>
+            </div>
+            <div class="stats-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500">Disetujui</p>
+                        <h2 class="mt-1 text-2xl font-extrabold text-green-600">{{ $totalApprove }}</h2>
+                    </div>
+                    <div class="stats-icon bg-green-100 text-green-700"><i class="fas fa-check-circle"></i></div>
+                </div>
+            </div>
+            <div class="stats-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500">Ditolak</p>
+                        <h2 class="mt-1 text-2xl font-extrabold text-red-600">{{ $totalTolak }}</h2>
+                    </div>
+                    <div class="stats-icon bg-red-100 text-red-700"><i class="fas fa-times-circle"></i></div>
                 </div>
             </div>
         </div>
@@ -326,12 +376,20 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="w-full sm:w-[160px]">
+                        <select name="status" class="filter-select">
+                            <option value="">Semua Status</option>
+                            <option value="pending"   {{ request('status') == 'pending'   ? 'selected' : '' }}>Pending</option>
+                            <option value="disetujui" {{ request('status') == 'disetujui' ? 'selected' : '' }}>Disetujui</option>
+                            <option value="ditolak"   {{ request('status') == 'ditolak'   ? 'selected' : '' }}>Ditolak</option>
+                        </select>
+                    </div>
                     <div class="flex items-center gap-2 w-full sm:w-auto">
                         <button type="submit" class="btn-action btn-primary min-w-[120px]">
                             <i class="fas fa-search"></i> Filter
                         </button>
                         @if(request()->filled('search') || request()->filled('status') || request()->filled('perusahaan') || request()->filled('divisi'))
-                            <a href="{{ route('institusi.lowongan.index') }}"
+                            <a href="{{ route('admin.verifikasi.index') }}"
                                class="btn-action bg-slate-100 hover:bg-slate-200 text-slate-700 min-w-[100px]">
                                 <i class="fas fa-rotate-left"></i> Reset
                             </a>
@@ -350,18 +408,18 @@
                         ? asset('storage/' . $lowongan->industri->logo_industri)
                         : 'https://ui-avatars.com/api/?name=' . urlencode(optional($lowongan->industri)->nama_industri ?? 'I') . '&background=4f46e5&color=fff&size=64';
 
-                    $status = $lowongan->status ?? 'dibuka';
+                    $status = $lowongan->status_verifikasi ?? 'pending';
 
                     $badgeClass = match($status) {
-                        'dibuka'  => 'badge-green',
-                        'ditutup' => 'badge-red',
-                        default   => 'badge-amber',
+                        'disetujui' => 'badge-green',
+                        'ditolak'   => 'badge-red',
+                        default     => 'badge-amber',
                     };
 
                     $badgeIcon = match($status) {
-                        'dibuka'  => 'fa-check-circle',
-                        'ditutup' => 'fa-times-circle',
-                        default   => 'fa-clock',
+                        'disetujui' => 'fa-check-circle',
+                        'ditolak'   => 'fa-times-circle',
+                        default     => 'fa-clock',
                     };
                 @endphp
 
@@ -416,16 +474,9 @@
                             </div>
                         </div>
 
-                        <div class="card-actions">
-                            <a href="{{ route('institusi.lowongan.show', $lowongan->id) }}" class="btn-view">
-                                Detail
-                            </a>
-                            {{-- @if($lowongan->status === 'dibuka')
-                                <a href="{{ route('institusi.pengajuan.create', $lowongan->id) }}" class="btn-ajukan">
-                                    <i class="fas fa-paper-plane"></i> Ajukan
-                                </a>
-                            @endif --}}
-                        </div>
+                        <a href="{{ route('admin.verifikasi.show', $lowongan->id) }}" class="btn-view">
+                            View
+                        </a>
                     </div>
 
                 </div>
@@ -436,10 +487,9 @@
                         <div class="w-24 h-24 mx-auto rounded-full bg-slate-100 flex items-center justify-center">
                             <i class="fas fa-briefcase text-4xl text-slate-300"></i>
                         </div>
-                        <h3 class="mt-6 text-xl font-extrabold text-slate-700">Tidak Ada Lowongan</h3>
+                        <h3 class="mt-6 text-xl font-extrabold text-slate-700">Belum Ada Lowongan Magang</h3>
                         <p class="mt-2 text-slate-500 max-w-lg mx-auto text-sm leading-relaxed">
-                            Saat ini belum ada data lowongan yang sesuai dengan filter
-                            atau belum ada pengajuan lowongan magang.
+                            Belum ditemukan lowongan magang yang sesuai dengan filter yang dipilih.
                         </p>
                     </div>
                 </div>
@@ -454,4 +504,47 @@
 
     </div>
 </div>
+
+{{-- ── MODAL HAPUS ── --}}
+<div x-data="{ showDeleteModal: false, deleteUrl: '', jobTitle: '' }"
+     @open-delete-modal-lowongan.window="showDeleteModal = true; deleteUrl = $event.detail.url; jobTitle = $event.detail.title">
+
+    <div x-show="showDeleteModal" style="display:none;"
+         class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900 bg-opacity-50 backdrop-blur-sm"
+         x-transition.opacity>
+
+        <div @click.away="showDeleteModal = false"
+             class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6"
+             x-show="showDeleteModal" x-transition.scale.origin.bottom>
+
+            <div class="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
+                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+            </div>
+
+            <h3 class="text-xl font-bold text-center text-gray-900 mb-2">Konfirmasi Hapus</h3>
+
+            <p class="text-center text-gray-600 mb-6">
+                Apakah Anda yakin ingin menghapus lowongan
+                <strong x-text="jobTitle"></strong>?
+                Tindakan ini tidak dapat dibatalkan.
+            </p>
+
+            <div class="flex justify-center gap-3">
+                <button type="button" @click="showDeleteModal = false"
+                    class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
+                    Batal
+                </button>
+                <form :action="deleteUrl" method="POST" class="inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit"
+                        class="px-5 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-xl transition-colors flex items-center gap-2">
+                        <i class="fas fa-trash"></i> Ya, Hapus
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
