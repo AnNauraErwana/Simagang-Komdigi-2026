@@ -225,12 +225,12 @@
                 {{-- HEADER --}}
                 <div class="p-6 border-b border-slate-100 flex flex-col lg:flex-row items-start gap-5">
                     <div class="logo-wrapper">
-                        <img src="{{ asset('storage/vendor/logo_komdigi.jpeg') }}" alt="Logo Industri">
+                        <img src="{{ $logo }}" alt="Logo Industri">
                     </div>
                     <div class="flex-1">
                         <h2 class="text-xl font-bold text-slate-800">{{ $lowongan->judul_lowongan ?? '-' }}</h2>
                         <p class="mt-1 text-slate-500 text-sm">
-                            <i class="fas fa-building mr-1"></i>BBLSDM Komdigi Makassar
+                            <i class="fas fa-building mr-1"></i>{{ optional($lowongan->industri)->nama_industri ?? '-' }}
                         </p>
                     </div>
                     @if ($lowongan->status === 'dibuka')

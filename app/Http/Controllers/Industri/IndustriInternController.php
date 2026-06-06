@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Industri;
 
 use App\Http\Controllers\Controller;
 use App\Models\Intern;
@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Team;
 use App\Models\Institusi;
 use App\Models\Industri;
+use App\Models\Pengajuan;
 use App\Models\PengajuanDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -16,76 +17,61 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
-class AdminInternController extends Controller
+
+class IndustriInternController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('permission:manage_interns');
-    }
 
     public function index(Request $request)
     {
-        // Build base query and apply common filters (except is_active)
-        $baseQuery = Intern::with(['user', 'mentor', 'team']);
+        $industriId = auth()->user()->industri->id;
+
+        $baseQuery = Intern::with(['user'])
+            ->whereHas('pengajuanDetail.pengajuan.lowongan', function ($query) use ($industriId) {
+                $query->where('industri_id', $industriId);
+            });
 
         if ($request->filled('search')) {
             $baseQuery->where('name', 'like', '%' . $request->search . '%');
         }
 
-        if ($request->filled('team_id')) {
-            $baseQuery->where('team_id', $request->team_id);
-        }
-
-        if ($request->filled('mentor_id')) {
-            $baseQuery->where('mentor_id', $request->mentor_id);
-        }
-
-        // Active interns (is_active = true)
         $activeInterns = (clone $baseQuery)
             ->where('is_active', true)
-            ->orderByDesc('created_at')
-            ->paginate(15, ['*'], 'active_page')
-            ->withQueryString();
+            ->latest()
+            ->paginate(15, ['*'], 'active_page');
 
-        // Alumni / inactive interns (is_active = false)
         $alumniInterns = (clone $baseQuery)
             ->where('is_active', false)
-            ->orderByDesc('created_at')
-            ->paginate(15, ['*'], 'alumni_page')
-            ->withQueryString();
-        $mentors = Mentor::orderByDesc('created_at')->get();
-        $teams = Team::orderBy('name')->get();
-        
-        return view('admin.intern.index', compact('activeInterns', 'alumniInterns', 'mentors', 'teams'));
+            ->latest()
+            ->paginate(15, ['*'], 'alumni_page');
+
+        return view('industri.intern.index', compact(
+            'activeInterns',
+            'alumniInterns'
+        ));
     }
 
     public function create()
     {
-        $komdigi = Industri::where(
-            'nama_industri',
-            'BBLSDM Komdigi Makassar'
-        )->first();
+        $industri = auth()->user()->industri;
 
         $calonMagang = PengajuanDetail::with([
-                'pengajuan.institusi',
-                'pengajuan.lowongan.team'
+                'pengajuan.institusi'
             ])
-            ->whereHas('pengajuan', function ($q) use ($komdigi) {
-                $q->where('status', 'approved')
-                ->whereHas('lowongan', function ($lowongan) use ($komdigi) {
-                    $lowongan->where('industri_id', $komdigi->id);
-                });
+            ->whereHas('pengajuan', function ($query) use ($industri) {
+                $query->where('status', 'approved')
+                    ->whereHas('lowongan', function ($lowongan) use ($industri) {
+                        $lowongan->where('industri_id', $industri->id);
+                    });
             })
             ->doesntHave('intern')
             ->get();
 
-        $mentors = Mentor::with('team')
-            ->where('is_active', true)
-            ->orderBy('name')
-            ->get();
+        // $mentors = Mentor::with('team')
+        //     ->where('is_active', true)
+        //     ->orderBy('name')
+        //     ->get();
 
-        return view('admin.intern.create', compact(
-            'mentors',
+        return view('industri.intern.create', compact(
             'calonMagang'
         ));
     }
@@ -116,7 +102,7 @@ class AdminInternController extends Controller
             'phone' => ['nullable', 'string', 'max:255'],
             'institution' => ['required', 'string', 'max:255'],
             'purpose' => ['nullable', 'string', 'in:Magang,KKN Profesi,PKL,Praktek Industri,Magang Industri,Guru Magang Industri,Job on Training'],
-            'mentor_id' => ['required', 'exists:mentors,id'],
+            // 'mentor_id' => ['required', 'exists:mentors,id'],
             
             // 'team' => ['nullable', 'string', Rule::in($validTeams)],
             'pengajuan_detail_id' => ['nullable', 'exists:pengajuan_details,id'],
@@ -167,26 +153,26 @@ class AdminInternController extends Controller
             $institution = $validated['custom_institution'];
         }
 
-        $mentor = Mentor::with('team')->find($validated['mentor_id']);
+        // $mentor = Mentor::with('team')->find($validated['mentor_id']);
 
-        if (!$mentor) {
-            return back()->withErrors(['mentor_id' => 'Mentor tidak ditemukan.']);
-        }
+        // if (!$mentor) {
+        //     return back()->withErrors(['mentor_id' => 'Mentor tidak ditemukan.']);
+        // }
 
-        if (!empty($validated['pengajuan_detail_id'])) {
-            $calon = PengajuanDetail::with(['pengajuan.lowongan.team'])->find($validated['pengajuan_detail_id']);
-            $targetTeamId = $calon?->pengajuan?->lowongan?->team_id;
+        // if (!empty($validated['pengajuan_detail_id'])) {
+        //     $calon = PengajuanDetail::with(['pengajuan.lowongan.team'])->find($validated['pengajuan_detail_id']);
+        //     $targetTeamId = $calon?->pengajuan?->lowongan?->team_id;
 
-            if ($targetTeamId && !$mentor->team) {
-                return back()->withErrors(['mentor_id' => 'Mentor ini belum memiliki tim.'])->withInput();
-            }
+        //     if ($targetTeamId && !$mentor->team) {
+        //         return back()->withErrors(['mentor_id' => 'Mentor ini belum memiliki tim.'])->withInput();
+        //     }
 
-            if ($targetTeamId && (int) $mentor->team_id !== (int) $targetTeamId) {
-                return back()->withErrors([
-                    'mentor_id' => 'Mentor harus sesuai dengan tim penempatan calon peserta magang.'
-                ])->withInput();
-            }
-        }
+        //     if ($targetTeamId && (int) $mentor->team_id !== (int) $targetTeamId) {
+        //         return back()->withErrors([
+        //             'mentor_id' => 'Mentor harus sesuai dengan tim penempatan calon peserta magang.'
+        //         ])->withInput();
+        //     }
+        // }
 
         Intern::create([
             'user_id' => $user->id,
@@ -197,8 +183,8 @@ class AdminInternController extends Controller
             'phone' => $validated['phone'],
             'institution' => $institution,
             'purpose' => $validated['purpose'] ?? null,
-            'mentor_id' => $mentor->id,
-            'team_id' => $mentor->team_id,
+            // 'mentor_id' => $mentor->id,
+            // 'team_id' => $mentor->team_id,
             'start_date' => $validated['start_date'],
             'end_date' => $validated['end_date'],
             'photo_path' => $photoPath,
@@ -208,7 +194,7 @@ class AdminInternController extends Controller
             'soft_skill' => $validated['soft_skill'] ?? null,
         ]);
 
-        return redirect()->route('admin.intern.index')
+        return redirect()->route('industri.intern.index')
             ->with('success', 'Data anak magang berhasil ditambahkan.');
     }
 
@@ -228,7 +214,7 @@ class AdminInternController extends Controller
             'has_report' => $intern->finalReport !== null,
         ];
 
-        return view('admin.intern.show', compact('intern', 'stats'));
+        return view('industri.intern.show', compact('intern', 'stats'));
     }
 
     public function edit(Intern $intern)
@@ -238,25 +224,25 @@ class AdminInternController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('admin.intern.edit', compact('intern', 'mentors'));
+        return view('industri.intern.edit', compact('intern', 'mentors'));
     }
 
     public function update(Request $request, Intern $intern)
     {
-        $validTeams = [
-            'TIM DEA',
-            'TIM GTA',
-            'TIM VSGA',
-            'TIM TA',
-            'TIM Microskill',
-            'TIM Media (DiaPus)',
-            'TIM Tata Usaha (Umum)',
-            'FGA',
-            'Keuangan',
-            'Tim PUSDATIN',
-            'Tim Perencanaan, Anggaran, Dan Kerja Sama',
-            'Tim Kepegawaian, Persuratan dan Kearsipan'
-        ];
+        // $validTeams = [
+        //     'TIM DEA',
+        //     'TIM GTA',
+        //     'TIM VSGA',
+        //     'TIM TA',
+        //     'TIM Microskill',
+        //     'TIM Media (DiaPus)',
+        //     'TIM Tata Usaha (Umum)',
+        //     'FGA',
+        //     'Keuangan',
+        //     'Tim PUSDATIN',
+        //     'Tim Perencanaan, Anggaran, Dan Kerja Sama',
+        //     'Tim Kepegawaian, Persuratan dan Kearsipan'
+        // ];
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -267,7 +253,7 @@ class AdminInternController extends Controller
             'phone' => ['nullable', 'string', 'max:255'],
             'institution' => ['required', 'string', 'max:255'],
             'purpose' => ['nullable', 'string', 'in:Magang,KKN Profesi,PKL,Praktek Industri,Magang Industri,Guru Magang Industri,Job on Training'],
-            'mentor_id' => ['required', 'exists:mentors,id'],
+            // 'mentor_id' => ['required', 'exists:mentors,id'],
             // 'team' => ['nullable', 'string', Rule::in($validTeams)],
             'start_date' => ['required', 'date'],
             'end_date' => ['required', 'date', 'after:start_date'],
@@ -295,26 +281,26 @@ class AdminInternController extends Controller
             $institution = $validated['custom_institution'];
         }
 
-        $mentor = Mentor::with('team')->find($validated['mentor_id']);
+        // $mentor = Mentor::with('team')->find($validated['mentor_id']);
 
-        if (!$mentor) {
-            return back()->withErrors(['mentor_id' => 'Mentor tidak ditemukan.'])->withInput();
-        }
+        // if (!$mentor) {
+        //     return back()->withErrors(['mentor_id' => 'Mentor tidak ditemukan.'])->withInput();
+        // }
 
-        if ($intern->pengajuan_detail_id) {
-            $calon = PengajuanDetail::with(['pengajuan.lowongan.team'])->find($intern->pengajuan_detail_id);
-            $targetTeamId = $calon?->pengajuan?->lowongan?->team_id;
+        // if ($intern->pengajuan_detail_id) {
+        //     $calon = PengajuanDetail::with(['pengajuan.lowongan.team'])->find($intern->pengajuan_detail_id);
+        //     $targetTeamId = $calon?->pengajuan?->lowongan?->team_id;
 
-            if ($targetTeamId && !$mentor->team) {
-                return back()->withErrors(['mentor_id' => 'Mentor ini belum memiliki tim.'])->withInput();
-            }
+        //     if ($targetTeamId && !$mentor->team) {
+        //         return back()->withErrors(['mentor_id' => 'Mentor ini belum memiliki tim.'])->withInput();
+        //     }
 
-            if ($targetTeamId && (int) $mentor->team_id !== (int) $targetTeamId) {
-                return back()->withErrors([
-                    'mentor_id' => 'Mentor harus sesuai dengan tim penempatan calon peserta magang.'
-                ])->withInput();
-            }
-        }
+        //     if ($targetTeamId && (int) $mentor->team_id !== (int) $targetTeamId) {
+        //         return back()->withErrors([
+        //             'mentor_id' => 'Mentor harus sesuai dengan tim penempatan calon peserta magang.'
+        //         ])->withInput();
+        //     }
+        // }
 
         $data = [
             'name' => $validated['name'],
@@ -324,8 +310,8 @@ class AdminInternController extends Controller
             'phone' => $validated['phone'],
             'institution' => $institution,
             'purpose' => $validated['purpose'] ?? null,
-            'mentor_id' => $mentor->id,
-            'team_id' => $mentor->team_id,
+            // 'mentor_id' => $mentor->id,
+            // 'team_id' => $mentor->team_id,
             'start_date' => $validated['start_date'],
             'end_date' => $validated['end_date'],
             'is_active' => $request->has('is_active') ? $request->boolean('is_active') : false,
@@ -365,7 +351,7 @@ class AdminInternController extends Controller
 
         $intern->update($data);
 
-        return redirect()->route('admin.intern.show', $intern)
+        return redirect()->route('industri.intern.index')
             ->with('success', 'Data anak magang berhasil diperbarui.');
     }
 
@@ -379,7 +365,7 @@ class AdminInternController extends Controller
         $intern->delete();
         User::find($userId)->delete();
 
-        return redirect()->route('admin.intern.index')
+        return redirect()->route('industri.intern.index')
             ->with('success', 'Data anak magang berhasil dihapus.');
     }
 }

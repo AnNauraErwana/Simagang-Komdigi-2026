@@ -25,6 +25,7 @@ class IndustriLowonganController extends Controller
         $lowonganDibuka = 0;
         $lowonganDitutup = 0;
         $totalLowonganFilter = 0;
+        $totalPesertaMagan = 0;
 
         // Jalankan query hanya jika industri tersedia
         if ($industri) {
@@ -72,6 +73,11 @@ class IndustriLowonganController extends Controller
                 ->count();
 
             $totalLowonganFilter = $lowongans->total();
+
+            // $totalPesertaMagan = Lowongan::where('industri_id', $industri->id)
+            //     ->withCount('interns')
+            //     ->get()
+            //     ->sum('interns_count');
         }
 
         return view('industri.lowongan.index', compact(
@@ -80,7 +86,8 @@ class IndustriLowonganController extends Controller
             'totalLowongan',
             'lowonganDibuka',
             'lowonganDitutup',
-            'totalLowonganFilter'
+            'totalLowonganFilter',
+            // 'totalPesertaMagan'
         ));
     }
 
@@ -122,12 +129,12 @@ class IndustriLowonganController extends Controller
         $request->validate([
             'judul_lowongan'      => 'required|string|max:255',
             'posisi_magang'       => 'required|string|max:255',
-            'divisi'              => 'required|string|max:255|exists:teams,name',
+            'divisi'              => 'required|string|max:255',
             'deskripsi_pekerjaan' => 'required|string',
             'requirements'        => 'required|string',
             'fasilitas'           => 'required|string',
             'kuota_peserta'       => 'required|integer|min:1',
-            'durasi_magang'       => 'required|string|max:100',
+            // 'durasi_magang'       => 'required|string|max:100',
             'status'              => 'required|in:aktif,nonaktif',
         ], [
             'required' => ':attribute wajib diisi.',
@@ -143,7 +150,7 @@ class IndustriLowonganController extends Controller
             'requirements'        => $request->requirements,
             'fasilitas'           => $request->fasilitas,
             'kuota_peserta'       => $request->kuota_peserta,
-            'durasi_magang'       => $request->durasi_magang,
+            // 'durasi_magang'       => $request->durasi_magang,
 
             // Mapping status
             'status' => $request->status === 'aktif'

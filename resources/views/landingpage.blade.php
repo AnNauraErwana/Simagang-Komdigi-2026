@@ -833,9 +833,9 @@
 
         .lowongan-scroll-wrapper {
             display: flex;
-            gap: 1.25rem;
+            gap: 1.5rem;
             overflow-x: auto;
-            padding-bottom: 1.25rem;
+            padding: 0.25rem 0.25rem 1.25rem;
             scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: thin;
@@ -851,18 +851,20 @@
             min-width: 380px;
             scroll-snap-align: start;
             background: #fff;
-            border-radius: 30px;
-            padding: 1.6rem;
-            border: 1px solid #edf2ff;
-            box-shadow: 0 12px 35px rgba(15,23,42,.05);
-            transition: .25s ease;
+            border-radius: 24px;
+            padding: 1.4rem;
+            border: 1px solid #e8edf5;
+            box-shadow: 0 4px 16px rgba(15,23,42,.06);
+            transition: .22s ease;
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            min-height: 220px;
         }
         .lowongan-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 25px 45px rgba(15,23,42,.10);
+            transform: translateY(-4px);
+            box-shadow: 0 16px 36px rgba(15,23,42,.10);
+            border-color: #c7d7f5;
         }
         .lowongan-card::before {
             content: '';
@@ -871,6 +873,85 @@
             background: linear-gradient(135deg, rgba(99,102,241,.03), transparent);
             pointer-events: none;
         }
+
+        .card-title {
+            margin-top: .75rem;
+            font-size: 1.12rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.35;
+            flex: 1;
+        }
+        .card-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .4rem .75rem;
+            margin-top: .55rem;
+        }
+        .meta-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: .25rem;
+            font-size: .72rem;
+            font-weight: 600;
+            color: #64748b;
+        }
+        .meta-chip i { font-size: .62rem; color: #94a3b8; }
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding-top: .9rem;
+            border-top: 1px solid #f1f5f9;
+            gap: .75rem;
+        }
+        .card-company {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            min-width: 0;
+        }
+        .company-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            background: #f8faff;
+            flex-shrink: 0;
+        }
+        .company-logo img { width: 100%; height: 100%; object-fit: cover; }
+        .company-name {
+            font-size: .75rem;
+            font-weight: 700;
+            color: #334155;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 145px;
+        }
+        .company-sub {
+            font-size: .65rem;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        .card-actions { display: flex; align-items: center; gap: .5rem; flex-shrink: 0; }
+        .btn-card {
+            height: 34px;
+            padding: 0 1rem;
+            border-radius: 10px;
+            font-size: .75rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: .2s;
+        }
+        .btn-detail { background: #0f172a; color: #fff; }
+        .btn-detail:hover { background: #4f46e5; color: #fff; text-decoration: none; }
 
         .logo-wrapper {
             width: 78px;
@@ -935,6 +1016,7 @@
 
         @media (max-width: 640px) {
             .lowongan-card { flex: 0 0 310px; min-width: 310px; }
+            .lowongan-scroll-wrapper { gap: 1rem; padding: 0.15rem 0.15rem 1rem; }
         }
     </style>
 </head>
@@ -957,6 +1039,7 @@
 
         <nav class="nav-links">
             <a href="#hero">Beranda</a>
+            <a href="#lowonganGrid">Lowongan</a>
             <a href="#process">Alur</a>
             <a href="#usage">Fitur</a>
             <a href="#testimonials">Testimoni</a>
@@ -971,6 +1054,7 @@
 
         <div class="mobile-menu" aria-hidden="true">
             <a href="#hero">Beranda</a>
+            <a href="#lowonganGrid">Lowongan</a>
             <a href="#process">Tahapan</a>
             <a href="#usage">Fitur</a>
             <a href="#testimonials">Testimoni</a>
@@ -1132,6 +1216,10 @@
 
             @foreach($lowongans as $lowongan)
                 @php
+                    $logo = optional($lowongan->industri)->logo_industri
+                        ? asset('storage/' . $lowongan->industri->logo_industri)
+                        : 'https://ui-avatars.com/api/?name=' . urlencode(optional($lowongan->industri)->nama_industri ?? 'Industri');
+
                     $status     = $lowongan->status ?? 'dibuka';
                     $badgeClass = match($status) {
                         'dibuka'  => 'bg-green-50 text-green-700 border-green-200',
@@ -1145,102 +1233,44 @@
                     };
                 @endphp
 
-                <div class="lowongan-card group flex-shrink-0 w-72
-                            bg-white rounded-2xl border border-slate-100
-                            shadow-sm hover:shadow-md hover:-translate-y-0.5
-                            transition-all duration-200 flex flex-col overflow-hidden"
+                <div class="lowongan-card group flex-shrink-0 w-72"
                      style="scroll-snap-align: start;"
                      data-status="{{ $status }}"
                      data-search="{{ strtolower($lowongan->judul_lowongan . ' ' . $lowongan->posisi_magang . ' ' . $lowongan->divisi) }}">
 
-                    {{-- Card top accent bar --}}
-                    <div class="h-1 w-full {{ $status === 'dibuka' ? 'bg-gradient-to-r from-blue-400 to-indigo-400' : 'bg-slate-200' }}"></div>
+                    <div class="flex justify-end">
+                        <span class="status-badge {{ $status === 'dibuka' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-700 border-red-200' }} border">
+                            <i class="fas {{ $status === 'dibuka' ? 'fa-check-circle' : 'fa-times-circle' }} text-[10px]"></i>
+                            {{ ucfirst($status) }}
+                        </span>
+                    </div>
 
-                    <div class="p-5 flex flex-col flex-1 gap-4">
+                    <h3 class="card-title">{{ $lowongan->judul_lowongan ?? '-' }}</h3>
 
-                        {{-- HEADER --}}
-                        <div class="flex items-start gap-3">
-                            <div class="w-11 h-11 rounded-xl bg-blue-50 border border-blue-100
-                                        flex items-center justify-center flex-shrink-0">
-                                <i class="fas fa-building text-blue-500 text-lg"></i>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <h3 class="text-[15px] font-bold text-slate-800 leading-snug line-clamp-2 mb-1">
-                                    {{ $lowongan->judul_lowongan ?? '-' }}
-                                </h3>
-                                <p class="text-xs text-slate-400 flex items-center gap-1">
-                                    <i class="fas fa-map-pin"></i>
-                                    BBLSDM Komdigi Makassar
-                                </p>
-                            </div>
-                            <span class="inline-flex items-center gap-1.5 text-[11px] font-bold
-                                         px-2.5 py-1 rounded-full border {{ $badgeClass }} flex-shrink-0">
-                                <i class="fas {{ $badgeIcon }} text-[10px]"></i>
-                                {{ ucfirst($status) }}
-                            </span>
-                        </div>
+                    <div class="card-meta">
+                        @if($lowongan->posisi_magang)
+                            <span class="meta-chip"><i class="fas fa-briefcase"></i> {{ Str::limit($lowongan->posisi_magang, 20) }}</span>
+                        @endif
+                        @if($lowongan->divisi)
+                            <span class="meta-chip"><i class="fas fa-layer-group"></i> {{ Str::limit($lowongan->divisi, 20) }}</span>
+                        @endif
+                        <span class="meta-chip"><i class="fas fa-users"></i> {{ $lowongan->kuota_peserta ?? 0 }} Peserta</span>
+                    </div>
 
-                        {{-- DETAIL GRID --}}
-                        <div class="grid grid-cols-2 gap-2">
-                            <div class="bg-slate-50 rounded-xl p-3">
-                                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Posisi</p>
-                                <p class="text-sm font-semibold text-slate-700 leading-snug">{{ $lowongan->posisi_magang ?? '-' }}</p>
+                    <div class="card-footer">
+                        <div class="card-company">
+                            <div class="company-logo">
+                                <img src="{{ $logo }}" alt="{{ optional($lowongan->industri)->nama_industri ?? 'Industri' }}">
                             </div>
-                            <div class="bg-slate-50 rounded-xl p-3">
-                                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Divisi</p>
-                                <p class="text-sm font-semibold text-slate-700 leading-snug">{{ $lowongan->divisi ?? '-' }}</p>
-                            </div>
-                            <div class="col-span-2 bg-blue-50 border border-blue-100 rounded-xl p-3 flex items-center gap-2">
-                                <i class="fas fa-users text-blue-400 text-sm"></i>
-                                <div>
-                                    <p class="text-[10px] font-bold uppercase tracking-wider text-blue-400 mb-0.5">Kuota Peserta</p>
-                                    <p class="text-sm font-bold text-blue-700">{{ $lowongan->kuota_peserta ?? 0 }} Peserta</p>
-                                </div>
+                            <div>
+                                <p class="company-name">{{ optional($lowongan->industri)->nama_industri ?? 'BBLSDM Komdigi Makassar' }}</p>
+                                <p class="company-sub">{{ optional($lowongan->created_at)->translatedFormat('d M Y') ?? '-' }}</p>
                             </div>
                         </div>
 
-                        {{-- DESKRIPSI --}}
-                        <div class="flex-1">
-                            <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
-                                Deskripsi Pekerjaan
-                            </h4>
-                            <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-100">
-                                <p class="text-xs leading-relaxed text-slate-500 line-clamp-3">
-                                    {{ $lowongan->deskripsi_pekerjaan ?? '-' }}
-                                </p>
-                            </div>
+                        <div class="card-actions">
+                            <a href="{{ route('institusi.create') }}" class="btn-card btn-detail">Detail</a>
                         </div>
-
-                        {{-- FOOTER ACTIONS --}}
-                        <div class="flex flex-wrap items-center gap-2 pt-1">
-                            <a href="{{ route('login') }}"
-                               class="inline-flex items-center gap-1.5 text-xs font-bold
-                                      px-3.5 py-2 rounded-xl
-                                      border border-slate-200 bg-white hover:bg-slate-50
-                                      text-slate-600 transition">
-                                <i class="fas fa-eye text-[11px]"></i>
-                                Detail
-                            </a>
-
-                            @if ($lowongan->status === 'dibuka')
-                                <a href="{{ route('login') }}"
-                                   class="inline-flex items-center gap-1.5 text-xs font-bold
-                                          px-3.5 py-2 rounded-xl
-                                          bg-blue-600 hover:bg-blue-700 text-white
-                                          shadow-sm shadow-blue-200 transition">
-                                    <i class="fas fa-paper-plane text-[11px]"></i>
-                                    Ajukan Permohonan
-                                </a>
-                            @else
-                                <span class="inline-flex items-center gap-1.5 text-xs font-bold
-                                             px-3.5 py-2 rounded-xl
-                                             bg-slate-100 text-slate-400 cursor-not-allowed">
-                                    <i class="fas fa-lock text-[11px]"></i>
-                                    Ditutup
-                                </span>
-                            @endif
-                        </div>
-
                     </div>
                 </div>
 

@@ -75,6 +75,12 @@ class PengajuanController extends Controller
 
     public function store(Request $request)
     {
+        // dd([
+        //     'hasFile' => $request->hasFile('surat_magang'),
+        //     'file' => $request->file('surat_magang'),
+        //     'error' => $request->file('surat_magang')?->getError(),
+        //     'size' => $request->file('surat_magang')?->getSize(),
+        // ]);
         $request->validate([
             'surat_magang' => 'required|file|mimes:pdf',
             'start_date' => 'required|date',

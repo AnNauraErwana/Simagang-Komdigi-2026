@@ -1,0 +1,774 @@
+@extends('layouts.app')
+
+@section('title', 'Detail Pengajuan Peserta Magang')
+
+@push('styles')
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+        *,
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .dash-bg {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e8eeff 0%, #f0f4ff 40%, #e4ecff 100%);
+        }
+
+        .hero-strip {
+            background: linear-gradient(110deg, #1e3a8a 0%, #3b4fd8 55%, #4f46e5 100%);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(20, 40, 120, 0.16);
+        }
+
+        .hero-strip::before {
+            content: '';
+            position: absolute;
+            top: -70px;
+            right: -50px;
+            width: 220px;
+            height: 220px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-strip::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: 18%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .panel {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 1px 3px rgba(20, 40, 120, 0.06), 0 4px 18px rgba(20, 40, 120, 0.06);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background: linear-gradient(100deg, #1e3a8a 0%, #3b4fd8 100%);
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-header h2 {
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            margin: 0;
+        }
+
+        .panel-body {
+            padding: 24px;
+        }
+
+        .section-card {
+            background: #f8faff;
+            border: 1px solid #e8eeff;
+            border-radius: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .section-card:hover {
+            border-color: #d4dff5;
+            box-shadow: 0 8px 24px rgba(79, 70, 229, 0.08);
+        }
+
+        .info-card {
+            background: #fff;
+            border: 1px solid #e8eeff;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(20, 40, 120, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            border-color: #c7d2fc;
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .field-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .field-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1e293b;
+            line-height: 1.6;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .section-text h2 {
+            margin: 0;
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .section-text p {
+            margin: 0.25rem 0 0 0;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        a[target="_blank"]::after {
+            content: '';
+        }
+
+        * {
+            transition: all 0.2s ease;
+        }
+
+        button, a {
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 640px) {
+            .panel-body {
+                padding: 16px;
+            }
+        }
+    </style>
+@endpush
+
+@section('content')
+    <div class="dash-bg py-6 sm:py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+
+            <div class="hero-strip px-5 sm:px-8 py-6 sm:py-8">
+                <div class="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+                    <div class="max-w-3xl text-white">
+                        <h1 class="mt-2 text-3xl sm:text-4xl font-extrabold leading-tight">Detail Pengajuan Peserta Magang</h1>
+                        <p class="mt-3 text-sm sm:text-base text-blue-100/90">Lihat informasi pengajuan, lowongan terkait, dan daftar calon peserta magang dalam satu tampilan.</p>
+                    </div>
+
+                    <div class="flex flex-col gap-3 sm:flex-row">
+                        <a href="{{ route('industri.pengajuan.index') }}"
+                            class="inline-flex items-center justify-center rounded-2xl bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur-sm border border-white/10 transition hover:bg-white/15">
+                            <i class="fas fa-arrow-left mr-2"></i>Kembali
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-body">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Kolom Kiri -->
+                        <div class="lg:col-span-2 space-y-6">
+                            <div class="section-card p-5 sm:p-6">
+                                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
+                                    <div class="section-title mb-0">
+                                        <div class="section-icon bg-blue-50 text-blue-600">
+                                            <i class="fas fa-briefcase"></i>
+                                        </div>
+                                        <div class="section-text">
+                                            <p>Informasi Surat</p>
+                                            <h2>Informasi Surat Pengajuan Magang</h2>
+                                        </div>
+                                    </div>
+                                    <a href="{{ route('pengajuan.surat', $pengajuan) }}" target="_blank"
+                                        class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-blue-700 hover:shadow-lg whitespace-nowrap">
+                                        <i class="fas fa-download mr-2"></i>
+                                        Download Surat
+                                    </a>
+                                </div>
+
+                                <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
+                                    <div class="info-card p-4">
+                                        <span class="field-label">Nomor Surat Pengajuan</span>
+                                        <p class="field-value">{{ $pengajuan->no_surat }}</p>
+                                    </div>
+                                    <div class="info-card p-4">
+                                        <span class="field-label">Penanggung Jawab</span>
+                                        <p class="field-value">{{ $pengajuan->tujuan_surat }}</p>
+                                    </div>
+                                    <div class="info-card p-4">
+                                        <span class="field-label">Tanggal Pengajuan</span>
+                                        <p class="field-value">{{ $pengajuan->created_at->format('d F Y') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="section-card p-5 sm:p-6">
+                                <div class="section-title">
+                                    <div class="section-icon bg-indigo-50 text-indigo-600">
+                                        <i class="fas fa-clipboard-list"></i>
+                                    </div>
+                                    <div class="section-text">
+                                        <p>Pengajuan</p>
+                                        <h2>Informasi Pengajuan Magang</h2>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="bg-blue-50 p-5 rounded-2xl border border-blue-100 hover:bg-blue-500 hover:shadow-[0_8px_20px_-6px_rgba(59,130,246,0.4)] transition-all duration-300 flex items-start gap-4 group flex-1">
+                                        <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center flex-shrink-0 group-hover:scale-110 shadow-sm transition-transform duration-300">
+                                            <i class="fas fa-briefcase text-blue-500 text-xl group-hover:text-blue-600"></i>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-xs font-bold text-blue-600/80 uppercase tracking-wider mb-1 group-hover:text-blue-100 truncate">Keperluan</p>
+                                            <p class="font-bold text-blue-900 group-hover:text-white truncate">{{ $pengajuan->keperluan }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="bg-amber-50 p-5 rounded-2xl border border-amber-100 hover:bg-amber-400 hover:shadow-[0_8px_20px_-6px_rgba(245,158,11,0.4)] transition-all duration-300 flex items-start gap-4 group flex-1">
+                                        <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center flex-shrink-0 group-hover:scale-110 shadow-sm transition-transform duration-300">
+                                            <i class="fas fa-users text-amber-500 text-xl group-hover:text-amber-600"></i>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-xs font-bold text-amber-600/80 uppercase tracking-wider mb-1 group-hover:text-amber-100 truncate">Jumlah Peserta</p>
+                                            <p class="font-bold text-amber-900 group-hover:text-white flex items-baseline gap-1 truncate">
+                                                <span class="text-2xl leading-none">{{ $pengajuan->details->count() }}</span>
+                                                <span class="text-sm font-medium">Orang</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="bg-green-50 p-5 rounded-2xl border border-green-100 hover:bg-green-500 hover:shadow-[0_8px_20px_-6px_rgba(34,197,94,0.4)] transition-all duration-300 flex items-start gap-4 group flex-1">
+                                        <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center flex-shrink-0 group-hover:scale-110 shadow-sm transition-transform duration-300">
+                                            <i class="fas fa-calendar-check text-green-500 text-xl group-hover:text-green-600"></i>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-xs font-bold text-green-600/80 uppercase tracking-wider mb-1 group-hover:text-green-100 truncate">Tanggal Masuk</p>
+                                            <p class="font-bold text-green-900 group-hover:text-white truncate">{{ $pengajuan->start_date }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="bg-orange-50 p-5 rounded-2xl border border-orange-100 hover:bg-orange-500 hover:shadow-[0_8px_20px_-6px_rgba(249,115,22,0.4)] transition-all duration-300 flex items-start gap-4 group flex-1">
+                                        <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center flex-shrink-0 group-hover:scale-110 shadow-sm transition-transform duration-300">
+                                            <i class="fas fa-calendar-times text-orange-500 text-xl group-hover:text-orange-600"></i>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-xs font-bold text-orange-600/80 uppercase tracking-wider mb-1 group-hover:text-orange-100 truncate">Tanggal Keluar</p>
+                                            <p class="font-bold text-orange-900 group-hover:text-white truncate">{{ $pengajuan->end_date }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="section-card p-5 sm:p-6">
+                                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
+                                    <div class="section-title mb-0">
+                                        <div class="section-icon bg-blue-50 text-blue-600">
+                                            <i class="fas fa-circle-info"></i>
+                                        </div>
+                                        <div class="section-text">
+                                            <p>Status</p>
+                                            <h2>Status Pengajuan Magang</h2>
+                                        </div>
+                                    </div>
+
+                                    {{-- @if ($pengajuan->status == 'approved')
+                                        <a href="{{ route('industri.pengajuan.surat-balasan', $pengajuan) }}" target="_blank"
+                                            class="inline-flex items-center justify-center rounded-xl bg-green-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-green-700 hover:shadow-lg whitespace-nowrap">
+                                            <i class="fas fa-download mr-2"></i>
+                                            Download Surat Balasan
+                                        </a>
+                                    @endif --}}
+                                </div>
+
+                                <div class="info-card p-4">
+                                    <span class="field-label mb-3">Status Pengajuan</span>
+                                    @php
+                                        $statusClass = match ($pengajuan->status) {
+                                            'approved' => 'bg-green-100 text-green-800',
+                                            'rejected' => 'bg-red-100 text-red-800',
+                                            'revised' => 'bg-orange-100 text-orange-800',
+                                            default => 'bg-yellow-100 text-yellow-800',
+                                        };
+                                    @endphp
+                                    <span class="status-pill {{ $statusClass }}">{{ ucfirst($pengajuan->status) }}</span>
+
+                                    @if ($pengajuan->status == 'revised' && $pengajuan->admin_note)
+                                        <div class="mt-4 rounded-xl border border-orange-200 bg-orange-50 p-4">
+                                            <h4 class="text-sm font-semibold text-orange-800 mb-2">📝 Catatan Revisi</h4>
+                                            <p class="text-sm text-orange-700 whitespace-pre-wrap">{{ $pengajuan->admin_note }}</p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kolom Kanan -->
+                        <div class="lg:col-span-1">
+                            @if ($pengajuan->lowongan)
+                            <div class="section-card p-5 sm:p-6 sticky top-6 border-l-4 border-l-purple-500">
+                                <div class="section-title">
+                                    <div class="section-icon bg-purple-50 text-purple-600">
+                                        <i class="fas fa-briefcase"></i>
+                                    </div>
+                                    <div class="section-text">
+                                        <p>Lowongan Terkait</p>
+                                        <h2>Informasi Lowongan</h2>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2.5">
+                                    <div class="info-card p-3.5">
+                                        <span class="field-label">Judul Lowongan</span>
+                                        <p class="field-value line-clamp-2">{{ $pengajuan->lowongan->judul_lowongan }}</p>
+                                    </div>
+                                    <div class="info-card p-3.5">
+                                        <span class="field-label">Posisi Magang</span>
+                                        <p class="field-value">{{ $pengajuan->lowongan->posisi_magang }}</p>
+                                    </div>
+                                    <div class="info-card p-3.5">
+                                        <span class="field-label">Divisi</span>
+                                        <p class="field-value">{{ $pengajuan->lowongan->divisi }}</p>
+                                    </div>
+                                    <div class="info-card p-3.5">
+                                        <span class="field-label">Kuota Peserta</span>
+                                        <p class="field-value">{{ $pengajuan->lowongan->kuota_peserta }} Peserta</p>
+                                    </div>
+                                    <div class="info-card p-3.5">
+                                        <span class="field-label">Perusahaan</span>
+                                        <p class="field-value">{{ optional($pengajuan->lowongan->industri)->nama_industri ?? '-' }}</p>
+                                    </div>
+                                    <div class="info-card p-3.5">
+                                        <span class="field-label">Status Lowongan</span>
+                                        @php
+                                            $lowonganStatusClass = match($pengajuan->lowongan->status) {
+                                                'dibuka' => 'bg-green-100 text-green-800',
+                                                'ditutup' => 'bg-red-100 text-red-800',
+                                                default => 'bg-yellow-100 text-yellow-800'
+                                            };
+                                        @endphp
+                                        <span class="inline-block mt-1 px-3 py-1 rounded-full text-xs font-semibold {{ $lowonganStatusClass }}">{{ ucfirst($pengajuan->lowongan->status) }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="mt-5">
+                                    <a href="#"
+                                        class="w-full inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-purple-600 to-purple-700 px-4 py-3 text-sm font-semibold text-white shadow-md transition hover:shadow-lg hover:from-purple-700 hover:to-purple-800">
+                                        <i class="fas fa-eye mr-2"></i>Lihat Detail Lengkap
+                                    </a>
+                                </div>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="section-card p-5 sm:p-6 mt-6">
+                        <div class="section-title">
+                            <div class="section-icon bg-blue-50 text-blue-600">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="section-text">
+                                <p>Peserta</p>
+                                <h2>Daftar Calon Peserta Magang</h2>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            @foreach ($pengajuan->details as $detail)
+                                <div class="info-card p-5 sm:p-6 border-l-4 border-l-blue-400">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h3 class="text-base font-bold text-blue-600">
+                                            <i class="fas fa-user-circle mr-2"></i>Peserta #{{ $loop->iteration }}
+                                        </h3>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <span class="field-label">Nama</span>
+                                            <p class="field-value">{{ $detail->nama }}</p>
+                                        </div>
+                                        <div>
+                                            <span class="field-label">Jurusan</span>
+                                            <p class="field-value">{{ $detail->jurusan }}</p>
+                                        </div>
+                                        <div>
+                                            <span class="field-label">Email</span>
+                                            <p class="field-value break-all text-blue-600">{{ $detail->email }}</p>
+                                        </div>
+                                        <div>
+                                            <span class="field-label">No Telepon</span>
+                                            <p class="field-value">{{ $detail->no_telp }}</p>
+                                        </div>
+                                        <div>
+                                            <span class="field-label">Jenis Kelamin</span>
+                                            <p class="field-value">{{ $detail->jenis_kelamin === 'P' ? 'Perempuan' : 'Lelaki' }}</p>
+                                        </div>
+                                        <div>
+                                            <span class="field-label">Soft Skill</span>
+                                            <p class="field-value">{{ $detail->soft_skill ?? '—' }}</p>
+                                        </div>
+                                        <div class="sm:col-span-2">
+                                            <span class="field-label">Hard Skill</span>
+                                            <p class="field-value">{{ $detail->hard_skill ?? '—' }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <!-- Form Update Status -->
+                    <div class="section-card p-5 sm:p-6 mt-6">
+                        <div class="section-title">
+                            <div class="section-icon bg-amber-50 text-amber-600">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                            <div class="section-text">
+                                <p>Aksi</p>
+                                <h2>Update Status Pengajuan</h2>
+                            </div>
+                        </div>
+
+                        <form id="update-status-form" method="POST"
+                            action="{{ route('industri.pengajuan.update-status', $pengajuan) }}">
+                            @csrf
+                            @method('PUT')
+                            <input type="hidden" name="notify_whatsapp" id="notify_whatsapp" value="0">
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div>
+                                    <label for="status" class="block text-sm font-semibold text-gray-700 mb-2">
+                                        Status Pengajuan
+                                    </label>
+                                    <select name="status" id="status" required
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                                        {{ in_array($pengajuan->status, ['approved', 'rejected'], true) ? 'disabled' : '' }}>
+                                        <option value="approved" {{ $pengajuan->status == 'approved' ? 'selected' : '' }}>
+                                            Approved
+                                        </option>
+                                        <option value="revised" {{ $pengajuan->status == 'revised' ? 'selected' : '' }}>
+                                            Revisi
+                                        </option>
+                                        <option value="rejected" {{ $pengajuan->status == 'rejected' ? 'selected' : '' }}>
+                                            Rejected
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div id="no_surat_block">
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                        Nomor Surat Balasan
+                                    </label>
+                                    <input type="text" name="nomor_surat_balasan"
+                                        placeholder="contoh: B-747/BBPSDMP.73/UM.01.01/12/2025"
+                                        value="{{ old('nomor_surat_balasan', $pengajuan->nomor_surat_balasan ?? '') }}"
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-xl">
+                                </div>
+                            </div>
+
+                            <div class="mb-6" id="admin-note-block"
+                                style="display: {{ $pengajuan->status == 'revised' ? 'block' : 'none' }};">
+                                <label for="admin_note" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Catatan Revisi
+                                </label>
+                                <textarea name="admin_note" id="admin_note" rows="4"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">{{ old('admin_note', $pengajuan->admin_note) }}</textarea>
+                                <p class="mt-2 text-xs text-gray-500">Tuliskan apa saja yang perlu direvisi oleh institusi/peserta magang.</p>
+                            </div>
+
+                            <script>
+                                (function() {
+                                    const statusEl = document.getElementById('status');
+                                    const noSuratBlock = document.getElementById('no_surat_block');
+                                    const noteBlock = document.getElementById('admin-note-block');
+
+                                    function updateUI(value) {
+                                        if (value === 'rejected' || value === 'revised') {
+                                            noSuratBlock.style.display = 'none';
+                                        } else {
+                                            noSuratBlock.style.display = 'block';
+                                        }
+
+                                        if (value === 'revised') {
+                                            noteBlock.style.display = 'block';
+                                        } else {
+                                            noteBlock.style.display = 'none';
+                                        }
+                                    }
+
+                                    statusEl.addEventListener('change', function(e) {
+                                        updateUI(e.target.value);
+                                    });
+
+                                    updateUI(statusEl.value);
+                                })();
+                            </script>
+
+                            <!-- Modal Konfirmasi Simpan -->
+                            <div id="save-confirm-modal"
+                                class="hidden fixed inset-0 z-50 flex items-center justify-center px-4">
+                                <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+                                <div class="relative max-w-md w-full bg-white rounded-xl shadow-lg overflow-hidden">
+                                    <div class="p-6 text-center">
+                                        <div class="mx-auto w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center mb-3">
+                                            <span class="text-blue-600 text-xl">?</span>
+                                        </div>
+                                        <h3 class="text-lg font-bold text-gray-800">Simpan Perubahan?</h3>
+                                        <p class="mt-2 text-sm text-gray-500">
+                                            Status akan diperbarui terlebih dahulu. Setelah itu Anda bisa memilih apakah ingin langsung mengirim notifikasi WhatsApp.
+                                        </p>
+                                    </div>
+                                    <div class="px-4 pb-4 pt-2 bg-gray-50 flex gap-3 justify-center">
+                                        <button id="save-confirm-cancel" type="button"
+                                            class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-700 font-semibold hover:bg-gray-100">
+                                            Tidak
+                                        </button>
+                                        <button id="save-confirm-accept" type="button"
+                                            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold">
+                                            Ya, Simpan
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Modal WhatsApp -->
+                            <div id="whatsapp-confirm-modal"
+                                class="hidden fixed inset-0 z-50 flex items-center justify-center px-4">
+                                <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+                                <div class="relative max-w-md w-full bg-white rounded-xl shadow-lg overflow-hidden">
+                                    <div class="p-6 text-center">
+                                        <div class="mx-auto w-14 h-14 rounded-full bg-green-50 flex items-center justify-center mb-3">
+                                            <i class="fab fa-whatsapp text-green-600 text-2xl"></i>
+                                        </div>
+                                        <h3 class="text-lg font-bold text-gray-800" id="whatsapp-modal-title">Kirim Notifikasi WhatsApp?</h3>
+                                        <p class="mt-2 text-sm text-gray-500" id="whatsapp-modal-message">
+                                            Status sudah tersimpan. Apakah Anda ingin langsung membuka WhatsApp dengan template pesan yang sudah siap?
+                                        </p>
+                                    </div>
+                                    <div class="px-4 pb-4 pt-2 bg-gray-50 flex gap-3 justify-center">
+                                        <button id="whatsapp-confirm-cancel" type="button"
+                                            class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-700 font-semibold hover:bg-gray-100">
+                                            Tidak
+                                        </button>
+                                        <button id="whatsapp-confirm-accept" type="button"
+                                            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold">
+                                            Ya, Kirim WhatsApp
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <script>
+                                (function() {
+                                    const form = document.getElementById('update-status-form');
+                                    const statusEl = document.getElementById('status');
+                                    const saveModal = document.getElementById('save-confirm-modal');
+                                    const whatsappModal = document.getElementById('whatsapp-confirm-modal');
+                                    const saveCancelButton = document.getElementById('save-confirm-cancel');
+                                    const saveAcceptButton = document.getElementById('save-confirm-accept');
+                                    const whatsappCancelButton = document.getElementById('whatsapp-confirm-cancel');
+                                    const whatsappAcceptButton = document.getElementById('whatsapp-confirm-accept');
+                                    const whatsappModalTitle = document.getElementById('whatsapp-modal-title');
+                                    const whatsappModalMessage = document.getElementById('whatsapp-modal-message');
+                                    const whatsappSection = document.getElementById('whatsapp-resend-section');
+                                    const whatsappLink = document.getElementById('whatsapp-resend-link');
+
+                                    let latestWhatsappUrl = @json($whatsapp['url'] ?? null);
+                                    let isSaving = false;
+
+                                    function openModal(modal) {
+                                        modal.classList.remove('hidden');
+                                    }
+
+                                    function closeModal(modal) {
+                                        modal.classList.add('hidden');
+                                    }
+
+                                    function updateWhatsappButton(url) {
+                                        latestWhatsappUrl = url || null;
+                                        if (whatsappLink) {
+                                            whatsappLink.href = url || '#';
+                                        }
+                                        if (whatsappSection) {
+                                            if (url) {
+                                                whatsappSection.classList.remove('hidden');
+                                            } else {
+                                                whatsappSection.classList.add('hidden');
+                                            }
+                                        }
+                                    }
+
+                                    function buildWhatsappMessageLabel(status) {
+                                        if (status === 'approved') {
+                                            return 'Pengajuan sudah disetujui. Apakah Anda ingin langsung membuka WhatsApp untuk mengirim notifikasi ke institusi?';
+                                        }
+                                        if (status === 'rejected') {
+                                            return 'Pengajuan sudah ditolak. Apakah Anda ingin langsung membuka WhatsApp untuk mengirim notifikasi ke institusi?';
+                                        }
+                                        if (status === 'revised') {
+                                            return 'Pengajuan perlu revisi. Apakah Anda ingin langsung membuka WhatsApp untuk mengirim catatan revisi ke institusi?';
+                                        }
+                                        return 'Status sudah tersimpan. Apakah Anda ingin langsung membuka WhatsApp untuk mengirim notifikasi ke institusi?';
+                                    }
+
+                                    async function saveStatus() {
+                                        if (isSaving) return;
+
+                                        isSaving = true;
+                                        saveAcceptButton.disabled = true;
+                                        saveCancelButton.disabled = true;
+                                        saveAcceptButton.textContent = 'Menyimpan...';
+
+                                        try {
+                                            const formData = new FormData(form);
+                                            const response = await fetch(form.action, {
+                                                method: 'POST',
+                                                body: formData,
+                                                headers: {
+                                                    'Accept': 'application/json',
+                                                }
+                                            });
+
+                                            if (!response.ok) {
+                                                const errorData = await response.json();
+                                                throw new Error(errorData.message || 'Gagal menyimpan status');
+                                            }
+
+                                            const data = await response.json();
+                                            closeModal(saveModal);
+
+                                            whatsappModalMessage.textContent = buildWhatsappMessageLabel(statusEl.value);
+                                            updateWhatsappButton(data.whatsapp_url || null);
+                                            openModal(whatsappModal);
+                                        } catch (error) {
+                                            alert(error.message || 'Gagal menyimpan status.');
+                                        } finally {
+                                            isSaving = false;
+                                            saveAcceptButton.disabled = false;
+                                            saveCancelButton.disabled = false;
+                                            saveAcceptButton.textContent = 'Ya, Simpan';
+                                        }
+                                    }
+
+                                    form.addEventListener('submit', function(event) {
+                                        event.preventDefault();
+                                        openModal(saveModal);
+                                        saveCancelButton.focus();
+                                    });
+
+                                    saveCancelButton.addEventListener('click', function() {
+                                        closeModal(saveModal);
+                                    });
+
+                                    saveAcceptButton.addEventListener('click', function() {
+                                        saveStatus();
+                                    });
+
+                                    whatsappCancelButton.addEventListener('click', function() {
+                                        closeModal(whatsappModal);
+                                        window.location.reload();
+                                    });
+
+                                    whatsappAcceptButton.addEventListener('click', function() {
+                                        if (!latestWhatsappUrl) {
+                                            alert('URL WhatsApp tidak tersedia');
+                                            return;
+                                        }
+                                        window.open(latestWhatsappUrl, '_blank', 'noopener');
+                                        closeModal(whatsappModal);
+                                    });
+                                })();
+                            </script>
+
+                            <div class="form-actions flex flex-col gap-3 pt-6 border-t border-slate-100">
+                                @if ($pengajuan->status == 'approved')
+                                    {{-- <a href="{{ route('industri.pengajuan.surat-balasan', $pengajuan) }}" target="_blank"
+                                        class="w-full inline-flex items-center px-6 py-3 bg-green-100 hover:bg-green-200 text-green-700 justify-center font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
+                                        <i class="fas fa-download mr-2"></i>
+                                        Download Surat Balasan
+                                    </a> --}}
+                                    <button type="button" disabled
+                                        class="w-full inline-flex items-center px-6 py-3 bg-gray-300 text-gray-700 justify-center font-bold rounded-xl shadow-sm transition-all duration-300">
+                                        Sudah Disetujui — Tidak dapat diubah
+                                    </button>
+                                @elseif($pengajuan->status == 'rejected')
+                                    <button type="button" disabled
+                                        class="w-full inline-flex items-center px-6 py-3 bg-gray-300 text-gray-700 justify-center font-bold rounded-xl shadow-sm transition-all duration-300">
+                                        Sudah Ditolak — Tidak dapat diubah
+                                    </button>
+                                @else
+                                    <button type="submit"
+                                        class="w-full inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white justify-center font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
+                                        <i class="fas fa-save mr-2"></i>Simpan Status
+                                    </button>
+                                @endif
+
+                                {{-- <div id="whatsapp-resend-section"
+                                    class="mt-2 {{ empty($whatsapp['url']) ? 'hidden' : '' }}">
+                                    <a id="whatsapp-resend-link" href="{{ $whatsapp['url'] ?? '#' }}" target="_blank"
+                                        rel="noopener"
+                                        class="w-full inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white justify-center font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
+                                        <i class="fab fa-whatsapp mr-2"></i>
+                                        Kirim Notifikasi WhatsApp
+                                    </a>
+                                    <p class="text-xs text-gray-500 text-center mt-2">
+                                        Gunakan tombol ini jika Anda memilih tidak mengirim WhatsApp setelah status disimpan.
+                                    </p>
+                                </div> --}}
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="flex justify-start gap-3 pt-6 border-t border-slate-100">
+                        <a href="{{ route('industri.pengajuan.index') }}"
+                            class="inline-flex items-center px-4 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition">
+                            <i class="fas fa-arrow-left mr-2"></i>Kembali ke Daftar
+                        </a>
+                    </div>
+                </div>
+        </div>
+    </div>
+@endsection

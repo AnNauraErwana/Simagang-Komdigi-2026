@@ -15,16 +15,20 @@ class AdminLowonganController extends Controller
      */
     public function index(Request $request)
     {
+        $industri = auth()->user()->industri;
+
         $query = Lowongan::with('industri')
-        ->orderByRaw("
-            CASE
-                WHEN status_verifikasi = 'pending' THEN 1
-                WHEN status_verifikasi = 'ditolak' THEN 2
-                WHEN status_verifikasi = 'disetujui' THEN 3
-                ELSE 4
-            END
-        ")
-        ->latest();
+            ->whereHas('industri', function ($q) {
+                $q->where('nama_industri', 'BBLSDM Komdigi Makassar');
+            })
+            ->orderByRaw("
+                CASE
+                    WHEN status_verifikasi = 'pending' THEN 1
+                    WHEN status_verifikasi = 'ditolak' THEN 2
+                    WHEN status_verifikasi = 'disetujui' THEN 3
+                    ELSE 4
+                END
+            ");
 
         // search
         if ($request->filled('search')) {
@@ -59,7 +63,9 @@ class AdminLowonganController extends Controller
         }
 
         // data statistik
-        $totalLowongan = Lowongan::count();
+        $totalLowongan = Lowongan::whereHas('industri', function ($q) {
+            $q->where('nama_industri', 'BBLSDM Komdigi Makassar');
+        })->count();
 
         $totalPending = Lowongan::where('status_verifikasi', 'pending')->count();
 
@@ -106,6 +112,11 @@ class AdminLowonganController extends Controller
      */
     public function store(Request $request)
     {
+        $industri = Industri::where('nama_industri', 'BBLSDM Komdigi Makassar')
+            ->firstOrFail();
+
+        $statusverifikasi = 'disetujui';
+
         // Validasi
         $request->validate([
             'judul_lowongan'      => 'required|string|max:255',
@@ -124,6 +135,7 @@ class AdminLowonganController extends Controller
         $team = Team::find($request->team_id);
 
         Lowongan::create([
+            'industri_id'         => $industri->id,
             'judul_lowongan'      => $request->judul_lowongan,
             'posisi_magang'       => $request->posisi_magang,
             'team_id'             => $request->team_id,
@@ -137,6 +149,7 @@ class AdminLowonganController extends Controller
             'status' => $request->status === 'aktif'
                 ? 'dibuka'
                 : 'ditutup',
+            'status_verifikasi'   => $statusverifikasi,
         ]);
 
         return redirect()
