@@ -489,12 +489,60 @@
                                 </span>
                             </div>
 
-                            {{-- Checkout button ── --}}
+                            {{-- Checkout form ── --}}
                             @if(!$todayAttendance->check_out)
-                                <button onclick="document.getElementById('checkoutModal').classList.remove('hidden')"
-                                    class="action-btn" style="justify-content:center;background:linear-gradient(110deg,#1e3a8a,#3b4fd8);color:#fff;border-color:transparent;">
-                                    <i class="fas fa-sign-out-alt"></i> Check Out Sekarang
-                                </button>
+                                <form action="{{ route('intern.attendance.checkout') }}" method="POST" enctype="multipart/form-data" id="checkoutForm" class="mt-4">
+                                    @csrf
+                                    <div class="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 sm:p-6 mb-4">
+                                        <label class="block text-sm font-semibold text-gray-700 mb-4">
+                                            <i class="fas fa-camera mr-1 text-blue-500"></i> Foto Bukti Absensi Keluar
+                                        </label>
+
+                                        <!-- Camera Display -->
+                                        <div class="mb-4">
+                                            <video id="checkoutVideo" width="100%" height="auto"
+                                                class="border-2 border-blue-300 rounded-lg hidden shadow-md transform -scale-x-100"
+                                                autoplay playsinline></video>
+                                            <canvas id="checkoutCanvas" class="hidden"></canvas>
+                                            <img id="checkoutCapturedImage"
+                                                class="w-full max-w-md mx-auto border-2 border-green-300 rounded-lg hidden mb-4 shadow-md"
+                                                alt="Captured image">
+                                        </div>
+
+                                        <!-- Camera Controls -->
+                                        <div class="flex flex-wrap gap-3 mb-4">
+                                            <button type="button" id="checkoutStartCamera"
+                                                class="inline-flex items-center justify-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
+                                                <i class="fas fa-camera mr-2"></i>Buka Kamera
+                                            </button>
+                                            <button type="button" id="checkoutCapturePhoto"
+                                                class="hidden inline-flex items-center justify-center px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
+                                                <i class="fas fa-camera-retro mr-2"></i>Ambil Foto
+                                            </button>
+                                            <button type="button" id="checkoutStopCamera"
+                                                class="hidden inline-flex items-center justify-center px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
+                                                <i class="fas fa-stop mr-2"></i>Stop Kamera
+                                            </button>
+                                        </div>
+
+                                        <input type="file" name="photo" id="checkoutPhoto" accept="image/*" class="hidden">
+                                        <input type="hidden" name="photo_data" id="checkoutPhotoData" value="">
+
+                                        <div class="mt-4 bg-blue-100 border border-blue-300 rounded-lg p-3">
+                                            <p class="text-xs text-blue-800 flex items-start">
+                                                <i class="fas fa-info-circle mr-2 mt-0.5"></i>
+                                                <span>Pastikan wajah Anda terlihat jelas pada foto. Foto akan digunakan sebagai bukti absensi keluar.</span>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex justify-end">
+                                        <button type="submit"
+                                            class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                                            <i class="fas fa-sign-out-alt mr-2"></i>Check Out
+                                        </button>
+                                    </div>
+                                </form>
                             @endif
 
                             {{-- Photos ── --}}
@@ -737,60 +785,7 @@
 </div>
 </div>
 
-{{-- ── CHECKOUT MODAL (restyled, same panel aesthetic) ── --}}
-<div id="checkoutModal" class="hidden modal-overlay">
-    <div class="modal-box">
-        <div class="flex items-center justify-between mb-5">
-            <div class="flex items-center gap-3">
-                <div style="width:40px;height:40px;background:#eff2ff;border-radius:12px;display:flex;align-items:center;justify-content:center;">
-                    <i class="fas fa-sign-out-alt" style="color:#3b4fd8;font-size:16px;"></i>
-                </div>
-                <div>
-                    <h3 class="font-bold text-gray-900 text-base">Check Out</h3>
-                    <p class="text-xs text-gray-400">Ambil foto untuk konfirmasi</p>
-                </div>
-            </div>
-            <button onclick="closeCheckoutModal()" style="width:32px;height:32px;border-radius:8px;background:#f1f5f9;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;">
-                <i class="fas fa-times text-gray-500"></i>
-            </button>
-        </div>
 
-        <form action="{{ route('intern.attendance.checkout') }}" method="POST" enctype="multipart/form-data" id="checkoutForm">
-            @csrf
-            <div class="mb-4">
-                <video id="checkoutVideo" width="100%" class="rounded-xl border border-gray-100 hidden" autoplay playsinline style="transform:scaleX(-1);"></video>
-                <canvas id="checkoutCanvas" class="hidden"></canvas>
-                <img id="checkoutCapturedImage" class="w-full rounded-xl border border-gray-100 hidden mb-3" alt="Foto">
-            </div>
-
-            <div class="flex gap-2 mb-4">
-                <button type="button" id="checkoutStartCamera" class="action-btn" style="flex:1;justify-content:center;">
-                    <i class="fas fa-camera"></i> Buka Kamera
-                </button>
-                <button type="button" id="checkoutCapturePhoto" class="action-btn hidden" style="flex:1;justify-content:center;background:linear-gradient(110deg,#16a34a,#15803d);color:#fff;border-color:transparent;">
-                    <i class="fas fa-camera-retro"></i> Ambil Foto
-                </button>
-                <button type="button" id="checkoutStopCamera" class="action-btn hidden" style="justify-content:center;background:#fee2e2;color:#b91c1c;border-color:#fecaca;">
-                    <i class="fas fa-stop"></i>
-                </button>
-            </div>
-
-            <input type="file" name="photo" id="checkoutPhoto" accept="image/*" class="hidden">
-            <input type="hidden" name="photo_data" id="checkoutPhotoData" value="">
-
-            <div class="flex gap-3 mt-2">
-                <button type="button" onclick="closeCheckoutModal()"
-                    class="action-btn" style="flex:1;justify-content:center;">
-                    Batal
-                </button>
-                <button type="submit"
-                    class="action-btn" style="flex:1;justify-content:center;background:linear-gradient(110deg,#1e3a8a,#3b4fd8);color:#fff;border-color:transparent;">
-                    <i class="fas fa-sign-out-alt"></i> Check Out
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
 
 @push('scripts')
 <script>
@@ -804,67 +799,72 @@
     const checkoutPhotoData     = document.getElementById('checkoutPhotoData');
     let checkoutStream = null;
 
-    function closeCheckoutModal() {
-        document.getElementById('checkoutModal').classList.add('hidden');
-        if (checkoutStream) {
-            checkoutStream.getTracks().forEach(t => t.stop());
-            checkoutStream = null;
-        }
-        checkoutVideo.classList.add('hidden');
-        checkoutStartCameraBtn.classList.remove('hidden');
-        checkoutCapturePhotoBtn.classList.add('hidden');
-        checkoutStopCameraBtn.classList.add('hidden');
-    }
-
-    checkoutStartCameraBtn.addEventListener('click', async () => {
-        try {
-            checkoutStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
-            checkoutVideo.srcObject = checkoutStream;
-            checkoutVideo.classList.remove('hidden');
-            checkoutStartCameraBtn.classList.add('hidden');
-            checkoutCapturePhotoBtn.classList.remove('hidden');
-            checkoutStopCameraBtn.classList.remove('hidden');
-        } catch (err) {
-            alert('Tidak dapat mengakses kamera. Pastikan izin kamera diberikan.');
-        }
-    });
-
-    checkoutCapturePhotoBtn.addEventListener('click', () => {
-        checkoutCanvas.width  = checkoutVideo.videoWidth;
-        checkoutCanvas.height = checkoutVideo.videoHeight;
-        const ctx = checkoutCanvas.getContext('2d');
-        ctx.translate(checkoutCanvas.width, 0);
-        ctx.scale(-1, 1);
-        ctx.drawImage(checkoutVideo, 0, 0);
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        const imageData = checkoutCanvas.toDataURL('image/png');
-        checkoutCapturedImage.src = imageData;
-        checkoutCapturedImage.classList.remove('hidden');
-        checkoutPhotoData.value = imageData;
-        fetch(imageData).then(r => r.blob()).then(blob => {
-            const file = new File([blob], 'checkout-photo.png', { type: 'image/png' });
-            const dt = new DataTransfer();
-            dt.items.add(file);
-            checkoutPhotoInput.files = dt.files;
+    if (checkoutStartCameraBtn) {
+        checkoutStartCameraBtn.addEventListener('click', async () => {
+            try {
+                checkoutStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+                checkoutVideo.srcObject = checkoutStream;
+                checkoutVideo.classList.remove('hidden');
+                checkoutCapturedImage.classList.add('hidden'); // Sembunyikan foto sebelumnya saat kamera aktif
+                checkoutStartCameraBtn.classList.add('hidden');
+                checkoutCapturePhotoBtn.classList.remove('hidden');
+                checkoutStopCameraBtn.classList.remove('hidden');
+            } catch (err) {
+                alert('Tidak dapat mengakses kamera. Pastikan izin kamera diberikan.');
+            }
         });
-    });
 
-    checkoutStopCameraBtn.addEventListener('click', () => {
-        if (checkoutStream) { checkoutStream.getTracks().forEach(t => t.stop()); checkoutStream = null; }
-        checkoutVideo.classList.add('hidden');
-        checkoutStartCameraBtn.classList.remove('hidden');
-        checkoutCapturePhotoBtn.classList.add('hidden');
-        checkoutStopCameraBtn.classList.add('hidden');
-    });
+        checkoutCapturePhotoBtn.addEventListener('click', () => {
+            checkoutCanvas.width  = checkoutVideo.videoWidth;
+            checkoutCanvas.height = checkoutVideo.videoHeight;
+            const ctx = checkoutCanvas.getContext('2d');
+            ctx.translate(checkoutCanvas.width, 0);
+            ctx.scale(-1, 1);
+            ctx.drawImage(checkoutVideo, 0, 0);
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            const imageData = checkoutCanvas.toDataURL('image/png');
+            checkoutCapturedImage.src = imageData;
+            checkoutCapturedImage.classList.remove('hidden');
+            checkoutPhotoData.value = imageData;
+            fetch(imageData).then(r => r.blob()).then(blob => {
+                const file = new File([blob], 'checkout-photo.png', { type: 'image/png' });
+                const dt = new DataTransfer();
+                dt.items.add(file);
+                checkoutPhotoInput.files = dt.files;
+            });
 
-    document.getElementById('checkoutForm').addEventListener('submit', function(e) {
-        if (!checkoutPhotoData.value && !checkoutPhotoInput.files.length) {
-            e.preventDefault();
-            alert('Silakan ambil foto terlebih dahulu.');
-            return false;
+            // Matikan stream kamera dan sembunyikan video setelah foto diambil
+            if (checkoutStream) {
+                checkoutStream.getTracks().forEach(t => t.stop());
+                checkoutStream = null;
+            }
+            checkoutVideo.classList.add('hidden');
+            checkoutStartCameraBtn.innerHTML = '<i class="fas fa-camera mr-2"></i>Ambil Foto Ulang';
+            checkoutStartCameraBtn.classList.remove('hidden');
+            checkoutCapturePhotoBtn.classList.add('hidden');
+            checkoutStopCameraBtn.classList.add('hidden');
+        });
+
+        checkoutStopCameraBtn.addEventListener('click', () => {
+            if (checkoutStream) { checkoutStream.getTracks().forEach(t => t.stop()); checkoutStream = null; }
+            checkoutVideo.classList.add('hidden');
+            checkoutStartCameraBtn.classList.remove('hidden');
+            checkoutCapturePhotoBtn.classList.add('hidden');
+            checkoutStopCameraBtn.classList.add('hidden');
+        });
+
+        const checkoutForm = document.getElementById('checkoutForm');
+        if (checkoutForm) {
+            checkoutForm.addEventListener('submit', function(e) {
+                if (!checkoutPhotoData.value && !checkoutPhotoInput.files.length) {
+                    e.preventDefault();
+                    alert('Silakan ambil foto terlebih dahulu.');
+                    return false;
+                }
+                if (checkoutStream) checkoutStream.getTracks().forEach(t => t.stop());
+            });
         }
-        if (checkoutStream) checkoutStream.getTracks().forEach(t => t.stop());
-    });
+    }
 
     // Donut animation
     document.addEventListener('DOMContentLoaded', () => {
